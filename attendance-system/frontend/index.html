@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendify - Smart Attendance System</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Particles Background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) { width: 300px; height: 300px; top: -100px; left: -100px; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 500px; height: 500px; bottom: -200px; right: -150px; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 200px; height: 200px; top: 40%; left: 10%; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 400px; height: 400px; bottom: 10%; right: 5%; animation-delay: 6s; }
+        .particle:nth-child(5) { width: 150px; height: 150px; top: 60%; right: 20%; animation-delay: 8s; }
+        .particle:nth-child(6) { width: 250px; height: 250px; top: 20%; right: 35%; animation-delay: 10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            50% { transform: translateY(-40px) rotate(10deg) scale(1.05); }
+        }
+
+        /* Glassmorphism Header */
+        .glass-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+            padding: 12px 40px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-tagline {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-icon {
+            font-size: 18px;
+            color: #fbbf24;
+        }
+
+        .theme-text {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .stats-badge {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .stat-number {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 60px;
+        }
+
+        /* Login Card */
+        .login-card {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Left Side - Info Section */
+        .info-section {
+            flex: 1.2;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+            padding: 50px 40px;
+            color: white;
+            position: relative;
+        }
+
+        .info-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .welcome-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 12px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(5px);
+        }
+
+        .info-section h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .info-section .highlight {
+            color: #fbbf24;
+        }
+
+        .info-section p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .stats-showcase {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-card {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-card .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            display: block;
+        }
+
+        .stat-card .stat-label {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        /* Testimonial Slider Styles */
+        .testimonial-slider {
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            padding: 25px;
+        }
+
+        .testimonial-container {
+            position: relative;
+            min-height: 160px;
+        }
+
+        .testimonial-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .testimonial-slide.active {
+            opacity: 1;
+            visibility: visible;
+            position: relative;
+        }
+
+        .testimonial-slide p {
+            font-size: 14px;
+            font-style: italic;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .author-title {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        .author-rating {
+            display: flex;
+            gap: 3px;
+            margin-top: 5px;
+        }
+
+        .author-rating i {
+            font-size: 10px;
+            color: #fbbf24;
+        }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            width: 24px;
+            background: white;
+            border-radius: 4px;
+        }
+
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .slider-nav:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .slider-nav.prev {
+            left: -15px;
+        }
+
+        .slider-nav.next {
+            right: -15px;
+        }
+
+        /* Right Side - Form Section */
+        .form-section {
+            flex: 0.8;
+            padding: 50px 40px;
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .form-header h2 {
+            font-size: 28px;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            background: #f8fafc;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-group .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #94a3b8;
+        }
+
+        .forgot-link {
+            text-align: right;
+            margin-top: -8px;
+        }
+
+        .forgot-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .forgot-link a:hover {
+            color: #5a67d8;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .trust-badge {
+            margin-top: 30px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .trust-badge p {
+            font-size: 11px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .trust-badge i {
+            font-size: 14px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 35px;
+            border-radius: 28px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            animation: slideDown 0.3s ease;
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 15px;
+            color: #1e293b;
+            font-size: 24px;
+        }
+        
+        .modal-content p {
+            margin-bottom: 20px;
+            color: #64748b;
+        }
+        
+        .modal .close {
+            position: absolute;
+            right: 22px;
+            top: 22px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.3s;
+        }
+        
+        .modal .close:hover {
+            color: #1e293b;
+        }
+        
+        .success-message {
+            margin-top: 15px;
+            text-align: center;
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px;
+            border-radius: 12px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .login-card {
+                flex-direction: column;
+                max-width: 500px;
+            }
+            
+            .info-section {
+                padding: 35px 30px;
+            }
+            
+            .info-section h1 {
+                font-size: 32px;
+            }
+            
+            .form-section {
+                padding: 35px 30px;
+            }
+            
+            .glass-header {
+                padding: 10px 20px;
+            }
+            
+            .stats-badge {
+                display: none;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+            
+            .slider-nav {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .theme-toggle {
+                padding: 6px 12px;
+            }
+            
+            .theme-text {
+                display: none;
+            }
+            
+            .stats-showcase {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Particles Background -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Glassmorphism Header -->
+    <header class="glass-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                    <div class="logo-text">Attendify</div>
+                    <div class="logo-tagline">Smart Attendance Management</div>
+                </div>
+            </div>
+            <div class="stats-badge">
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <span><span class="stat-number" id="liveUsers">0</span> Active Users</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span><span class="stat-number" id="todayPresent">0</span> Checked In</span>
+                </div>
+            </div>
+            <div class="theme-toggle" id="themeToggle">
+                <i class="fas fa-sun theme-icon"></i>
+                <span class="theme-text">Light / Dark</span>
+                <i class="fas fa-moon" style="color: #94a3b8;"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="login-card">
+            <!-- Left Side - Info Section with Testimonial Slider -->
+            <div class="info-section">
+                <div class="welcome-badge">
+                    <i class="fas fa-rocket"></i> Welcome to the Future
+                </div>
+                <h1>Smart <span class="highlight">Attendance</span><br>Management System</h1>
+                <p>Streamline your workforce management with real-time tracking, QR check-ins, and comprehensive analytics. Trusted by 500+ organizations worldwide.</p>
+                
+                <div class="stats-showcase">
+                    <div class="stat-card">
+                        <span class="stat-number">99.9%</span>
+                        <span class="stat-label">Uptime Guarantee</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Active Companies</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">10K+</span>
+                        <span class="stat-label">Daily Check-ins</span>
+                    </div>
+                </div>
+
+                <!-- Professional Testimonial Slider -->
+                <div class="testimonial-slider">
+                    <div class="slider-nav prev" id="prevTestimonial">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
+                    <div class="slider-nav next" id="nextTestimonial">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="testimonial-container" id="testimonialContainer">
+                        <!-- Testimonial 1 -->
+                        <div class="testimonial-slide active">
+                            <p>"Attendify has transformed how we manage employee attendance. The QR check-in feature is a game-changer! Real-time tracking and analytics have saved us countless hours."</p>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div class="author-info">
+                                    <div class="author-name">Sarah Johnson</div>
+                                    <div class="author-title">HR Director, TechCorp</div>
+                                    <div class="author-rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Testimonial 2 -->
+                        <div class="testimonial-slide">
+                            <p>"The best attendance system we've ever used! Simple, intuitive, and the automated reports make monthly reviews effortless. Our team loves the QR code check-in feature."</p>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div class="author-info">
+                                    <div class="author-name">Dr. Michael Chen</div>
+                                    <div class="author-title">Operations Manager, HealthPlus</div>
+                                    <div class="author-rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Testimonial 3 -->
+                        <div class="testimonial-slide">
+                            <p>"Exceptional platform! The real-time dashboard gives us complete visibility into attendance patterns. The support team is incredibly responsive and helpful."</p>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <div class="author-info">
+                                    <div class="author-name">Emily Rodriguez</div>
+                                    <div class="author-title">CEO, StartUp Labs</div>
+                                    <div class="author-rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Testimonial 4 -->
+                        <div class="testimonial-slide">
+                            <p>"Implementing Attendify was the best decision we made this year. Reduced administrative work by 70% and improved accuracy dramatically. Highly recommended!"</p>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">
+                                    <i class="fas fa-user-astronaut"></i>
+                                </div>
+                                <div class="author-info">
+                                    <div class="author-name">James Wilson</div>
+                                    <div class="author-title">IT Director, Global Systems</div>
+                                    <div class="author-rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-dots" id="sliderDots"></div>
+                </div>
+            </div>
+
+            <!-- Right Side - Form Section -->
+            <div class="form-section">
+                <div class="form-header">
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to access your dashboard</p>
+                </div>
+
+                <form id="loginForm" class="login-form">
+                    <div class="input-group">
+                        <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                        <input type="email" id="email" placeholder="Email address" required>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-icon"><i class="fas fa-lock"></i></span>
+                        <input type="password" id="password" placeholder="Password" required>
+                    </div>
+                    <div class="forgot-link">
+                        <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn-login" id="loginBtn">
+                        <i class="fas fa-arrow-right-to-bracket"></i> Sign In
+                    </button>
+                </form>
+
+                <div id="errorMessage" class="error-message"></div>
+
+                <div class="trust-badge">
+                    <p>
+                        <i class="fas fa-shield-alt"></i> Secure Login 
+                        <i class="fas fa-circle" style="font-size: 4px;"></i> 
+                        <i class="fas fa-clock"></i> 24/7 Support
+                        <i class="fas fa-circle" style="font-size: 4px;"></i>
+                        <i class="fas fa-chart-simple"></i> Real-time Analytics
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-key"></i> Reset Password</h2>
+            <p>Enter your email address and we'll send you a link to reset your password.</p>
+            <form id="forgotForm">
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                    <input type="email" id="resetEmail" required placeholder="your@email.com">
+                </div>
+                <button type="submit" class="btn-login" id="sendResetBtn" style="width: 100%;">
+                    <i class="fas fa-paper-plane"></i> Send Reset Link
+                </button>
+                <div id="forgotError" class="error-message"></div>
+                <div id="forgotSuccess" class="success-message" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Testimonial Slider
+        const testimonials = document.querySelectorAll('.testimonial-slide');
+        const dotsContainer = document.getElementById('sliderDots');
+        let currentIndex = 0;
+        let slideInterval;
+
+        // Create dots
+        testimonials.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlides() {
+            testimonials.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentIndex);
+            });
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % testimonials.length;
+            updateSlides();
+            resetInterval();
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+            updateSlides();
+            resetInterval();
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            updateSlides();
+            resetInterval();
+        }
+
+        function startAutoSlide() {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function resetInterval() {
+            clearInterval(slideInterval);
+            startAutoSlide();
+        }
+
+        // Event listeners for slider navigation
+        document.getElementById('prevTestimonial').addEventListener('click', prevSlide);
+        document.getElementById('nextTestimonial').addEventListener('click', nextSlide);
+
+        // Start auto-sliding
+        startAutoSlide();
+
+        // Supabase configuration
+        const SUPABASE_URL = 'https://hesxkxbtreqfxmhrdwml.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_jTsJmSF195H4U6Og7oOdSA_2VI1_xnd';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Update live stats
+        async function updateLiveStats() {
+            try {
+                const { count: userCount } = await supabaseClient
+                    .from('users')
+                    .select('*', { count: 'exact', head: true });
+                
+                const today = new Date().toISOString().split('T')[0];
+                const { count: presentCount } = await supabaseClient
+                    .from('attendance')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('date', today)
+                    .not('check_in_time', 'is', null);
+                
+                document.getElementById('liveUsers').textContent = userCount || 0;
+                document.getElementById('todayPresent').textContent = presentCount || 0;
+            } catch (error) {
+                console.error('Error updating stats:', error);
+            }
+        }
+        updateLiveStats();
+        setInterval(updateLiveStats, 30000);
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        let isDark = true;
+        themeToggle.addEventListener('click', () => {
+            isDark = !isDark;
+            if (isDark) {
+                document.body.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)';
+                themeToggle.querySelector('.theme-icon').className = 'fas fa-sun theme-icon';
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)';
+                themeToggle.querySelector('.theme-icon').className = 'fas fa-moon theme-icon';
+            }
+        });
+
+        // Handle login
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const errorDiv = document.getElementById('errorMessage');
+        const loginBtn = document.getElementById('loginBtn');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            
+            errorDiv.style.display = 'none';
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+            
+            if (!window.auth) {
+                errorDiv.textContent = 'System initializing... Please refresh the page.';
+                errorDiv.style.display = 'block';
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
+                return;
+            }
+            
+            try {
+                const result = await window.auth.login(email, password);
+                
+                if (!result.success) {
+                    errorDiv.textContent = result.error;
+                    errorDiv.style.display = 'block';
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'An unexpected error occurred';
+                errorDiv.style.display = 'block';
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
+            }
+        });
+
+        // Forgot Password Modal
+        const forgotModal = document.getElementById('forgotModal');
+        const forgotLink = document.getElementById('forgotPasswordLink');
+        const closeBtn = forgotModal.querySelector('.close');
+
+        forgotLink.onclick = function(e) {
+            e.preventDefault();
+            forgotModal.style.display = 'flex';
+            document.getElementById('resetEmail').value = '';
+            document.getElementById('forgotError').style.display = 'none';
+            document.getElementById('forgotSuccess').style.display = 'none';
+        }
+
+        closeBtn.onclick = function() {
+            forgotModal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == forgotModal) {
+                forgotModal.style.display = 'none';
+            }
+        }
+
+        // Handle forgot password
+        const forgotForm = document.getElementById('forgotForm');
+        const resetEmail = document.getElementById('resetEmail');
+        const forgotError = document.getElementById('forgotError');
+        const forgotSuccess = document.getElementById('forgotSuccess');
+        const sendResetBtn = document.getElementById('sendResetBtn');
+
+        forgotForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = resetEmail.value;
+            
+            forgotError.style.display = 'none';
+            forgotSuccess.style.display = 'none';
+            sendResetBtn.disabled = true;
+            sendResetBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + '/attendance-system/frontend/confirm-password.html'
+                });
+
+                if (error) throw error;
+
+                forgotSuccess.textContent = `✅ Password reset email sent to ${email}. Please check your inbox.`;
+                forgotSuccess.style.display = 'block';
+                resetEmail.value = '';
+                
+                setTimeout(() => {
+                    forgotModal.style.display = 'none';
+                }, 4000);
+                
+            } catch (error) {
+                forgotError.textContent = error.message || 'Failed to send reset email.';
+                forgotError.style.display = 'block';
+            } finally {
+                sendResetBtn.disabled = false;
+                sendResetBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reset Link';
+            }
+        });
+
+        // Check if already logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (window.auth && window.auth.currentUser) {
+                    window.location.href = 'dashboard.html';
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

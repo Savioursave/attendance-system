@@ -1,0 +1,72 @@
+[build]
+  publish = "frontend"
+  command = "echo 'Building frontend for production...'"
+
+[build.environment]
+  NODE_VERSION = "18"
+  SUPABASE_URL = "https://hesxkxbtreqfxmhrdwml.supabase.co"
+  SUPABASE_ANON_KEY = "sb_publishable_jTsJmSF195H4U6Og7oOdSA_2VI1_xnd"
+
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/dashboard"
+  to = "/dashboard.html"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/confirm-password"
+  to = "/confirm-password.html"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://your-vercel-app.vercel.app/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
