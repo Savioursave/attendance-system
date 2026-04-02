@@ -3,67 +3,68 @@
   "name": "attendance-system-backend",
   "builds": [
     {
-      "src": "attendance-system/backend/index.js",
+      "src": "attendance-system/attendance-system/backend/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/health",
-      "dest": "attendance-system/backend/index.js"
+      "dest": "attendance-system/attendance-system/backend/index.js"
     },
     {
       "src": "/api/users",
-      "dest": "attendance-system/backend/index.js"
+      "dest": "attendance-system/attendance-system/backend/index.js"
     },
     {
       "src": "/api/users/(.*)",
-      "dest": "attendance-system/backend/index.js"
+      "dest": "attendance-system/attendance-system/backend/index.js"
     },
     {
       "src": "/api/attendance",
-      "dest": "attendance-system/backend/index.js"
+      "dest": "attendance-system/attendance-system/backend/index.js"
     },
     {
       "src": "/api/attendance/(.*)",
-      "dest": "attendance-system/backend/index.js"
+      "dest": "attendance-system/attendance-system/backend/index.js"
     },
     {
       "src": "/api/reports",
-      "dest": "attendance-system/backend/index.js"
+      "dest": "attendance-system/attendance-system/backend/index.js"
     },
     {
       "src": "/api/reports/(.*)",
-      "dest": "attendance-system/backend/index.js"
+      "dest": "attendance-system/attendance-system/backend/index.js"
     },
     {
       "src": "/api/qrcode",
-      "dest": "attendance-system/backend/index.js"
+      "dest": "attendance-system/attendance-system/backend/index.js"
     },
     {
       "src": "/api/qrcode/(.*)",
-      "dest": "attendance-system/backend/index.js"
+      "dest": "attendance-system/attendance-system/backend/index.js"
     },
     {
       "src": "/api/(.*)",
-      "dest": "attendance-system/backend/index.js"
+      "dest": "attendance-system/attendance-system/backend/index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "attendance-system/backend/index.js"
+      "dest": "attendance-system/attendance-system/backend/index.js"
     }
   ],
   "env": {
     "SUPABASE_URL": "https://hesxkxbtreqfxmhrdwml.supabase.co",
     "SUPABASE_ANON_KEY": "sb_publishable_jTsJmSF195H4U6Og7oOdSA_2VI1_xnd",
     "SUPABASE_SERVICE_KEY": "sb_secret_2KcpN......",
+    "FRONTEND_URL": "https://your-netlify-app.netlify.app",
     "PORT": "3000",
     "NODE_ENV": "production"
   },
   "functions": {
-    "attendance-system/backend/index.js": {
-      "includeFiles": "attendance-system/backend/**",
-      "excludeFiles": "attendance-system/backend/node_modules/.cache/**"
+    "attendance-system/attendance-system/backend/index.js": {
+      "includeFiles": "attendance-system/attendance-system/backend/**",
+      "excludeFiles": "attendance-system/attendance-system/backend/node_modules/.cache/**"
     }
   },
   "headers": [
