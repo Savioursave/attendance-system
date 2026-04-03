@@ -80,6 +80,39 @@ app.get('/api/users/profile', authenticateUser, async (req, res) => {
     }
 });
 
+// Get all users (admin only)
+app.get('/api/users', authenticateUser, async (req, res) => {
+    try {
+        // Check if user is admin
+        const { data: currentUser } = await supabase
+            .from('users')
+            .select('role')
+            .eq('id', req.user.id)
+            .single();
+
+        if (currentUser?.role !== 'admin') {
+            return res.status(403).json({ error: 'Admin access required' });
+        }
+
+        const { data, error } = await supabase
+            .from('users')
+            .select(`
+                *,
+                departments (
+                    name,
+                    id
+                )
+            `)
+            .order('full_name');
+
+        if (error) throw error;
+
+        res.json({ success: true, data });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Get attendance records
 app.get('/api/attendance', authenticateUser, async (req, res) => {
     try {
@@ -113,6 +146,111 @@ app.get('/api/attendance', authenticateUser, async (req, res) => {
         if (error) throw error;
 
         res.json({ success: true, data });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Create attendance record (check in)
+app.post('/api/attendance/checkin', authenticateUser, async (req, res) => {
+    try {
+        const { method = 'manual', location, userId } = req.body;
+        const targetUserId = userId || req.user.id;
+        const today = new Date().toISOString().split('T')[0];
+        const checkInTime = new Date().toISOString();
+        
+        // Determine status based on time
+        const cutoffTime = new Date();
+        cutoffTime.setHours(9, 0, 0, 0);
+        let status = 'present';
+        if (new Date(checkInTime) > cutoffTime) {
+            status = 'late';
+        }
+
+        // Check if already checked in today
+        const { data: existing, error: checkError } = await supabase
+            .from('attendance')
+            .select('*')
+            .eq('user_id', targetUserId)
+            .eq('date', today)
+            .maybeSingle();
+
+        if (checkError && checkError.code !== 'PGRST116') {
+            throw checkError;
+        }
+
+        if (existing?.check_in_time) {
+            return res.status(400).json({ error: 'Already checked in today' });
+        }
+
+        let result;
+        if (existing) {
+            result = await supabase
+                .from('attendance')
+                .update({
+                    check_in_time: checkInTime,
+                    check_in_method: method,
+                    location: location,
+                    status: status,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', existing.id)
+                .select();
+        } else {
+            result = await supabase
+                .from('attendance')
+                .insert([{
+                    user_id: targetUserId,
+                    date: today,
+                    check_in_time: checkInTime,
+                    check_in_method: method,
+                    location: location,
+                    status: status,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                }])
+                .select();
+        }
+
+        if (result.error) throw result.error;
+
+        res.json({ success: true, data: result.data[0] });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Update attendance record (check out)
+app.put('/api/attendance/checkout', authenticateUser, async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const targetUserId = userId || req.user.id;
+        const today = new Date().toISOString().split('T')[0];
+        const checkOutTime = new Date().toISOString();
+
+        const { data: attendance, error: fetchError } = await supabase
+            .from('attendance')
+            .select('*')
+            .eq('user_id', targetUserId)
+            .eq('date', today)
+            .maybeSingle();
+
+        if (fetchError) throw fetchError;
+        if (!attendance) throw new Error('No check-in record found');
+        if (attendance.check_out_time) throw new Error('Already checked out');
+
+        const { data, error } = await supabase
+            .from('attendance')
+            .update({
+                check_out_time: checkOutTime,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', attendance.id)
+            .select();
+
+        if (error) throw error;
+
+        res.json({ success: true, data: data[0] });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -312,7 +450,13 @@ function convertToCSV(data) {
     return [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
 }
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// For Vercel serverless deployment
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+// Export for Vercel
+module.exports = app;
