@@ -1,6 +1,7 @@
 {
   "version": 2,
   "name": "attendance-system-backend",
+  // NEW DEPLOYMENT TRIGGER - April 3 2026 6:30PM
   "builds": [
     {
       "src": "attendance-system/backend/index.js",
