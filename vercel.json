@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "attendance-system-backend",
+  "name": "attendify-backend-api",
   "builds": [
     {
       "src": "attendance-system/backend/index.js",
@@ -53,12 +53,6 @@
       "dest": "attendance-system/backend/index.js"
     }
   ],
-  "functions": {
-    "attendance-system/backend/index.js": {
-      "includeFiles": "attendance-system/backend/**",
-      "excludeFiles": "attendance-system/backend/node_modules/.cache/**"
-    }
-  },
   "headers": [
     {
       "source": "/api/(.*)",
