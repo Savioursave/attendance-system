@@ -1,0 +1,85 @@
+ {
+  "version": 2,
+  "name": "attendance-system-backend",
+  "builds": [
+    {
+      "src": "attendance-system/backend/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/health",
+      "dest": "attendance-system/backend/index.js"
+    },
+    {
+      "src": "/api/users",
+      "dest": "attendance-system/backend/index.js"
+    },
+    {
+      "src": "/api/users/(.*)",
+      "dest": "attendance-system/backend/index.js"
+    },
+    {
+      "src": "/api/attendance",
+      "dest": "attendance-system/backend/index.js"
+    },
+    {
+      "src": "/api/attendance/(.*)",
+      "dest": "attendance-system/backend/index.js"
+    },
+    {
+      "src": "/api/reports",
+      "dest": "attendance-system/backend/index.js"
+    },
+    {
+      "src": "/api/reports/(.*)",
+      "dest": "attendance-system/backend/index.js"
+    },
+    {
+      "src": "/api/qrcode",
+      "dest": "attendance-system/backend/index.js"
+    },
+    {
+      "src": "/api/qrcode/(.*)",
+      "dest": "attendance-system/backend/index.js"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "attendance-system/backend/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "attendance-system/backend/index.js"
+    }
+  ],
+  "functions": {
+    "attendance-system/backend/index.js": {
+      "includeFiles": "attendance-system/backend/**",
+      "excludeFiles": "attendance-system/backend/node_modules/.cache/**"
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Credentials",
+          "value": "true"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization"
+        }
+      ]
+    }
+  ]
+}
