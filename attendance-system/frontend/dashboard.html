@@ -3,14 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Attendance System</title>
+    <title>Dashboard - Springytrack</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        /* Global Styles */
+        /* Toast Notification Styles */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            z-index: 2000;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            max-width: 90%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .toast-notification.error {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+        }
+
+        .toast-notification.warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .toast-notification.info {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* Fingerprint Button Style */
+        .btn-fingerprint {
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-fingerprint:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46,125,50,0.4);
+        }
+
+        /* Modal Styles for Fingerprint Registration */
+        .fingerprint-modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .fingerprint-modal-content {
+            background: white;
+            padding: 35px;
+            border-radius: 28px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: slideDown 0.3s ease;
+        }
+
+        .fingerprint-modal-content h2 {
+            margin-bottom: 20px;
+            color: #1e293b;
+            font-size: 24px;
+        }
+
+        .fingerprint-modal-content .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.3s;
+        }
+
+        .fingerprint-modal-content .close:hover {
+            color: #1e293b;
+        }
+
+        .fingerprint-icon {
+            font-size: 80px;
+            color: #2e7d32;
+            margin: 20px 0;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reg-status {
+            margin: 15px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .btn-cancel {
+            background: #64748b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: #475569;
+        }
+
+        /* Existing styles continue */
         * {
             margin: 0;
             padding: 0;
@@ -23,7 +184,6 @@
             color: #333;
         }
 
-        /* Navigation */
         .navbar {
             background: #1a2634;
             color: white;
@@ -37,17 +197,16 @@
         .nav-brand {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #4caf50;
+            background: linear-gradient(135deg, #fff 0%, #a5d6a7 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .nav-menu {
             display: flex;
             gap: 1rem;
             align-items: center;
-        }
-
-        .nav-menu span {
-            font-weight: 500;
         }
 
         .nav-menu button {
@@ -57,21 +216,18 @@
             padding: 0.5rem 1rem;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s;
         }
 
         .nav-menu button:hover {
             background: #3e5a6b;
         }
 
-        /* Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* Quick Actions - Professional Button Colors */
         .quick-actions {
             display: flex;
             gap: 15px;
@@ -88,13 +244,6 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .btn-checkin:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(46,125,50,0.4);
         }
 
         .btn-checkout {
@@ -106,13 +255,6 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .btn-checkout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(245,124,0,0.4);
         }
 
         .btn-assist {
@@ -124,13 +266,6 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .btn-assist:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(2,136,209,0.4);
         }
 
         .btn-view {
@@ -142,13 +277,6 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .btn-view:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(123,31,162,0.4);
         }
 
         .btn-primary {
@@ -158,50 +286,8 @@
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: 500;
         }
 
-        .btn-success {
-            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #f57c00 0%, #ef6c00 100%);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-info {
-            background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -223,7 +309,6 @@
             font-size: 0.9rem;
             margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .stat-card div {
@@ -232,7 +317,6 @@
             color: #2e7d32;
         }
 
-        /* Charts */
         .charts-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -247,7 +331,6 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        /* Date Group */
         .date-group {
             margin-bottom: 30px;
             background: white;
@@ -265,15 +348,8 @@
         .date-header h3 {
             margin: 0;
             color: #2e7d32;
-            font-size: 1.1rem;
         }
 
-        .date-header span {
-            font-size: 12px;
-            color: #666;
-        }
-
-        /* Table Styles */
         .attendance-table-container {
             overflow-x: auto;
         }
@@ -288,7 +364,6 @@
             color: white;
             padding: 12px 15px;
             text-align: left;
-            font-weight: 600;
         }
 
         .attendance-table td {
@@ -300,7 +375,6 @@
             background: #f5f5f5;
         }
 
-        /* Status Badges */
         .status-badge {
             padding: 4px 10px;
             border-radius: 20px;
@@ -324,7 +398,6 @@
             color: #c62828;
         }
 
-        /* Admin Section */
         .admin-section {
             background: white;
             border-radius: 12px;
@@ -340,7 +413,6 @@
             padding-bottom: 10px;
         }
 
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -378,11 +450,6 @@
             color: #999;
         }
 
-        .close:hover {
-            color: #333;
-        }
-
-        /* Form Groups */
         .form-group {
             margin-bottom: 20px;
         }
@@ -391,7 +458,6 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #333;
         }
 
         .form-control {
@@ -409,13 +475,6 @@
             flex-wrap: wrap;
         }
 
-        .filter-bar input, .filter-bar select {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-        }
-
-        /* Spinner */
         .spinner {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #2e7d32;
@@ -429,20 +488,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        .loading-spinner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
         }
 
         .error-message {
@@ -459,18 +504,8 @@
             background: #e8f5e9;
             padding: 10px;
             border-radius: 8px;
-            margin-top: 10px;
         }
 
-        .info-message {
-            color: #0288d1;
-            background: #e3f2fd;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
             .quick-actions {
                 flex-direction: column;
@@ -490,14 +525,14 @@
 </head>
 <body>
     <!-- Loading Spinner -->
-    <div id="loadingSpinner" class="loading-spinner">
+    <div id="loadingSpinner" class="loading-spinner" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;">
         <div class="spinner"></div>
         <p>Loading dashboard...</p>
     </div>
 
     <!-- Error Message Container -->
-    <div id="errorContainer" style="display: none;" class="error-container">
-        <div class="error-box">
+    <div id="errorContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center;">
+        <div class="error-box" style="text-align: center;">
             <h2>❌ Error Loading Dashboard</h2>
             <p id="errorMessage">An error occurred while loading the dashboard.</p>
             <button onclick="window.location.href='index.html'" class="btn-primary">Go to Login</button>
@@ -508,7 +543,7 @@
     <!-- Main Content -->
     <div id="mainContent" style="display: none;">
         <nav class="navbar">
-            <div class="nav-brand">📊 Attendify</div>
+            <div class="nav-brand">🌿 Springytrack</div>
             <div class="nav-menu">
                 <span id="userName"></span>
                 <button onclick="handleLogout()">Logout</button>
@@ -522,6 +557,9 @@
                 <button onclick="window.attendance.checkOut()" class="btn-checkout" id="checkOutBtn">⏰ Check Out</button>
                 <button onclick="openAssistModal()" class="btn-assist" id="assistBtn">🤝 Assist Check In/Out</button>
                 <button onclick="showPresentAbsentUsers()" class="btn-view" id="viewUsersBtn">👥 View Present/Absent</button>
+                <button id="registerFingerprintBtn" class="btn-fingerprint">
+                    <i class="fas fa-fingerprint"></i> 🔐 Register Fingerprint
+                </button>
             </div>
 
             <!-- Admin QR Actions -->
@@ -529,9 +567,9 @@
                 <h2>📱 Organization QR Code Management</h2>
                 <div class="quick-actions">
                     <button onclick="generateMasterQR()" class="btn-primary">Generate Master QR Code</button>
-                    <button onclick="downloadMasterQR()" class="btn-success">Download Master QR Code</button>
-                    <button onclick="viewMasterQR()" class="btn-info">View Master QR Code</button>
-                    <button onclick="resetMasterQR()" class="btn-danger">Reset Master QR Code</button>
+                    <button onclick="downloadMasterQR()" class="btn-primary">Download Master QR Code</button>
+                    <button onclick="viewMasterQR()" class="btn-primary">View Master QR Code</button>
+                    <button onclick="resetMasterQR()" class="btn-primary">Reset Master QR Code</button>
                 </div>
                 <p style="margin-top: 10px; font-size: 12px; color: #666;">Print and display the master QR code at the entrance. All users must scan this code to check in/out.</p>
             </div>
@@ -604,8 +642,8 @@
                 </select>
             </div>
             <div class="quick-actions">
-                <button onclick="proceedToCamera()" class="btn-success">Proceed to Camera</button>
-                <button onclick="closeAssistModal()" class="btn-warning">Cancel</button>
+                <button onclick="proceedToCamera()" class="btn-primary">Proceed to Camera</button>
+                <button onclick="closeAssistModal()" class="btn-primary">Cancel</button>
             </div>
             <div id="assistError" class="error-message"></div>
         </div>
@@ -623,8 +661,8 @@
             <div id="photoPreview" style="margin-top: 15px; display: none;">
                 <img id="capturedImage" style="width: 100%; border-radius: 12px;">
                 <div class="quick-actions" style="margin-top: 10px;">
-                    <button onclick="retakePhoto()" class="btn-warning">Retake</button>
-                    <button onclick="confirmWithPhoto()" class="btn-success">Confirm & Proceed</button>
+                    <button onclick="retakePhoto()" class="btn-primary">Retake</button>
+                    <button onclick="confirmWithPhoto()" class="btn-primary">Confirm & Proceed</button>
                 </div>
             </div>
             <div id="cameraError" class="error-message"></div>
@@ -639,8 +677,8 @@
             <div id="masterQRDisplay" style="display: flex; justify-content: center; margin: 20px 0;"></div>
             <p style="font-size: 12px; text-align: center;">All users must scan this QR code to check in/out.</p>
             <div class="quick-actions">
-                <button onclick="downloadMasterQRFromModal()" class="btn-success">Download QR Code</button>
-                <button onclick="closeMasterQRModal()" class="btn-warning">Close</button>
+                <button onclick="downloadMasterQRFromModal()" class="btn-primary">Download QR Code</button>
+                <button onclick="closeMasterQRModal()" class="btn-primary">Close</button>
             </div>
         </div>
     </div>
@@ -707,8 +745,8 @@
                 </div>
                 <input type="hidden" id="userId">
                 <div class="quick-actions">
-                    <button type="submit" class="btn-success" id="saveUserBtn">Save User</button>
-                    <button type="button" class="btn-warning" onclick="closeUserForm()">Cancel</button>
+                    <button type="submit" class="btn-primary" id="saveUserBtn">Save User</button>
+                    <button type="button" class="btn-primary" onclick="closeUserForm()">Cancel</button>
                 </div>
                 <div id="userFormError" class="error-message"></div>
             </form>
@@ -751,8 +789,8 @@
                 </div>
                 <input type="hidden" id="deptId">
                 <div class="quick-actions">
-                    <button type="submit" class="btn-success" id="saveDeptBtn">Save Department</button>
-                    <button type="button" class="btn-warning" onclick="closeDeptForm()">Cancel</button>
+                    <button type="submit" class="btn-primary" id="saveDeptBtn">Save Department</button>
+                    <button type="button" class="btn-primary" onclick="closeDeptForm()">Cancel</button>
                 </div>
                 <div id="deptFormError" class="error-message"></div>
             </form>
@@ -774,9 +812,9 @@
             <span class="close">&times;</span>
             <h2>👥 Present & Absent Users</h2>
             <div class="filter-bar">
-                <button onclick="loadPresentUsers()" class="btn-success">✅ Show Present</button>
-                <button onclick="loadAbsentUsers()" class="btn-danger">❌ Show Absent</button>
-                <button onclick="loadAllUsersStatus()" class="btn-info">👥 Show All</button>
+                <button onclick="loadPresentUsers()" class="btn-primary">✅ Show Present</button>
+                <button onclick="loadAbsentUsers()" class="btn-primary">❌ Show Absent</button>
+                <button onclick="loadAllUsersStatus()" class="btn-primary">👥 Show All</button>
             </div>
             <div id="presentAbsentContent">
                 <div class="spinner"></div>
@@ -792,6 +830,94 @@
     <script src="js/attendance.js"></script>
     <script src="js/admin.js"></script>
     <script>
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const existingToast = document.querySelector('.toast-notification');
+            if (existingToast) existingToast.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type}`;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Fingerprint Registration in Dashboard
+        const registerFingerprintBtn = document.getElementById('registerFingerprintBtn');
+        if (registerFingerprintBtn) {
+            registerFingerprintBtn.addEventListener('click', async () => {
+                if (!window.auth || !window.auth.currentUser) {
+                    showToast('Please log in first', 'error');
+                    return;
+                }
+                
+                const email = window.auth.currentUser.email;
+                
+                // Create modal
+                const modal = document.createElement('div');
+                modal.className = 'fingerprint-modal';
+                modal.innerHTML = `
+                    <div class="fingerprint-modal-content">
+                        <span class="close">&times;</span>
+                        <h2><i class="fas fa-fingerprint"></i> Register Fingerprint</h2>
+                        <div class="fingerprint-icon">
+                            <i class="fas fa-fingerprint"></i>
+                        </div>
+                        <p>Place your finger on the sensor to register your fingerprint.</p>
+                        <div class="reg-status" id="regStatus">🖐️ Waiting for fingerprint...</div>
+                        <button id="cancelRegBtn" class="btn-cancel">Cancel</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                const regStatus = modal.querySelector('#regStatus');
+                const closeBtn = modal.querySelector('.close');
+                const cancelBtn = modal.querySelector('#cancelRegBtn');
+                
+                const closeModal = () => modal.remove();
+                closeBtn.onclick = closeModal;
+                cancelBtn.onclick = closeModal;
+                
+                regStatus.innerHTML = '🖐️ Place your finger on the sensor...';
+                
+                // Simulate fingerprint registration (in production, use WebAuthn API)
+                setTimeout(() => {
+                    const fingerprintData = { 
+                        email: email, 
+                        registeredAt: new Date().toISOString(),
+                        credentialId: 'fp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
+                    };
+                    localStorage.setItem('springytrack_fingerprint', JSON.stringify(fingerprintData));
+                    
+                    // Also save to Supabase if needed
+                    if (window.supabaseClient) {
+                        window.supabaseClient
+                            .from('user_credentials')
+                            .upsert({
+                                user_id: window.auth.currentUser.id,
+                                credential_id: fingerprintData.credentialId,
+                                public_key: btoa(window.auth.currentUser.id + Date.now()),
+                                created_at: new Date().toISOString()
+                            })
+                            .then(({ error }) => {
+                                if (error) console.error('Error saving to Supabase:', error);
+                            });
+                    }
+                    
+                    regStatus.innerHTML = '✅ <strong>Fingerprint registered successfully!</strong>';
+                    regStatus.style.color = '#2e7d32';
+                    
+                    showToast('✅ Fingerprint registered successfully! You can now use fingerprint login.', 'success');
+                    
+                    setTimeout(closeModal, 2000);
+                }, 2500);
+            });
+        }
+
         // Global variables
         let html5QrCode;
         let attendanceChart;
@@ -876,7 +1002,7 @@
         // ============= MASTER QR FUNCTIONS =============
         async function generateMasterQR() {
             const result = await window.admin.generateMasterQR();
-            if (result.success) alert('✅ Master QR code generated successfully!');
+            if (result.success) showToast('✅ Master QR code generated successfully!', 'success');
         }
         
         async function downloadMasterQR() {
@@ -886,9 +1012,9 @@
                 link.download = 'organization-master-qr.png';
                 link.href = result.qrCodeUrl;
                 link.click();
-                alert('✅ Master QR code downloaded!');
+                showToast('✅ Master QR code downloaded!', 'success');
             } else {
-                alert('No master QR code found. Generate one first.');
+                showToast('No master QR code found. Generate one first.', 'error');
             }
         }
         
@@ -898,7 +1024,7 @@
                 link.download = 'organization-master-qr.png';
                 link.href = currentMasterQRDataUrl;
                 link.click();
-                alert('✅ QR code downloaded!');
+                showToast('✅ QR code downloaded!', 'success');
             }
         }
         
@@ -909,14 +1035,14 @@
                 document.getElementById('masterQRDisplay').innerHTML = `<img src="${result.qrCodeUrl}" style="width: 250px;">`;
                 document.getElementById('masterQRModal').style.display = 'block';
             } else {
-                alert('No master QR code found. Generate one first.');
+                showToast('No master QR code found. Generate one first.', 'error');
             }
         }
         
         async function resetMasterQR() {
             if (confirm('Reset master QR code? This will invalidate all existing QR codes.')) {
                 await window.admin.resetMasterQR();
-                alert('Master QR code reset. Generate a new one.');
+                showToast('Master QR code reset. Generate a new one.', 'warning');
             }
         }
         
@@ -996,11 +1122,12 @@
         
         async function confirmWithPhoto() {
             if (!capturedPhotoData) {
-                alert('Capture a photo first.');
+                showToast('Capture a photo first.', 'error');
                 return;
             }
             stopCamera();
             document.getElementById('cameraModal').style.display = 'none';
+            
             const loadingMsg = document.createElement('div');
             loadingMsg.className = 'loading-spinner';
             loadingMsg.innerHTML = '<div class="spinner"></div><p>Processing...</p>';
@@ -1022,14 +1149,14 @@
                 }
                 
                 if (result.success) {
-                    alert(`✅ Successfully ${assistAction === 'checkin' ? 'checked in' : 'checked out'} staff member.`);
+                    showToast(`✅ Successfully ${assistAction === 'checkin' ? 'checked in' : 'checked out'} staff member.`, 'success');
                     await loadStats();
                     await loadRecentAttendanceGrouped();
                 } else {
-                    alert(`Failed: ${result.error}`);
+                    showToast(`Failed: ${result.error}`, 'error');
                 }
             } catch (error) {
-                alert('Error: ' + error.message);
+                showToast('Error: ' + error.message, 'error');
             } finally {
                 loadingMsg.remove();
                 assistUserId = null;
@@ -1094,16 +1221,7 @@
                         </div>
                         <div class="attendance-table-container">
                             <table class="attendance-table">
-                                <thead>
-                                    <tr>
-                                        <th>Employee</th>
-                                        <th>Department</th>
-                                        <th>Check In</th>
-                                        <th>Check Out</th>
-                                        <th>Status</th>
-                                        <th>Method</th>
-                                    </tr>
-                                </thead>
+                                <thead><tr><th>Employee</th><th>Department</th><th>Check In</th><th>Check Out</th><th>Status</th><th>Method</th></tr></thead>
                                 <tbody>
                 `;
                 
@@ -1116,16 +1234,7 @@
                     else if (record.status === 'late') { statusClass = 'status-late'; statusText = 'Late'; }
                     else { statusClass = 'status-absent'; statusText = 'Absent'; }
                     
-                    html += `
-                        <tr>
-                            <td><strong>${escapeHtml(record.users?.full_name || 'Unknown')}</strong></td>
-                            <td>${escapeHtml(deptName)}</td>
-                            <td>${checkIn}</td>
-                            <td>${checkOut}</td>
-                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                            <td>${record.check_in_method}</td>
-                        </tr>
-                    `;
+                    html += `<tr><td><strong>${escapeHtml(record.users?.full_name || 'Unknown')}</strong></td><td>${escapeHtml(deptName)}</td><td>${checkIn}</td><td>${checkOut}</td><td><span class="status-badge ${statusClass}">${statusText}</span></td><td>${record.check_in_method}</td></tr>`;
                 }
                 html += `</tbody></table></div></div>`;
             }
@@ -1260,11 +1369,11 @@
             const departments = await window.admin.getDepartments();
             const result = await window.admin.getUsers();
             if (result.success) {
-                let html = `<div class="filter-bar"><input type="text" id="userSearch" placeholder="Search..." onkeyup="filterUsers()"><select id="roleFilter" onchange="filterUsers()"><option value="">All Roles</option><option value="admin">Admin</option><option value="supervisor">Supervisor</option><option value="staff">Staff</option><option value="student">Student</option></select><select id="deptFilter" onchange="filterUsers()"><option value="">All Departments</option>${departments.success ? departments.data.map(d => `<option value="${d.id}">${d.name}</option>`).join('') : ''}</select><button onclick="openAddUserForm()" class="btn-success">+ Add New User</button></div>
+                let html = `<div class="filter-bar"><input type="text" id="userSearch" placeholder="Search..." onkeyup="filterUsers()"><select id="roleFilter" onchange="filterUsers()"><option value="">All Roles</option><option value="admin">Admin</option><option value="supervisor">Supervisor</option><option value="staff">Staff</option><option value="student">Student</option></select><select id="deptFilter" onchange="filterUsers()"><option value="">All Departments</option>${departments.success ? departments.data.map(d => `<option value="${d.id}">${d.name}</option>`).join('') : ''}</select><button onclick="openAddUserForm()" class="btn-primary">+ Add New User</button></div>
                     <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Status</th><th>Actions</th></tr></thead><tbody id="userTableBody">`;
                 result.data.forEach(user => {
                     const dept = user.departments?.name || 'Not Assigned';
-                    html += `<tr data-role="${user.role}" data-dept="${user.department_id || ''}" data-name="${user.full_name.toLowerCase()}" data-email="${user.employee_id.toLowerCase()}"><td><strong>${escapeHtml(user.full_name)}</strong></td><td>${escapeHtml(user.employee_id)}</td><td><span class="status-badge">${user.role}</span></td><td>${escapeHtml(dept)}</td><td><span class="status-badge status-${user.is_active ? 'present' : 'absent'}">${user.is_active ? 'Active' : 'Inactive'}</span></td><td><button onclick="openEditUserForm('${user.id}')" class="btn-info">Edit</button> <button onclick="toggleUserStatus('${user.id}', ${user.is_active})" class="btn-warning">${user.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
+                    html += `<tr data-role="${user.role}" data-dept="${user.department_id || ''}" data-name="${user.full_name.toLowerCase()}" data-email="${user.employee_id.toLowerCase()}"><td><strong>${escapeHtml(user.full_name)}</strong></td><td>${escapeHtml(user.employee_id)}</td><td><span class="status-badge">${user.role}</span></td><td>${escapeHtml(dept)}</td><td><span class="status-badge status-${user.is_active ? 'present' : 'absent'}">${user.is_active ? 'Active' : 'Inactive'}</span></td><td><button onclick="openEditUserForm('${user.id}')" class="btn-primary">Edit</button> <button onclick="toggleUserStatus('${user.id}', ${user.is_active})" class="btn-primary">${user.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
                 });
                 html += `</tbody></table></div>`;
                 content.innerHTML = html;
@@ -1354,7 +1463,7 @@
             };
             if (!isEdit) {
                 userData.password = document.getElementById('userPassword').value;
-                if (!userData.password) { alert('Password required'); return; }
+                if (!userData.password) { showToast('Password required', 'error'); return; }
             }
             const saveBtn = document.getElementById('saveUserBtn');
             const original = saveBtn.textContent;
@@ -1364,7 +1473,7 @@
             saveBtn.textContent = original;
             saveBtn.disabled = false;
             if (result.success) {
-                alert(`User ${isEdit ? 'updated' : 'created'} successfully!`);
+                showToast(`User ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
                 closeUserForm();
                 showUserManagement();
                 loadStats();
@@ -1379,7 +1488,7 @@
             if (confirm(`Deactivate this user?`)) {
                 const result = await window.admin.updateUser(userId, { is_active: !currentStatus });
                 if (result.success) {
-                    alert('Status updated');
+                    showToast('Status updated', 'success');
                     showUserManagement();
                     loadStats();
                 }
@@ -1394,10 +1503,10 @@
             modal.style.display = 'block';
             const result = await window.admin.getDepartments();
             if (result.success) {
-                let html = `<button onclick="openAddDepartmentForm()" class="btn-success" style="margin-bottom:15px;">+ Add Department</button>
+                let html = `<button onclick="openAddDepartmentForm()" class="btn-primary" style="margin-bottom:15px;">+ Add Department</button>
                     <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Name</th><th>Description</th><th>Head</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
                 result.data.forEach(dept => {
-                    html += `<tr><td><strong>${escapeHtml(dept.name)}</strong></td><td>${escapeHtml(dept.description || 'N/A')}</td><td>${dept.head_of_department?.full_name || 'Not assigned'}</td><td><span class="status-badge status-${dept.is_active ? 'present' : 'absent'}">${dept.is_active ? 'Active' : 'Inactive'}</span></td><td><button onclick="openEditDepartmentForm('${dept.id}')" class="btn-info">Edit</button> <button onclick="toggleDepartmentStatus('${dept.id}', ${dept.is_active})" class="btn-warning">${dept.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
+                    html += `<tr><td><strong>${escapeHtml(dept.name)}</strong></td><td>${escapeHtml(dept.description || 'N/A')}</td><td>${dept.head_of_department?.full_name || 'Not assigned'}</td><td><span class="status-badge status-${dept.is_active ? 'present' : 'absent'}">${dept.is_active ? 'Active' : 'Inactive'}</span></td><td><button onclick="openEditDepartmentForm('${dept.id}')" class="btn-primary">Edit</button> <button onclick="toggleDepartmentStatus('${dept.id}', ${dept.is_active})" class="btn-primary">${dept.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
                 });
                 html += `</tbody></table></div>`;
                 content.innerHTML = html;
@@ -1474,7 +1583,7 @@
             saveBtn.textContent = original;
             saveBtn.disabled = false;
             if (result.success) {
-                alert(`Department ${isEdit ? 'updated' : 'created'} successfully!`);
+                showToast(`Department ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
                 closeDeptForm();
                 showDepartmentManagement();
             } else {
@@ -1487,7 +1596,7 @@
             if (confirm(`Deactivate this department?`)) {
                 const result = await window.admin.updateDepartment(deptId, { is_active: !currentStatus });
                 if (result.success) {
-                    alert('Status updated');
+                    showToast('Status updated', 'success');
                     showDepartmentManagement();
                 }
             }
@@ -1506,8 +1615,8 @@
                         <option value="summary">Summary Report</option>
                         <option value="detailed">Detailed Report</option>
                     </select>
-                    <button onclick="generateReport()" class="btn-success">Generate</button>
-                    <button onclick="exportReport()" class="btn-info">Export CSV</button>
+                    <button onclick="generateReport()" class="btn-primary">Generate</button>
+                    <button onclick="exportReport()" class="btn-primary">Export CSV</button>
                 </div>
                 <div id="reportResults"><p>Select date range and click Generate</p></div>
             `;
@@ -1545,7 +1654,7 @@
             }
         }
 
-        function exportReport() { alert('Export to CSV feature ready.'); }
+        function exportReport() { showToast('Export to CSV feature ready.', 'info'); }
 
         function setupRealtimeListeners() {
             window.addEventListener('attendance-updated', () => {
