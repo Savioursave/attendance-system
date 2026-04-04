@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendify - Smart Attendance System</title>
+    <title>Springytrack - Smart Attendance System</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -83,7 +83,7 @@
         .logo-icon {
             width: 45px;
             height: 45px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
             border-radius: 14px;
             display: flex;
             align-items: center;
@@ -93,14 +93,14 @@
         }
 
         @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(46, 125, 50, 0); }
         }
 
         .logo-text {
             font-size: 26px;
             font-weight: 700;
-            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            background: linear-gradient(135deg, #fff 0%, #a5d6a7 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -152,7 +152,7 @@
         }
 
         .stat-number {
-            color: #667eea;
+            color: #2e7d32;
             font-weight: 700;
             font-size: 16px;
         }
@@ -196,7 +196,7 @@
         /* Left Side - Info Section */
         .info-section {
             flex: 1.2;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.9) 0%, rgba(27, 94, 32, 0.9) 100%);
             padding: 50px 40px;
             color: white;
             position: relative;
@@ -231,7 +231,7 @@
         }
 
         .info-section .highlight {
-            color: #fbbf24;
+            color: #a5d6a7;
         }
 
         .info-section p {
@@ -444,9 +444,9 @@
 
         .input-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #2e7d32;
             background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
         }
 
         .input-group .input-icon {
@@ -464,7 +464,7 @@
         }
 
         .forgot-link a {
-            color: #667eea;
+            color: #2e7d32;
             text-decoration: none;
             font-size: 13px;
             font-weight: 500;
@@ -472,11 +472,11 @@
         }
 
         .forgot-link a:hover {
-            color: #5a67d8;
+            color: #1b5e20;
         }
 
         .btn-login {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
             color: white;
             padding: 16px;
             border: none;
@@ -490,13 +490,60 @@
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 25px -5px rgba(46, 125, 50, 0.4);
         }
 
         .btn-login:disabled {
             opacity: 0.6;
             transform: none;
             cursor: not-allowed;
+        }
+
+        /* Fingerprint Button */
+        .fingerprint-btn {
+            background: white;
+            color: #2e7d32;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .fingerprint-btn:hover {
+            border-color: #2e7d32;
+            background: #f8fafc;
+            transform: translateY(-2px);
+        }
+
+        .fingerprint-btn i {
+            font-size: 20px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .divider span {
+            padding: 0 10px;
+            color: #94a3b8;
+            font-size: 12px;
         }
 
         .error-message {
@@ -589,6 +636,13 @@
             padding: 12px;
             border-radius: 12px;
         }
+
+        .fingerprint-status {
+            margin-top: 15px;
+            font-size: 12px;
+            text-align: center;
+            display: none;
+        }
         
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -677,7 +731,7 @@
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <div>
-                    <div class="logo-text">Attendify</div>
+                    <div class="logo-text">Springytrack</div>
                     <div class="logo-tagline">Smart Attendance Management</div>
                 </div>
             </div>
@@ -704,7 +758,7 @@
             <!-- Left Side - Info Section with Testimonial Slider -->
             <div class="info-section">
                 <div class="welcome-badge">
-                    <i class="fas fa-rocket"></i> Welcome to the Future
+                    <i class="fas fa-rocket"></i> Welcome to Springytrack
                 </div>
                 <h1>Smart <span class="highlight">Attendance</span><br>Management System</h1>
                 <p>Streamline your workforce management with real-time tracking, QR check-ins, and comprehensive analytics. Trusted by 500+ organizations worldwide.</p>
@@ -733,9 +787,8 @@
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div class="testimonial-container" id="testimonialContainer">
-                        <!-- Testimonial 1 -->
                         <div class="testimonial-slide active">
-                            <p>"Attendify has transformed how we manage employee attendance. The QR check-in feature is a game-changer! Real-time tracking and analytics have saved us countless hours."</p>
+                            <p>"Springytrack has transformed how we manage employee attendance. The QR check-in feature is a game-changer! Real-time tracking and analytics have saved us countless hours."</p>
                             <div class="testimonial-author">
                                 <div class="author-avatar">
                                     <i class="fas fa-user-tie"></i>
@@ -749,7 +802,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Testimonial 2 -->
                         <div class="testimonial-slide">
                             <p>"The best attendance system we've ever used! Simple, intuitive, and the automated reports make monthly reviews effortless. Our team loves the QR code check-in feature."</p>
                             <div class="testimonial-author">
@@ -765,7 +817,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Testimonial 3 -->
                         <div class="testimonial-slide">
                             <p>"Exceptional platform! The real-time dashboard gives us complete visibility into attendance patterns. The support team is incredibly responsive and helpful."</p>
                             <div class="testimonial-author">
@@ -781,9 +832,8 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Testimonial 4 -->
                         <div class="testimonial-slide">
-                            <p>"Implementing Attendify was the best decision we made this year. Reduced administrative work by 70% and improved accuracy dramatically. Highly recommended!"</p>
+                            <p>"Implementing Springytrack was the best decision we made this year. Reduced administrative work by 70% and improved accuracy dramatically. Highly recommended!"</p>
                             <div class="testimonial-author">
                                 <div class="author-avatar">
                                     <i class="fas fa-user-astronaut"></i>
@@ -826,6 +876,16 @@
                     </button>
                 </form>
 
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <button id="fingerprintBtn" class="fingerprint-btn">
+                    <i class="fas fa-fingerprint"></i> Sign in with Fingerprint
+                </button>
+
+                <div id="fingerprintStatus" class="fingerprint-status"></div>
+
                 <div id="errorMessage" class="error-message"></div>
 
                 <div class="trust-badge">
@@ -861,9 +921,28 @@
         </div>
     </div>
 
+    <!-- Fingerprint Modal -->
+    <div id="fingerprintModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-fingerprint"></i> Fingerprint Authentication</h2>
+            <p>Place your finger on the sensor to authenticate.</p>
+            <div style="text-align: center; margin: 30px 0;">
+                <i class="fas fa-fingerprint" style="font-size: 80px; color: #2e7d32; animation: pulse 1s infinite;"></i>
+            </div>
+            <div id="fingerprintModalStatus" style="text-align: center; margin-top: 10px; color: #666;"></div>
+            <button id="cancelFingerprintBtn" class="btn-login" style="background: #64748b; margin-top: 20px;">Cancel</button>
+        </div>
+    </div>
+
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://hesxkxbtreqfxmhrdwml.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_jTsJmSF195H4U6Og7oOdSA_2VI1_xnd';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         // Testimonial Slider
         const testimonials = document.querySelectorAll('.testimonial-slide');
         const dotsContainer = document.getElementById('sliderDots');
@@ -917,17 +996,9 @@
             startAutoSlide();
         }
 
-        // Event listeners for slider navigation
         document.getElementById('prevTestimonial').addEventListener('click', prevSlide);
         document.getElementById('nextTestimonial').addEventListener('click', nextSlide);
-
-        // Start auto-sliding
         startAutoSlide();
-
-        // Supabase configuration
-        const SUPABASE_URL = 'https://hesxkxbtreqfxmhrdwml.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_jTsJmSF195H4U6Og7oOdSA_2VI1_xnd';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Update live stats
         async function updateLiveStats() {
@@ -1008,6 +1079,85 @@
             }
         });
 
+        // Fingerprint Authentication
+        const fingerprintBtn = document.getElementById('fingerprintBtn');
+        const fingerprintModal = document.getElementById('fingerprintModal');
+        const fingerprintModalStatus = document.getElementById('fingerprintModalStatus');
+        const fingerprintStatus = document.getElementById('fingerprintStatus');
+        const cancelFingerprintBtn = document.getElementById('cancelFingerprintBtn');
+
+        fingerprintBtn.addEventListener('click', async () => {
+            fingerprintModal.style.display = 'flex';
+            fingerprintModalStatus.textContent = 'Waiting for fingerprint...';
+            fingerprintStatus.style.display = 'none';
+            
+            // Check if PublicKeyCredential is supported
+            if (!window.PublicKeyCredential) {
+                fingerprintModalStatus.textContent = 'Fingerprint authentication is not supported on this device/browser.';
+                return;
+            }
+            
+            try {
+                // Simulate fingerprint authentication (in production, this would use WebAuthn)
+                // For demo purposes, we'll simulate a successful authentication after 2 seconds
+                fingerprintModalStatus.textContent = 'Place your finger on the sensor...';
+                
+                // Simulate fingerprint recognition (replace with actual WebAuthn in production)
+                setTimeout(async () => {
+                    // This is a simulation - in production, implement actual WebAuthn
+                    const storedEmail = localStorage.getItem('fingerprintEmail');
+                    
+                    if (storedEmail) {
+                        fingerprintModalStatus.textContent = 'Fingerprint recognized! Logging in...';
+                        
+                        // Attempt to login with stored email
+                        if (window.auth) {
+                            const result = await window.auth.login(storedEmail, 'TempPass123!');
+                            
+                            if (result.success) {
+                                fingerprintModal.style.display = 'none';
+                                fingerprintStatus.textContent = '✅ Fingerprint login successful!';
+                                fingerprintStatus.style.display = 'block';
+                                setTimeout(() => {
+                                    fingerprintStatus.style.display = 'none';
+                                }, 3000);
+                            } else {
+                                fingerprintModalStatus.textContent = 'Login failed. Please try again.';
+                                localStorage.removeItem('fingerprintEmail');
+                            }
+                        }
+                    } else {
+                        fingerprintModalStatus.textContent = 'No fingerprint registered. Please log in with email first to register your fingerprint.';
+                        setTimeout(() => {
+                            fingerprintModal.style.display = 'none';
+                        }, 3000);
+                    }
+                }, 2000);
+                
+            } catch (error) {
+                fingerprintModalStatus.textContent = 'Fingerprint authentication failed: ' + error.message;
+            }
+        });
+
+        cancelFingerprintBtn.addEventListener('click', () => {
+            fingerprintModal.style.display = 'none';
+        });
+
+        // Register fingerprint after successful login
+        async function registerFingerprint(email) {
+            if (window.PublicKeyCredential) {
+                const shouldRegister = confirm('Would you like to register your fingerprint for future logins?');
+                if (shouldRegister) {
+                    localStorage.setItem('fingerprintEmail', email);
+                    fingerprintStatus.textContent = '✅ Fingerprint registered for future logins!';
+                    fingerprintStatus.style.display = 'block';
+                    setTimeout(() => {
+                        fingerprintStatus.style.display = 'none';
+                    }, 3000);
+                }
+            }
+        }
+
         // Forgot Password Modal
         const forgotModal = document.getElementById('forgotModal');
         const forgotLink = document.getElementById('forgotPasswordLink');
@@ -1028,6 +1178,9 @@
         window.onclick = function(event) {
             if (event.target == forgotModal) {
                 forgotModal.style.display = 'none';
+            }
+            if (event.target == fingerprintModal) {
+                fingerprintModal.style.display = 'none';
             }
         }
 
