@@ -17,13 +17,13 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 50%, #16213e 100%);
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Animated Particles Background */
-        .particles {
+        /* Animated Gradient Background */
+        .animated-bg {
             position: fixed;
             top: 0;
             left: 0;
@@ -33,23 +33,97 @@
             overflow: hidden;
         }
 
-        .particle {
+        .gradient-orb {
             position: absolute;
-            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            animation: float 15s infinite ease-in-out;
+            filter: blur(80px);
+            animation: float 20s infinite ease-in-out;
         }
 
-        .particle:nth-child(1) { width: 300px; height: 300px; top: -100px; left: -100px; animation-delay: 0s; }
-        .particle:nth-child(2) { width: 500px; height: 500px; bottom: -200px; right: -150px; animation-delay: 2s; }
-        .particle:nth-child(3) { width: 200px; height: 200px; top: 40%; left: 10%; animation-delay: 4s; }
-        .particle:nth-child(4) { width: 400px; height: 400px; bottom: 10%; right: 5%; animation-delay: 6s; }
-        .particle:nth-child(5) { width: 150px; height: 150px; top: 60%; right: 20%; animation-delay: 8s; }
-        .particle:nth-child(6) { width: 250px; height: 250px; top: 20%; right: 35%; animation-delay: 10s; }
+        .gradient-orb:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(46, 125, 50, 0.3) 0%, rgba(27, 94, 32, 0) 70%);
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .gradient-orb:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(100, 108, 255, 0.25) 0%, rgba(100, 108, 255, 0) 70%);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: 5s;
+        }
+
+        .gradient-orb:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0) 70%);
+            top: 40%;
+            left: 20%;
+            animation-delay: 3s;
+        }
+
+        .gradient-orb:nth-child(4) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, rgba(236, 72, 153, 0) 70%);
+            bottom: 20%;
+            right: 15%;
+            animation-delay: 8s;
+        }
+
+        .gradient-orb:nth-child(5) {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, rgba(6, 182, 212, 0) 70%);
+            top: 60%;
+            right: 30%;
+            animation-delay: 12s;
+        }
+
+        .gradient-orb:nth-child(6) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0) 70%);
+            top: 10%;
+            right: 10%;
+            animation-delay: 7s;
+        }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-            50% { transform: translateY(-40px) rotate(10deg) scale(1.05); }
+            0%, 100% {
+                transform: translateY(0) translateX(0) scale(1);
+            }
+            25% {
+                transform: translateY(-40px) translateX(30px) scale(1.05);
+            }
+            50% {
+                transform: translateY(20px) translateX(-20px) scale(0.95);
+            }
+            75% {
+                transform: translateY(-20px) translateX(40px) scale(1.02);
+            }
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            animation: particleFloat 25s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            from {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            to {
+                transform: translateY(-100vh) rotate(360deg);
+            }
         }
 
         /* Glassmorphism Header */
@@ -58,9 +132,9 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             z-index: 100;
             padding: 12px 40px;
             animation: slideDown 0.6s ease-out;
@@ -117,7 +191,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             padding: 8px 16px;
             border-radius: 40px;
             cursor: pointer;
@@ -125,7 +199,7 @@
         }
 
         .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .theme-icon {
@@ -173,8 +247,8 @@
             display: flex;
             max-width: 1200px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
             border-radius: 40px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -196,7 +270,8 @@
         /* Left Side - Info Section */
         .info-section {
             flex: 1.2;
-            background: linear-gradient(135deg, rgba(46, 125, 50, 0.9) 0%, rgba(27, 94, 32, 0.9) 100%);
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.85) 0%, rgba(27, 94, 32, 0.85) 100%);
+            backdrop-filter: blur(10px);
             padding: 50px 40px;
             color: white;
             position: relative;
@@ -215,7 +290,7 @@
 
         .welcome-badge {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             padding: 6px 16px;
             border-radius: 40px;
             font-size: 12px;
@@ -514,6 +589,7 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
+            width: 100%;
         }
 
         .fingerprint-btn:hover {
@@ -713,14 +789,14 @@
     </style>
 </head>
 <body>
-    <!-- Animated Particles Background -->
-    <div class="particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
+    <!-- Animated Gradient Background -->
+    <div class="animated-bg">
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
     </div>
 
     <!-- Glassmorphism Header -->
@@ -755,7 +831,7 @@
 
     <div class="container">
         <div class="login-card">
-            <!-- Left Side - Info Section with Testimonial Slider -->
+            <!-- Left Side - Info Section -->
             <div class="info-section">
                 <div class="welcome-badge">
                     <i class="fas fa-rocket"></i> Welcome to Springytrack
@@ -778,7 +854,7 @@
                     </div>
                 </div>
 
-                <!-- Professional Testimonial Slider -->
+                <!-- Testimonial Slider -->
                 <div class="testimonial-slider">
                     <div class="slider-nav prev" id="prevTestimonial">
                         <i class="fas fa-chevron-left"></i>
@@ -949,7 +1025,6 @@
         let currentIndex = 0;
         let slideInterval;
 
-        // Create dots
         testimonials.forEach((_, index) => {
             const dot = document.createElement('div');
             dot.classList.add('dot');
@@ -1029,7 +1104,7 @@
         themeToggle.addEventListener('click', () => {
             isDark = !isDark;
             if (isDark) {
-                document.body.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)';
+                document.body.style.background = 'linear-gradient(135deg, #0f172a 0%, #1a1a2e 50%, #16213e 100%)';
                 themeToggle.querySelector('.theme-icon').className = 'fas fa-sun theme-icon';
             } else {
                 document.body.style.background = 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)';
@@ -1065,7 +1140,10 @@
             try {
                 const result = await window.auth.login(email, password);
                 
-                if (!result.success) {
+                if (result.success) {
+                    // Register fingerprint after successful login
+                    registerFingerprint(email);
+                } else {
                     errorDiv.textContent = result.error;
                     errorDiv.style.display = 'block';
                     loginBtn.disabled = false;
@@ -1078,6 +1156,32 @@
                 loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
             }
         });
+
+        // Register fingerprint after successful login
+        function registerFingerprint(email) {
+            if (window.PublicKeyCredential) {
+                setTimeout(() => {
+                    const shouldRegister = confirm('✅ Login successful!\n\nWould you like to register your fingerprint for faster future logins?');
+                    if (shouldRegister) {
+                        localStorage.setItem('fingerprintEmail', email);
+                        const fingerprintStatus = document.getElementById('fingerprintStatus');
+                        fingerprintStatus.textContent = '✅ Fingerprint registered for future logins!';
+                        fingerprintStatus.style.display = 'block';
+                        setTimeout(() => {
+                            fingerprintStatus.style.display = 'none';
+                        }, 3000);
+                    }
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                }, 500);
+            } else {
+                // Redirect to dashboard without fingerprint registration
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 500);
+            }
+        }
 
         // Fingerprint Authentication
         const fingerprintBtn = document.getElementById('fingerprintBtn');
@@ -1098,32 +1202,31 @@
             }
             
             try {
-                // Simulate fingerprint authentication (in production, this would use WebAuthn)
-                // For demo purposes, we'll simulate a successful authentication after 2 seconds
                 fingerprintModalStatus.textContent = 'Place your finger on the sensor...';
                 
-                // Simulate fingerprint recognition (replace with actual WebAuthn in production)
+                // Simulate fingerprint recognition
                 setTimeout(async () => {
-                    // This is a simulation - in production, implement actual WebAuthn
                     const storedEmail = localStorage.getItem('fingerprintEmail');
                     
                     if (storedEmail) {
                         fingerprintModalStatus.textContent = 'Fingerprint recognized! Logging in...';
                         
-                        // Attempt to login with stored email
                         if (window.auth) {
                             const result = await window.auth.login(storedEmail, 'TempPass123!');
                             
                             if (result.success) {
                                 fingerprintModal.style.display = 'none';
-                                fingerprintStatus.textContent = '✅ Fingerprint login successful!';
+                                fingerprintStatus.textContent = '✅ Fingerprint login successful! Redirecting...';
                                 fingerprintStatus.style.display = 'block';
                                 setTimeout(() => {
-                                    fingerprintStatus.style.display = 'none';
-                                }, 3000);
+                                    window.location.href = 'dashboard.html';
+                                }, 1000);
                             } else {
                                 fingerprintModalStatus.textContent = 'Login failed. Please try again.';
                                 localStorage.removeItem('fingerprintEmail');
+                                setTimeout(() => {
+                                    fingerprintModal.style.display = 'none';
+                                }, 2000);
                             }
                         }
                     } else {
@@ -1142,21 +1245,6 @@
         cancelFingerprintBtn.addEventListener('click', () => {
             fingerprintModal.style.display = 'none';
         });
-
-        // Register fingerprint after successful login
-        async function registerFingerprint(email) {
-            if (window.PublicKeyCredential) {
-                const shouldRegister = confirm('Would you like to register your fingerprint for future logins?');
-                if (shouldRegister) {
-                    localStorage.setItem('fingerprintEmail', email);
-                    fingerprintStatus.textContent = '✅ Fingerprint registered for future logins!';
-                    fingerprintStatus.style.display = 'block';
-                    setTimeout(() => {
-                        fingerprintStatus.style.display = 'none';
-                    }, 3000);
-                }
-            }
-        }
 
         // Forgot Password Modal
         const forgotModal = document.getElementById('forgotModal');
