@@ -37,62 +37,62 @@
             position: absolute;
             border-radius: 50%;
             filter: blur(60px);
-            opacity: 0.6;
-            animation: floatOrb 20s infinite ease-in-out;
+            opacity: 0.5;
+            animation: floatOrb 25s infinite ease-in-out;
         }
 
         .orb-1 {
-            width: 400px;
-            height: 400px;
+            width: 500px;
+            height: 500px;
             background: radial-gradient(circle, rgba(46, 125, 50, 0.4) 0%, rgba(27, 94, 32, 0.1) 100%);
-            top: -100px;
-            left: -100px;
+            top: -150px;
+            left: -150px;
             animation-delay: 0s;
         }
 
         .orb-2 {
-            width: 500px;
-            height: 500px;
+            width: 600px;
+            height: 600px;
             background: radial-gradient(circle, rgba(33, 150, 243, 0.3) 0%, rgba(25, 118, 210, 0.1) 100%);
-            bottom: -150px;
-            right: -150px;
-            animation-delay: 3s;
+            bottom: -200px;
+            right: -200px;
+            animation-delay: 5s;
         }
 
         .orb-3 {
-            width: 300px;
-            height: 300px;
+            width: 350px;
+            height: 350px;
             background: radial-gradient(circle, rgba(156, 39, 176, 0.3) 0%, rgba(123, 31, 162, 0.1) 100%);
-            top: 40%;
-            left: 20%;
-            animation-delay: 6s;
+            top: 30%;
+            left: 15%;
+            animation-delay: 10s;
         }
 
         .orb-4 {
-            width: 350px;
-            height: 350px;
+            width: 450px;
+            height: 450px;
             background: radial-gradient(circle, rgba(0, 188, 212, 0.3) 0%, rgba(0, 150, 136, 0.1) 100%);
-            bottom: 20%;
-            right: 10%;
-            animation-delay: 9s;
+            bottom: 15%;
+            right: 5%;
+            animation-delay: 15s;
         }
 
         .orb-5 {
-            width: 250px;
-            height: 250px;
+            width: 300px;
+            height: 300px;
             background: radial-gradient(circle, rgba(255, 152, 0, 0.25) 0%, rgba(255, 87, 34, 0.1) 100%);
             top: 60%;
-            right: 25%;
-            animation-delay: 12s;
+            right: 20%;
+            animation-delay: 20s;
         }
 
         .orb-6 {
-            width: 450px;
-            height: 450px;
+            width: 400px;
+            height: 400px;
             background: radial-gradient(circle, rgba(76, 175, 80, 0.25) 0%, rgba(56, 142, 60, 0.1) 100%);
             top: 10%;
-            right: -150px;
-            animation-delay: 15s;
+            right: -100px;
+            animation-delay: 25s;
         }
 
         @keyframes floatOrb {
@@ -100,14 +100,45 @@
                 transform: translate(0, 0) scale(1);
             }
             25% {
-                transform: translate(50px, -30px) scale(1.05);
+                transform: translate(80px, -50px) scale(1.1);
             }
             50% {
-                transform: translate(-30px, 50px) scale(0.95);
+                transform: translate(-50px, 80px) scale(0.9);
             }
             75% {
-                transform: translate(30px, 30px) scale(1.02);
+                transform: translate(50px, 50px) scale(1.05);
             }
+        }
+
+        /* Animated Lines */
+        .line-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .moving-line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(46, 125, 50, 0.3), transparent);
+            height: 2px;
+            width: 100%;
+            animation: moveLine 15s linear infinite;
+        }
+
+        .moving-line:nth-child(1) { top: 15%; animation-delay: 0s; }
+        .moving-line:nth-child(2) { top: 35%; animation-delay: 3s; }
+        .moving-line:nth-child(3) { top: 55%; animation-delay: 6s; }
+        .moving-line:nth-child(4) { top: 75%; animation-delay: 9s; }
+        .moving-line:nth-child(5) { top: 85%; animation-delay: 12s; }
+
+        @keyframes moveLine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         /* Glassmorphism Header */
@@ -152,7 +183,7 @@
 
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(46, 125, 50, 0); }
+            50% { box-shadow: 0 0 0 15px rgba(46, 125, 50, 0); }
         }
 
         .logo-text {
@@ -618,6 +649,12 @@
             transform: scale(1.1);
         }
 
+        .biometric-btn.disabled, .biometric-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .divider {
             display: flex;
             align-items: center;
@@ -829,6 +866,15 @@
         <div class="orb orb-4"></div>
         <div class="orb orb-5"></div>
         <div class="orb orb-6"></div>
+    </div>
+
+    <!-- Animated Lines -->
+    <div class="line-container">
+        <div class="moving-line"></div>
+        <div class="moving-line"></div>
+        <div class="moving-line"></div>
+        <div class="moving-line"></div>
+        <div class="moving-line"></div>
     </div>
 
     <!-- Glassmorphism Header -->
@@ -1053,64 +1099,50 @@
         // BIOMETRIC AUTHENTICATION SYSTEM
         // ============================================
         
-        // Biometric storage key
-        const BIOMETRIC_KEY = 'springytrack_biometric_registered';
-        const BIOMETRIC_EMAIL_KEY = 'springytrack_biometric_email';
-        
-        // Check if biometric is registered
-        function isBiometricRegistered() {
-            return localStorage.getItem(BIOMETRIC_KEY) === 'true';
-        }
-        
-        // Get registered biometric email
-        function getBiometricEmail() {
-            return localStorage.getItem(BIOMETRIC_EMAIL_KEY);
-        }
-        
-        // Register biometric after successful login
-        async function registerBiometric(email) {
-            return new Promise((resolve) => {
-                // Show biometric registration modal
-                const modal = document.getElementById('biometricModal');
-                const message = document.getElementById('biometricModalMessage');
-                const statusDiv = document.getElementById('biometricModalStatus');
+        // Check if user has biometric device registered in Supabase
+        async function checkBiometricStatusForUser(email) {
+            try {
+                // First get the user ID from email
+                const { data: userData, error: userError } = await supabaseClient
+                    .from('users')
+                    .select('id')
+                    .eq('employee_id', email)
+                    .single();
                 
-                message.textContent = 'Place your finger on the sensor to register your fingerprint.';
-                statusDiv.textContent = '';
-                modal.style.display = 'flex';
+                if (userError || !userData) {
+                    console.log('User not found:', userError);
+                    return false;
+                }
                 
-                // Simulate biometric registration (in production, use WebAuthn API)
-                setTimeout(() => {
-                    if (confirm('Place your finger on the sensor to complete registration.')) {
-                        // Successful registration
-                        localStorage.setItem(BIOMETRIC_KEY, 'true');
-                        localStorage.setItem(BIOMETRIC_EMAIL_KEY, email);
-                        statusDiv.textContent = '✅ Fingerprint registered successfully!';
-                        statusDiv.style.color = '#166534';
-                        
-                        setTimeout(() => {
-                            modal.style.display = 'none';
-                            resolve(true);
-                        }, 2000);
-                    } else {
-                        statusDiv.textContent = 'Registration cancelled.';
-                        statusDiv.style.color = '#dc2626';
-                        setTimeout(() => {
-                            modal.style.display = 'none';
-                            resolve(false);
-                        }, 1500);
-                    }
-                }, 1500);
-            });
+                // Check if user has active biometric device
+                const { data, error } = await supabaseClient
+                    .from('biometric_devices')
+                    .select('id, device_name, is_active')
+                    .eq('user_id', userData.id)
+                    .eq('is_active', true)
+                    .maybeSingle();
+                
+                if (error) {
+                    console.error('Error checking biometric:', error);
+                    return false;
+                }
+                
+                return !!data;
+            } catch (error) {
+                console.error('Error checking biometric status:', error);
+                return false;
+            }
         }
         
         // Authenticate with biometric
-        async function authenticateWithBiometric() {
-            return new Promise((resolve) => {
-                // Check if biometric is registered
-                if (!isBiometricRegistered()) {
+        async function authenticateWithBiometric(email) {
+            return new Promise(async (resolve) => {
+                // Check if biometric is registered for this user
+                const hasBiometric = await checkBiometricStatusForUser(email);
+                
+                if (!hasBiometric) {
                     const statusDiv = document.getElementById('biometricStatus');
-                    statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Biometric authentication not set up. Please log in with email first to register.';
+                    statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Biometric authentication not set up for this account. Please log in with email first to register.';
                     statusDiv.style.display = 'block';
                     statusDiv.style.color = '#dc2626';
                     setTimeout(() => {
@@ -1129,18 +1161,17 @@
                 statusDiv.textContent = '';
                 modal.style.display = 'flex';
                 
-                // Simulate biometric authentication (in production, use WebAuthn API)
+                // Simulate biometric authentication
                 setTimeout(async () => {
-                    // Simulate successful authentication
-                    const registeredEmail = getBiometricEmail();
+                    statusDiv.innerHTML = '<div class="biometric-spinner"></div> Verifying fingerprint...';
                     
-                    if (registeredEmail) {
-                        statusDiv.textContent = '✅ Biometric verified! Logging in...';
+                    setTimeout(async () => {
+                        statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> ✅ Biometric verified! Logging in...';
                         statusDiv.style.color = '#166534';
                         
-                        // Attempt to login with the registered email
+                        // Attempt to login with the email
                         if (window.auth) {
-                            const result = await window.auth.login(registeredEmail, 'TempPass123!');
+                            const result = await window.auth.login(email, 'TempPass123!');
                             
                             if (result.success) {
                                 setTimeout(() => {
@@ -1148,7 +1179,7 @@
                                     resolve(true);
                                 }, 1000);
                             } else {
-                                statusDiv.textContent = '❌ Login failed. Please try again.';
+                                statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ❌ Login failed. Please try again.';
                                 statusDiv.style.color = '#dc2626';
                                 setTimeout(() => {
                                     modal.style.display = 'none';
@@ -1156,29 +1187,16 @@
                                 }, 2000);
                             }
                         } else {
-                            statusDiv.textContent = '❌ Authentication system not ready.';
+                            statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ❌ Authentication system not ready.';
                             statusDiv.style.color = '#dc2626';
                             setTimeout(() => {
                                 modal.style.display = 'none';
                                 resolve(false);
                             }, 2000);
                         }
-                    } else {
-                        statusDiv.textContent = '❌ No registered fingerprint found.';
-                        statusDiv.style.color = '#dc2626';
-                        setTimeout(() => {
-                            modal.style.display = 'none';
-                            resolve(false);
-                        }, 2000);
-                    }
-                }, 2000);
+                    }, 1500);
+                }, 500);
             });
-        }
-        
-        // Remove biometric registration (logout)
-        function clearBiometricRegistration() {
-            // Don't clear on logout - keep for next session
-            // Only clear if user explicitly wants to
         }
 
         // ============================================
@@ -1315,17 +1333,6 @@
                     errorDiv.style.display = 'block';
                     loginBtn.disabled = false;
                     loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
-                } else {
-                    // After successful login, check if biometric is already registered
-                    if (!isBiometricRegistered()) {
-                        // Ask user to register biometric
-                        setTimeout(async () => {
-                            const shouldRegister = confirm('Would you like to register your fingerprint for faster future logins?');
-                            if (shouldRegister) {
-                                await registerBiometric(email);
-                            }
-                        }, 1000);
-                    }
                 }
             } catch (error) {
                 errorDiv.textContent = 'An unexpected error occurred';
@@ -1344,8 +1351,19 @@
         const cancelBiometricBtn = document.getElementById('cancelBiometricBtn');
         
         biometricBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
             const statusDiv = document.getElementById('biometricStatus');
             statusDiv.style.display = 'none';
+            
+            if (!email) {
+                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please enter your email address first.';
+                statusDiv.style.display = 'block';
+                statusDiv.style.color = '#dc2626';
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 3000);
+                return;
+            }
             
             // Check if device supports biometric authentication
             if (!window.PublicKeyCredential) {
@@ -1358,23 +1376,10 @@
                 return;
             }
             
-            // Check if biometric is registered
-            if (!isBiometricRegistered()) {
-                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Biometric authentication not set up. Please log in with email first to register.';
-                statusDiv.style.display = 'block';
-                statusDiv.style.color = '#dc2626';
-                setTimeout(() => {
-                    statusDiv.style.display = 'none';
-                }, 4000);
-                return;
-            }
-            
             // Start authentication
-            const authenticated = await authenticateWithBiometric();
+            const authenticated = await authenticateWithBiometric(email);
             
             if (authenticated) {
-                // Login will be handled by the auth state change in auth.js
-                // The page will redirect to dashboard
                 const statusDiv = document.getElementById('biometricStatus');
                 statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Biometric login successful! Redirecting...';
                 statusDiv.style.display = 'block';

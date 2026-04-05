@@ -50,6 +50,8 @@ class AuthManager {
         if (!this.currentUser) return;
 
         try {
+            console.log('Loading user profile for:', this.currentUser.id);
+            
             const { data: profile, error } = await this.supabase
                 .from('users')
                 .select(`
@@ -64,6 +66,31 @@ class AuthManager {
 
             if (error) {
                 console.error('Error loading profile:', error);
+                // If profile doesn't exist, create a default one
+                if (error.code === 'PGRST116') {
+                    console.log('Profile not found, creating default profile...');
+                    const { data: newProfile, error: insertError } = await this.supabase
+                        .from('users')
+                        .insert([{
+                            id: this.currentUser.id,
+                            employee_id: this.currentUser.email,
+                            full_name: this.currentUser.user_metadata?.full_name || this.currentUser.email.split('@')[0],
+                            role: 'staff',
+                            is_active: true
+                        }])
+                        .select()
+                        .single();
+                    
+                    if (insertError) {
+                        console.error('Error creating profile:', insertError);
+                        return;
+                    }
+                    
+                    this.currentUser.profile = newProfile;
+                    console.log('Profile created successfully:', newProfile);
+                    this.updateUIBasedOnRole(newProfile.role);
+                    return;
+                }
                 return;
             }
 
@@ -169,6 +196,7 @@ class AuthManager {
     }
 
     updateUIBasedOnRole(role) {
+        console.log('Updating UI based on role:', role);
         document.querySelectorAll('[data-role]').forEach(element => {
             const requiredRole = element.dataset.role;
             if (!hasRole(role, requiredRole)) {

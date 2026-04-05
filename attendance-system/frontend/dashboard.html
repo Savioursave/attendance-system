@@ -877,9 +877,12 @@
         let videoElement = null;
         let canvasElement = null;
 
-        // Biometric storage keys (will be synced with Supabase)
+        // Biometric variables
         let isBiometricRegistered = false;
         let biometricDeviceId = null;
+
+        // Supabase client
+        const supabaseClient = window.supabaseClient;
 
         // Show toast notification
         function showToast(message, type = 'success') {
@@ -901,14 +904,17 @@
                 const user = window.auth?.currentUser;
                 if (!user) return false;
                 
-                const { data, error } = await window.supabaseClient
+                const { data, error } = await supabaseClient
                     .from('biometric_devices')
                     .select('id, device_name, is_active')
                     .eq('user_id', user.id)
                     .eq('is_active', true)
                     .maybeSingle();
                 
-                if (error) throw error;
+                if (error) {
+                    console.error('Error checking biometric:', error);
+                    return false;
+                }
                 
                 if (data) {
                     isBiometricRegistered = true;
@@ -934,7 +940,7 @@
             const credentialId = btoa(`${user.id}-${Date.now()}-${Math.random()}`);
             const publicKey = btoa(`mock-public-key-${Date.now()}`);
             
-            const { data, error } = await window.supabaseClient
+            const { data, error } = await supabaseClient
                 .from('biometric_devices')
                 .insert([{
                     user_id: user.id,
@@ -956,12 +962,16 @@
             biometricDeviceId = data[0].id;
             
             // Log the activity
-            await window.supabaseClient.rpc('log_biometric_activity', {
-                p_user_id: user.id,
-                p_action: 'REGISTER',
-                p_status: 'SUCCESS',
-                p_device_info: navigator.userAgent
-            });
+            try {
+                await supabaseClient.rpc('log_biometric_activity', {
+                    p_user_id: user.id,
+                    p_action: 'REGISTER',
+                    p_status: 'SUCCESS',
+                    p_device_info: navigator.userAgent
+                });
+            } catch (logError) {
+                console.error('Error logging biometric activity:', logError);
+            }
             
             showToast('✅ Fingerprint registered successfully!', 'success');
             return true;
@@ -971,7 +981,7 @@
         async function deleteBiometricFromSupabase() {
             if (!biometricDeviceId) return false;
             
-            const { error } = await window.supabaseClient
+            const { error } = await supabaseClient
                 .from('biometric_devices')
                 .update({ is_active: false })
                 .eq('id', biometricDeviceId);
@@ -1048,7 +1058,6 @@
         
         async function handleLogout() {
             try {
-                // Note: Don't delete biometric on logout - keep for next session
                 if (window.auth) {
                     await window.auth.logout();
                 }
@@ -1460,7 +1469,7 @@
                         if (a.check_out_time) checkOut = new Date(a.check_out_time).toLocaleTimeString();
                         sClass = status === 'present' ? 'status-present' : 'status-late';
                     }
-                    html += `<tr><td><strong>${escapeHtml(u.full_name)}</strong></td><td>${escapeHtml(u.employee_id)}</td><td>${escapeHtml(dept)}</td><td>${u.role}</td><td><span class="status-badge ${sClass}">${sText}</span></td><td>${checkIn}</td><td>${checkOut}</td></tr>`;
+                    html += `<tr><td style="padding:10px;"><strong>${escapeHtml(u.full_name)}</strong></td><td style="padding:10px;">${escapeHtml(u.employee_id)}</td><td style="padding:10px;">${escapeHtml(dept)}</td><td style="padding:10px;">${u.role}</td><td style="padding:10px;"><span class="status-badge ${sClass}">${sText}</span></td><td style="padding:10px;">${checkIn}</td><td style="padding:10px;">${checkOut}</td></tr>`;
                 });
                 html += `</tbody></table></div>`;
                 content.innerHTML = html;
@@ -1486,7 +1495,7 @@
                     const dept = u.departments?.name || 'Not Assigned';
                     const sClass = r.status === 'present' ? 'status-present' : 'status-late';
                     const sText = r.status === 'present' ? 'Present' : 'Late';
-                    html += `<tr><td><strong>${escapeHtml(u.full_name)}</strong></td><td>${escapeHtml(u.employee_id)}</td><td>${escapeHtml(dept)}</td><td>${u.role}</td><td><span class="status-badge ${sClass}">${sText}</span></td><td>${new Date(r.check_in_time).toLocaleTimeString()}</td><td>${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td></tr>`;
+                    html += `<tr><td style="padding:10px;"><strong>${escapeHtml(u.full_name)}</strong></td><td style="padding:10px;">${escapeHtml(u.employee_id)}</td><td style="padding:10px;">${escapeHtml(dept)}</td><td style="padding:10px;">${u.role}</td><td style="padding:10px;"><span class="status-badge ${sClass}">${sText}</span></td><td style="padding:10px;">${new Date(r.check_in_time).toLocaleTimeString()}</td><td style="padding:10px;">${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td></tr>`;
                 });
                 html += `</tbody></table></div>`;
                 content.innerHTML = html;
@@ -1509,9 +1518,9 @@
                     <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Employee</th><th>Email</th><th>Department</th><th>Role</th></tr></thead><tbody>`;
                 absentUsers.forEach(u => {
                     const dept = u.departments?.name || 'Not Assigned';
-                    html += `<tr><td><strong>${escapeHtml(u.full_name)}</strong></td><td>${escapeHtml(u.employee_id)}</td><td>${escapeHtml(dept)}</td><td>${u.role}</td></tr>`;
+                    html += `<tr><td style="padding:10px;"><strong>${escapeHtml(u.full_name)}</strong></td><td style="padding:10px;">${escapeHtml(u.employee_id)}</td><td style="padding:10px;">${escapeHtml(dept)}</td><td style="padding:10px;">${u.role}</td></tr>`;
                 });
-                html += `</tbody></table></div>`;
+                html += `</tbody><tr></div>`;
                 content.innerHTML = html;
             } catch (error) {
                 content.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
