@@ -17,13 +17,13 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a4e 25%, #2d2d6e 50%, #1a1a4e 75%, #0a0a2a 100%);
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a3a 100%);
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Animated Gradient Background with Multiple Colors */
-        .animated-bg {
+        /* Animated Floating Orbs Background */
+        .orb-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -33,126 +33,80 @@
             overflow: hidden;
         }
 
-        .gradient-orb {
+        .orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(100px);
-            animation: floatOrb 25s infinite ease-in-out;
+            filter: blur(60px);
             opacity: 0.6;
+            animation: floatOrb 20s infinite ease-in-out;
         }
 
-        .gradient-orb:nth-child(1) {
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(46, 125, 50, 0.4) 0%, rgba(27, 94, 32, 0.1) 70%);
-            top: -200px;
-            left: -200px;
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(46, 125, 50, 0.4) 0%, rgba(27, 94, 32, 0.1) 100%);
+            top: -100px;
+            left: -100px;
             animation-delay: 0s;
-            animation-duration: 20s;
         }
 
-        .gradient-orb:nth-child(2) {
-            width: 700px;
-            height: 700px;
-            background: radial-gradient(circle, rgba(100, 108, 255, 0.35) 0%, rgba(100, 108, 255, 0.05) 70%);
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(33, 150, 243, 0.3) 0%, rgba(25, 118, 210, 0.1) 100%);
             bottom: -150px;
             right: -150px;
             animation-delay: 3s;
-            animation-duration: 25s;
         }
 
-        .gradient-orb:nth-child(3) {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, rgba(139, 92, 246, 0.05) 70%);
-            top: 30%;
-            left: -100px;
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(156, 39, 176, 0.3) 0%, rgba(123, 31, 162, 0.1) 100%);
+            top: 40%;
+            left: 20%;
             animation-delay: 6s;
-            animation-duration: 22s;
         }
 
-        .gradient-orb:nth-child(4) {
-            width: 550px;
-            height: 550px;
-            background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, rgba(236, 72, 153, 0.05) 70%);
-            bottom: 10%;
-            right: 5%;
-            animation-delay: 9s;
-            animation-duration: 28s;
-        }
-
-        .gradient-orb:nth-child(5) {
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.35) 0%, rgba(6, 182, 212, 0.05) 70%);
-            top: 50%;
-            right: 20%;
-            animation-delay: 12s;
-            animation-duration: 24s;
-        }
-
-        .gradient-orb:nth-child(6) {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(245, 158, 11, 0.3) 0%, rgba(245, 158, 11, 0.05) 70%);
-            top: 10%;
-            right: 30%;
-            animation-delay: 15s;
-            animation-duration: 26s;
-        }
-
-        .gradient-orb:nth-child(7) {
+        .orb-4 {
             width: 350px;
             height: 350px;
-            background: radial-gradient(circle, rgba(34, 197, 94, 0.35) 0%, rgba(34, 197, 94, 0.05) 70%);
-            bottom: 30%;
-            left: 20%;
-            animation-delay: 18s;
-            animation-duration: 30s;
+            background: radial-gradient(circle, rgba(0, 188, 212, 0.3) 0%, rgba(0, 150, 136, 0.1) 100%);
+            bottom: 20%;
+            right: 10%;
+            animation-delay: 9s;
         }
 
-        .gradient-orb:nth-child(8) {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, rgba(168, 85, 247, 0.05) 70%);
+        .orb-5 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(255, 152, 0, 0.25) 0%, rgba(255, 87, 34, 0.1) 100%);
             top: 60%;
-            left: 40%;
-            animation-delay: 21s;
-            animation-duration: 27s;
+            right: 25%;
+            animation-delay: 12s;
+        }
+
+        .orb-6 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.25) 0%, rgba(56, 142, 60, 0.1) 100%);
+            top: 10%;
+            right: -150px;
+            animation-delay: 15s;
         }
 
         @keyframes floatOrb {
             0%, 100% {
-                transform: translateY(0) translateX(0) scale(1);
+                transform: translate(0, 0) scale(1);
             }
-            20% {
-                transform: translateY(-60px) translateX(40px) scale(1.05);
+            25% {
+                transform: translate(50px, -30px) scale(1.05);
             }
-            40% {
-                transform: translateY(30px) translateX(-50px) scale(0.95);
+            50% {
+                transform: translate(-30px, 50px) scale(0.95);
             }
-            60% {
-                transform: translateY(-30px) translateX(60px) scale(1.08);
-            }
-            80% {
-                transform: translateY(40px) translateX(-30px) scale(0.98);
-            }
-        }
-
-        /* Floating Particles */
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 50%;
-            animation: particleFloat 30s infinite linear;
-        }
-
-        @keyframes particleFloat {
-            from {
-                transform: translateY(100vh) rotate(0deg);
-            }
-            to {
-                transform: translateY(-100vh) rotate(360deg);
+            75% {
+                transform: translate(30px, 30px) scale(1.02);
             }
         }
 
@@ -162,9 +116,9 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(10, 10, 42, 0.85);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 100;
             padding: 12px 40px;
             animation: slideDown 0.6s ease-out;
@@ -217,31 +171,6 @@
             margin-top: 2px;
         }
 
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 8px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .theme-icon {
-            font-size: 18px;
-            color: #fbbf24;
-        }
-
-        .theme-text {
-            font-size: 13px;
-            color: #94a3b8;
-        }
-
         .stats-badge {
             display: flex;
             gap: 20px;
@@ -277,11 +206,11 @@
             display: flex;
             max-width: 1200px;
             width: 100%;
-            background: rgba(15, 23, 42, 0.7);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
             border-radius: 40px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             animation: fadeInUp 0.8s ease-out;
         }
@@ -301,7 +230,6 @@
         .info-section {
             flex: 1.2;
             background: linear-gradient(135deg, rgba(46, 125, 50, 0.85) 0%, rgba(27, 94, 32, 0.85) 100%);
-            backdrop-filter: blur(10px);
             padding: 50px 40px;
             color: white;
             position: relative;
@@ -320,7 +248,7 @@
 
         .welcome-badge {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
             padding: 6px 16px;
             border-radius: 40px;
             font-size: 12px;
@@ -552,6 +480,7 @@
             border-color: #2e7d32;
             background: white;
             box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
+            transform: translateY(-2px);
         }
 
         .input-group .input-icon {
@@ -561,6 +490,26 @@
             transform: translateY(-50%);
             font-size: 18px;
             color: #94a3b8;
+            transition: color 0.3s ease;
+        }
+
+        .input-group input:focus + .input-icon {
+            color: #2e7d32;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.3s ease;
+            z-index: 2;
+        }
+
+        .password-toggle:hover {
+            color: #2e7d32;
         }
 
         .forgot-link {
@@ -578,6 +527,7 @@
 
         .forgot-link a:hover {
             color: #1b5e20;
+            text-decoration: underline;
         }
 
         .btn-login {
@@ -591,11 +541,35 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-login:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-login:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px -5px rgba(46, 125, 50, 0.4);
+        }
+
+        .btn-login:active {
+            transform: translateY(1px);
         }
 
         .btn-login:disabled {
@@ -604,8 +578,8 @@
             cursor: not-allowed;
         }
 
-        /* Fingerprint Button */
-        .fingerprint-btn {
+        /* Biometric Button */
+        .biometric-btn {
             background: white;
             color: #2e7d32;
             padding: 14px;
@@ -620,16 +594,28 @@
             justify-content: center;
             gap: 12px;
             width: 100%;
+            position: relative;
+            overflow: hidden;
         }
 
-        .fingerprint-btn:hover {
+        .biometric-btn:hover {
             border-color: #2e7d32;
             background: #f8fafc;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.2);
         }
 
-        .fingerprint-btn i {
+        .biometric-btn:active {
+            transform: translateY(1px);
+        }
+
+        .biometric-btn i {
             font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .biometric-btn:hover i {
+            transform: scale(1.1);
         }
 
         .divider {
@@ -655,6 +641,24 @@
         .error-message {
             background: #fee2e2;
             color: #dc2626;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 16px;
+            display: none;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
             padding: 12px;
             border-radius: 12px;
             font-size: 13px;
@@ -733,17 +737,8 @@
         .modal .close:hover {
             color: #1e293b;
         }
-        
-        .success-message {
-            margin-top: 15px;
-            text-align: center;
-            background: #dcfce7;
-            color: #166534;
-            padding: 12px;
-            border-radius: 12px;
-        }
 
-        .fingerprint-status {
+        .biometric-status {
             margin-top: 15px;
             font-size: 12px;
             text-align: center;
@@ -764,6 +759,21 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        .biometric-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #2e7d32;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Responsive */
@@ -803,14 +813,6 @@
         }
 
         @media (max-width: 480px) {
-            .theme-toggle {
-                padding: 6px 12px;
-            }
-            
-            .theme-text {
-                display: none;
-            }
-            
             .stats-showcase {
                 flex-direction: column;
                 gap: 15px;
@@ -819,16 +821,14 @@
     </style>
 </head>
 <body>
-    <!-- Animated Gradient Background with Multiple Colors -->
-    <div class="animated-bg">
-        <div class="gradient-orb"></div>
-        <div class="gradient-orb"></div>
-        <div class="gradient-orb"></div>
-        <div class="gradient-orb"></div>
-        <div class="gradient-orb"></div>
-        <div class="gradient-orb"></div>
-        <div class="gradient-orb"></div>
-        <div class="gradient-orb"></div>
+    <!-- Animated Floating Orbs Background -->
+    <div class="orb-container">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
+        <div class="orb orb-5"></div>
+        <div class="orb orb-6"></div>
     </div>
 
     <!-- Glassmorphism Header -->
@@ -853,17 +853,12 @@
                     <span><span class="stat-number" id="todayPresent">0</span> Checked In</span>
                 </div>
             </div>
-            <div class="theme-toggle" id="themeToggle">
-                <i class="fas fa-sun theme-icon"></i>
-                <span class="theme-text">Light / Dark</span>
-                <i class="fas fa-moon" style="color: #94a3b8;"></i>
-            </div>
         </div>
     </header>
 
     <div class="container">
         <div class="login-card">
-            <!-- Left Side - Info Section -->
+            <!-- Left Side - Info Section with Testimonial Slider -->
             <div class="info-section">
                 <div class="welcome-badge">
                     <i class="fas fa-rocket"></i> Welcome to Springytrack
@@ -886,7 +881,7 @@
                     </div>
                 </div>
 
-                <!-- Testimonial Slider -->
+                <!-- Professional Testimonial Slider -->
                 <div class="testimonial-slider">
                     <div class="slider-nav prev" id="prevTestimonial">
                         <i class="fas fa-chevron-left"></i>
@@ -970,11 +965,14 @@
                 <form id="loginForm" class="login-form">
                     <div class="input-group">
                         <span class="input-icon"><i class="fas fa-envelope"></i></span>
-                        <input type="email" id="email" placeholder="Email address" required>
+                        <input type="email" id="email" placeholder="Email address" required autocomplete="email">
                     </div>
                     <div class="input-group">
                         <span class="input-icon"><i class="fas fa-lock"></i></span>
-                        <input type="password" id="password" placeholder="Password" required>
+                        <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
+                        <span class="password-toggle" id="passwordToggle">
+                            <i class="fas fa-eye-slash"></i>
+                        </span>
                     </div>
                     <div class="forgot-link">
                         <a href="#" id="forgotPasswordLink">Forgot Password?</a>
@@ -988,11 +986,11 @@
                     <span>OR</span>
                 </div>
 
-                <button id="fingerprintBtn" class="fingerprint-btn">
-                    <i class="fas fa-fingerprint"></i> Sign in with Fingerprint
+                <button id="biometricBtn" class="biometric-btn">
+                    <i class="fas fa-fingerprint"></i> Sign in with Biometric
                 </button>
 
-                <div id="fingerprintStatus" class="fingerprint-status"></div>
+                <div id="biometricStatus" class="biometric-status"></div>
 
                 <div id="errorMessage" class="error-message"></div>
 
@@ -1029,17 +1027,17 @@
         </div>
     </div>
 
-    <!-- Fingerprint Modal -->
-    <div id="fingerprintModal" class="modal" style="display: none;">
+    <!-- Biometric Authentication Modal -->
+    <div id="biometricModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2><i class="fas fa-fingerprint"></i> Fingerprint Authentication</h2>
-            <p id="fingerprintModalMessage">Place your finger on the sensor to authenticate.</p>
+            <h2><i class="fas fa-fingerprint"></i> Biometric Authentication</h2>
+            <p id="biometricModalMessage">Place your finger on the sensor to authenticate.</p>
             <div style="text-align: center; margin: 30px 0;">
                 <i class="fas fa-fingerprint" style="font-size: 80px; color: #2e7d32; animation: pulse 1s infinite;"></i>
             </div>
-            <div id="fingerprintModalStatus" style="text-align: center; margin-top: 10px; color: #666;"></div>
-            <button id="cancelFingerprintBtn" class="btn-login" style="background: #64748b; margin-top: 20px;">Cancel</button>
+            <div id="biometricModalStatus" style="text-align: center; margin-top: 10px; color: #666;"></div>
+            <button id="cancelBiometricBtn" class="btn-login" style="background: #64748b; margin-top: 20px;">Cancel</button>
         </div>
     </div>
 
@@ -1051,12 +1049,148 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_jTsJmSF195H4U6Og7oOdSA_2VI1_xnd';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Testimonial Slider
+        // ============================================
+        // BIOMETRIC AUTHENTICATION SYSTEM
+        // ============================================
+        
+        // Biometric storage key
+        const BIOMETRIC_KEY = 'springytrack_biometric_registered';
+        const BIOMETRIC_EMAIL_KEY = 'springytrack_biometric_email';
+        
+        // Check if biometric is registered
+        function isBiometricRegistered() {
+            return localStorage.getItem(BIOMETRIC_KEY) === 'true';
+        }
+        
+        // Get registered biometric email
+        function getBiometricEmail() {
+            return localStorage.getItem(BIOMETRIC_EMAIL_KEY);
+        }
+        
+        // Register biometric after successful login
+        async function registerBiometric(email) {
+            return new Promise((resolve) => {
+                // Show biometric registration modal
+                const modal = document.getElementById('biometricModal');
+                const message = document.getElementById('biometricModalMessage');
+                const statusDiv = document.getElementById('biometricModalStatus');
+                
+                message.textContent = 'Place your finger on the sensor to register your fingerprint.';
+                statusDiv.textContent = '';
+                modal.style.display = 'flex';
+                
+                // Simulate biometric registration (in production, use WebAuthn API)
+                setTimeout(() => {
+                    if (confirm('Place your finger on the sensor to complete registration.')) {
+                        // Successful registration
+                        localStorage.setItem(BIOMETRIC_KEY, 'true');
+                        localStorage.setItem(BIOMETRIC_EMAIL_KEY, email);
+                        statusDiv.textContent = '✅ Fingerprint registered successfully!';
+                        statusDiv.style.color = '#166534';
+                        
+                        setTimeout(() => {
+                            modal.style.display = 'none';
+                            resolve(true);
+                        }, 2000);
+                    } else {
+                        statusDiv.textContent = 'Registration cancelled.';
+                        statusDiv.style.color = '#dc2626';
+                        setTimeout(() => {
+                            modal.style.display = 'none';
+                            resolve(false);
+                        }, 1500);
+                    }
+                }, 1500);
+            });
+        }
+        
+        // Authenticate with biometric
+        async function authenticateWithBiometric() {
+            return new Promise((resolve) => {
+                // Check if biometric is registered
+                if (!isBiometricRegistered()) {
+                    const statusDiv = document.getElementById('biometricStatus');
+                    statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Biometric authentication not set up. Please log in with email first to register.';
+                    statusDiv.style.display = 'block';
+                    statusDiv.style.color = '#dc2626';
+                    setTimeout(() => {
+                        statusDiv.style.display = 'none';
+                    }, 4000);
+                    resolve(false);
+                    return;
+                }
+                
+                // Show biometric authentication modal
+                const modal = document.getElementById('biometricModal');
+                const message = document.getElementById('biometricModalMessage');
+                const statusDiv = document.getElementById('biometricModalStatus');
+                
+                message.textContent = 'Place your finger on the sensor to authenticate.';
+                statusDiv.textContent = '';
+                modal.style.display = 'flex';
+                
+                // Simulate biometric authentication (in production, use WebAuthn API)
+                setTimeout(async () => {
+                    // Simulate successful authentication
+                    const registeredEmail = getBiometricEmail();
+                    
+                    if (registeredEmail) {
+                        statusDiv.textContent = '✅ Biometric verified! Logging in...';
+                        statusDiv.style.color = '#166534';
+                        
+                        // Attempt to login with the registered email
+                        if (window.auth) {
+                            const result = await window.auth.login(registeredEmail, 'TempPass123!');
+                            
+                            if (result.success) {
+                                setTimeout(() => {
+                                    modal.style.display = 'none';
+                                    resolve(true);
+                                }, 1000);
+                            } else {
+                                statusDiv.textContent = '❌ Login failed. Please try again.';
+                                statusDiv.style.color = '#dc2626';
+                                setTimeout(() => {
+                                    modal.style.display = 'none';
+                                    resolve(false);
+                                }, 2000);
+                            }
+                        } else {
+                            statusDiv.textContent = '❌ Authentication system not ready.';
+                            statusDiv.style.color = '#dc2626';
+                            setTimeout(() => {
+                                modal.style.display = 'none';
+                                resolve(false);
+                            }, 2000);
+                        }
+                    } else {
+                        statusDiv.textContent = '❌ No registered fingerprint found.';
+                        statusDiv.style.color = '#dc2626';
+                        setTimeout(() => {
+                            modal.style.display = 'none';
+                            resolve(false);
+                        }, 2000);
+                    }
+                }, 2000);
+            });
+        }
+        
+        // Remove biometric registration (logout)
+        function clearBiometricRegistration() {
+            // Don't clear on logout - keep for next session
+            // Only clear if user explicitly wants to
+        }
+
+        // ============================================
+        // TESTIMONIAL SLIDER
+        // ============================================
+        
         const testimonials = document.querySelectorAll('.testimonial-slide');
         const dotsContainer = document.getElementById('sliderDots');
         let currentIndex = 0;
         let slideInterval;
 
+        // Create dots
         testimonials.forEach((_, index) => {
             const dot = document.createElement('div');
             dot.classList.add('dot');
@@ -1107,7 +1241,23 @@
         document.getElementById('nextTestimonial').addEventListener('click', nextSlide);
         startAutoSlide();
 
-        // Update live stats
+        // ============================================
+        // PASSWORD TOGGLE
+        // ============================================
+        
+        const passwordToggle = document.getElementById('passwordToggle');
+        const passwordInput = document.getElementById('password');
+        
+        passwordToggle.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+        });
+
+        // ============================================
+        // LIVE STATS
+        // ============================================
+        
         async function updateLiveStats() {
             try {
                 const { count: userCount } = await supabaseClient
@@ -1130,55 +1280,12 @@
         updateLiveStats();
         setInterval(updateLiveStats, 30000);
 
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        let isDark = true;
-        themeToggle.addEventListener('click', () => {
-            isDark = !isDark;
-            if (isDark) {
-                document.body.style.background = 'linear-gradient(135deg, #0a0a2a 0%, #1a1a4e 25%, #2d2d6e 50%, #1a1a4e 75%, #0a0a2a 100%)';
-                themeToggle.querySelector('.theme-icon').className = 'fas fa-sun theme-icon';
-            } else {
-                document.body.style.background = 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)';
-                themeToggle.querySelector('.theme-icon').className = 'fas fa-moon theme-icon';
-            }
-        });
-
-        // Check if fingerprint is registered
-        function isFingerprintRegistered() {
-            return localStorage.getItem('fingerprintEmail') !== null;
-        }
-
-        // Register fingerprint after successful login
-        function registerFingerprint(email) {
-            if (window.PublicKeyCredential) {
-                setTimeout(() => {
-                    const shouldRegister = confirm('✅ Login successful!\n\nWould you like to register your fingerprint for faster future logins?');
-                    if (shouldRegister) {
-                        localStorage.setItem('fingerprintEmail', email);
-                        const fingerprintStatus = document.getElementById('fingerprintStatus');
-                        fingerprintStatus.textContent = '✅ Fingerprint registered for future logins!';
-                        fingerprintStatus.style.display = 'block';
-                        setTimeout(() => {
-                            fingerprintStatus.style.display = 'none';
-                        }, 3000);
-                    }
-                    
-                    // Redirect to dashboard
-                    window.location.href = 'dashboard.html';
-                }, 500);
-            } else {
-                // Redirect to dashboard without fingerprint registration
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 500);
-            }
-        }
-
-        // Handle login
+        // ============================================
+        // LOGIN FORM HANDLER
+        // ============================================
+        
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
         const errorDiv = document.getElementById('errorMessage');
         const loginBtn = document.getElementById('loginBtn');
 
@@ -1203,14 +1310,22 @@
             try {
                 const result = await window.auth.login(email, password);
                 
-                if (result.success) {
-                    // Register fingerprint after successful login
-                    registerFingerprint(email);
-                } else {
+                if (!result.success) {
                     errorDiv.textContent = result.error;
                     errorDiv.style.display = 'block';
                     loginBtn.disabled = false;
                     loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
+                } else {
+                    // After successful login, check if biometric is already registered
+                    if (!isBiometricRegistered()) {
+                        // Ask user to register biometric
+                        setTimeout(async () => {
+                            const shouldRegister = confirm('Would you like to register your fingerprint for faster future logins?');
+                            if (shouldRegister) {
+                                await registerBiometric(email);
+                            }
+                        }, 1000);
+                    }
                 }
             } catch (error) {
                 errorDiv.textContent = 'An unexpected error occurred';
@@ -1220,100 +1335,61 @@
             }
         });
 
-        // Fingerprint Authentication - Enhanced Flow
-        const fingerprintBtn = document.getElementById('fingerprintBtn');
-        const fingerprintModal = document.getElementById('fingerprintModal');
-        const fingerprintModalStatus = document.getElementById('fingerprintModalStatus');
-        const fingerprintModalMessage = document.getElementById('fingerprintModalMessage');
-        const fingerprintStatus = document.getElementById('fingerprintStatus');
-        const cancelFingerprintBtn = document.getElementById('cancelFingerprintBtn');
-
-        fingerprintBtn.addEventListener('click', async () => {
-            // First, check if fingerprint is registered
-            const registeredEmail = localStorage.getItem('fingerprintEmail');
+        // ============================================
+        // BIOMETRIC BUTTON HANDLER
+        // ============================================
+        
+        const biometricBtn = document.getElementById('biometricBtn');
+        const biometricModal = document.getElementById('biometricModal');
+        const cancelBiometricBtn = document.getElementById('cancelBiometricBtn');
+        
+        biometricBtn.addEventListener('click', async () => {
+            const statusDiv = document.getElementById('biometricStatus');
+            statusDiv.style.display = 'none';
             
-            if (!registeredEmail) {
-                // Fingerprint not registered - show message and prompt to login first
-                fingerprintStatus.textContent = '⚠️ No fingerprint registered. Please log in with email first to register your fingerprint.';
-                fingerprintStatus.style.display = 'block';
-                fingerprintStatus.style.color = '#e65100';
-                fingerprintStatus.style.background = '#fff3e0';
-                fingerprintStatus.style.padding = '10px';
-                fingerprintStatus.style.borderRadius = '8px';
-                
-                setTimeout(() => {
-                    fingerprintStatus.style.display = 'none';
-                }, 5000);
-                return;
-            }
-            
-            // Fingerprint is registered - proceed with authentication
-            fingerprintModal.style.display = 'flex';
-            fingerprintModalStatus.textContent = 'Waiting for fingerprint...';
-            fingerprintModalMessage.textContent = 'Place your finger on the sensor to authenticate.';
-            fingerprintStatus.style.display = 'none';
-            
-            // Check if PublicKeyCredential is supported
+            // Check if device supports biometric authentication
             if (!window.PublicKeyCredential) {
-                fingerprintModalStatus.textContent = 'Fingerprint authentication is not supported on this device/browser.';
-                fingerprintModalMessage.textContent = 'Please log in with email and password instead.';
+                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Biometric authentication is not supported on this device/browser.';
+                statusDiv.style.display = 'block';
+                statusDiv.style.color = '#dc2626';
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 4000);
                 return;
             }
             
-            try {
-                fingerprintModalStatus.textContent = 'Place your finger on the sensor...';
-                
-                // Simulate fingerprint recognition
-                setTimeout(async () => {
-                    const storedEmail = localStorage.getItem('fingerprintEmail');
-                    
-                    if (storedEmail) {
-                        fingerprintModalStatus.textContent = '🟢 Fingerprint recognized! Logging in...';
-                        fingerprintModalMessage.textContent = 'Authentication successful. Redirecting...';
-                        
-                        if (window.auth) {
-                            const result = await window.auth.login(storedEmail, 'TempPass123!');
-                            
-                            if (result.success) {
-                                fingerprintModal.style.display = 'none';
-                                fingerprintStatus.textContent = '✅ Fingerprint login successful! Redirecting to dashboard...';
-                                fingerprintStatus.style.display = 'block';
-                                fingerprintStatus.style.color = '#166534';
-                                fingerprintStatus.style.background = '#dcfce7';
-                                fingerprintStatus.style.padding = '10px';
-                                fingerprintStatus.style.borderRadius = '8px';
-                                setTimeout(() => {
-                                    window.location.href = 'dashboard.html';
-                                }, 1000);
-                            } else {
-                                fingerprintModalStatus.textContent = '❌ Login failed. Please try again with email and password.';
-                                fingerprintModalMessage.textContent = 'Authentication error. Please log in manually.';
-                                localStorage.removeItem('fingerprintEmail');
-                                setTimeout(() => {
-                                    fingerprintModal.style.display = 'none';
-                                }, 3000);
-                            }
-                        }
-                    } else {
-                        fingerprintModalStatus.textContent = '❌ No fingerprint registered. Please log in with email first.';
-                        fingerprintModalMessage.textContent = 'Please sign in with email and password to register your fingerprint.';
-                        setTimeout(() => {
-                            fingerprintModal.style.display = 'none';
-                        }, 3000);
-                    }
-                }, 2000);
-                
-            } catch (error) {
-                fingerprintModalStatus.textContent = 'Fingerprint authentication failed: ' + error.message;
-                fingerprintModalMessage.textContent = 'Please try logging in with email and password instead.';
+            // Check if biometric is registered
+            if (!isBiometricRegistered()) {
+                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Biometric authentication not set up. Please log in with email first to register.';
+                statusDiv.style.display = 'block';
+                statusDiv.style.color = '#dc2626';
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 4000);
+                return;
+            }
+            
+            // Start authentication
+            const authenticated = await authenticateWithBiometric();
+            
+            if (authenticated) {
+                // Login will be handled by the auth state change in auth.js
+                // The page will redirect to dashboard
+                const statusDiv = document.getElementById('biometricStatus');
+                statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Biometric login successful! Redirecting...';
+                statusDiv.style.display = 'block';
+                statusDiv.style.color = '#166534';
             }
         });
-
-        cancelFingerprintBtn.addEventListener('click', () => {
-            fingerprintModal.style.display = 'none';
+        
+        cancelBiometricBtn.addEventListener('click', () => {
+            biometricModal.style.display = 'none';
         });
 
-        // Forgot Password Modal
+        // ============================================
+        // FORGOT PASSWORD MODAL
+        // ============================================
+        
         const forgotModal = document.getElementById('forgotModal');
         const forgotLink = document.getElementById('forgotPasswordLink');
         const closeBtn = forgotModal.querySelector('.close');
@@ -1334,8 +1410,8 @@
             if (event.target == forgotModal) {
                 forgotModal.style.display = 'none';
             }
-            if (event.target == fingerprintModal) {
-                fingerprintModal.style.display = 'none';
+            if (event.target == biometricModal) {
+                biometricModal.style.display = 'none';
             }
         }
 

@@ -9,169 +9,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* Toast Notification Styles */
-        .toast-notification {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #2e7d32, #1b5e20);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-size: 14px;
-            z-index: 2000;
-            animation: slideUp 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            max-width: 90%;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .toast-notification.error {
-            background: linear-gradient(135deg, #dc2626, #991b1b);
-        }
-
-        .toast-notification.warning {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-        }
-
-        .toast-notification.info {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-
-        /* Fingerprint Button Style */
-        .btn-fingerprint {
-            background: linear-gradient(135deg, #2e7d32, #1b5e20);
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-fingerprint:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46,125,50,0.4);
-        }
-
-        /* Modal Styles for Fingerprint Registration */
-        .fingerprint-modal {
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .fingerprint-modal-content {
-            background: white;
-            padding: 35px;
-            border-radius: 28px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            position: relative;
-            animation: slideDown 0.3s ease;
-        }
-
-        .fingerprint-modal-content h2 {
-            margin-bottom: 20px;
-            color: #1e293b;
-            font-size: 24px;
-        }
-
-        .fingerprint-modal-content .close {
-            position: absolute;
-            right: 20px;
-            top: 15px;
-            font-size: 28px;
-            cursor: pointer;
-            color: #94a3b8;
-            transition: color 0.3s;
-        }
-
-        .fingerprint-modal-content .close:hover {
-            color: #1e293b;
-        }
-
-        .fingerprint-icon {
-            font-size: 80px;
-            color: #2e7d32;
-            margin: 20px 0;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .reg-status {
-            margin: 15px 0;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .btn-cancel {
-            background: #64748b;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-cancel:hover {
-            background: #475569;
-        }
-
-        /* Existing styles continue */
         * {
             margin: 0;
             padding: 0;
@@ -179,7 +19,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f5f7fa;
             color: #333;
         }
@@ -209,6 +49,10 @@
             align-items: center;
         }
 
+        .nav-menu span {
+            font-weight: 500;
+        }
+
         .nav-menu button {
             background: #2c3e50;
             color: white;
@@ -216,10 +60,12 @@
             padding: 0.5rem 1rem;
             border-radius: 6px;
             cursor: pointer;
+            transition: all 0.3s;
         }
 
         .nav-menu button:hover {
             background: #3e5a6b;
+            transform: translateY(-2px);
         }
 
         .container {
@@ -228,6 +74,7 @@
             padding: 20px;
         }
 
+        /* Quick Actions */
         .quick-actions {
             display: flex;
             gap: 15px;
@@ -240,10 +87,17 @@
             color: white;
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .btn-checkin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46,125,50,0.4);
         }
 
         .btn-checkout {
@@ -251,10 +105,16 @@
             color: white;
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-checkout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245,124,0,0.4);
         }
 
         .btn-assist {
@@ -262,10 +122,16 @@
             color: white;
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-assist:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(2,136,209,0.4);
         }
 
         .btn-view {
@@ -273,10 +139,42 @@
             color: white;
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(123,31,162,0.4);
+        }
+
+        .btn-biometric {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-biometric:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46,125,50,0.4);
+        }
+
+        .btn-biometric:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-primary {
@@ -284,10 +182,57 @@
             color: white;
             padding: 10px 20px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
         }
 
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f57c00 0%, #ef6c00 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -298,10 +243,15 @@
         .stat-card {
             background: white;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 16px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             text-align: center;
             border-top: 4px solid #2e7d32;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
 
         .stat-card h3 {
@@ -309,6 +259,7 @@
             font-size: 0.9rem;
             margin-bottom: 10px;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .stat-card div {
@@ -317,6 +268,7 @@
             color: #2e7d32;
         }
 
+        /* Charts */
         .charts-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -327,14 +279,15 @@
         .chart-container {
             background: white;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 16px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
+        /* Date Group */
         .date-group {
             margin-bottom: 30px;
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
@@ -348,6 +301,12 @@
         .date-header h3 {
             margin: 0;
             color: #2e7d32;
+            font-size: 1.1rem;
+        }
+
+        .date-header span {
+            font-size: 12px;
+            color: #666;
         }
 
         .attendance-table-container {
@@ -364,6 +323,7 @@
             color: white;
             padding: 12px 15px;
             text-align: left;
+            font-weight: 600;
         }
 
         .attendance-table td {
@@ -398,9 +358,10 @@
             color: #c62828;
         }
 
+        /* Admin Section */
         .admin-section {
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 20px;
             margin: 20px 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -413,6 +374,7 @@
             padding-bottom: 10px;
         }
 
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -423,14 +385,16 @@
             height: 100%;
             background-color: rgba(0,0,0,0.5);
             backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-content {
             background: white;
             margin: 50px auto;
             padding: 30px;
-            border-radius: 16px;
-            max-width: 600px;
+            border-radius: 20px;
+            max-width: 500px;
             width: 90%;
             position: relative;
             max-height: 80vh;
@@ -448,6 +412,11 @@
             font-size: 28px;
             cursor: pointer;
             color: #999;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #333;
         }
 
         .form-group {
@@ -458,14 +427,22 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
+            color: #333;
         }
 
         .form-control {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
             font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
         }
 
         .filter-bar {
@@ -473,6 +450,13 @@
             gap: 10px;
             margin-bottom: 20px;
             flex-wrap: wrap;
+        }
+
+        .filter-bar input, .filter-bar select {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
         }
 
         .spinner {
@@ -490,11 +474,25 @@
             100% { transform: rotate(360deg); }
         }
 
+        .loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
         .error-message {
             color: #d32f2f;
             background: #ffebee;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 10px;
             margin-top: 10px;
             display: none;
         }
@@ -502,8 +500,35 @@
         .success-message {
             color: #2e7d32;
             background: #e8f5e9;
-            padding: 10px;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .info-message {
+            color: #0288d1;
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2e7d32;
+            color: white;
+            padding: 12px 20px;
             border-radius: 8px;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         @media (max-width: 768px) {
@@ -524,15 +549,13 @@
     </style>
 </head>
 <body>
-    <!-- Loading Spinner -->
-    <div id="loadingSpinner" class="loading-spinner" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;">
+    <div id="loadingSpinner" class="loading-spinner">
         <div class="spinner"></div>
         <p>Loading dashboard...</p>
     </div>
 
-    <!-- Error Message Container -->
-    <div id="errorContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center;">
-        <div class="error-box" style="text-align: center;">
+    <div id="errorContainer" style="display: none;" class="error-container">
+        <div class="error-box">
             <h2>❌ Error Loading Dashboard</h2>
             <p id="errorMessage">An error occurred while loading the dashboard.</p>
             <button onclick="window.location.href='index.html'" class="btn-primary">Go to Login</button>
@@ -540,10 +563,9 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div id="mainContent" style="display: none;">
         <nav class="navbar">
-            <div class="nav-brand">🌿 Springytrack</div>
+            <div class="nav-brand">📊 Springytrack</div>
             <div class="nav-menu">
                 <span id="userName"></span>
                 <button onclick="handleLogout()">Logout</button>
@@ -551,30 +573,27 @@
         </nav>
 
         <div class="container">
-            <!-- Quick Actions -->
             <div class="quick-actions">
                 <button onclick="window.attendance.checkIn('manual')" class="btn-checkin" id="checkInBtn">✅ Check In</button>
                 <button onclick="window.attendance.checkOut()" class="btn-checkout" id="checkOutBtn">⏰ Check Out</button>
                 <button onclick="openAssistModal()" class="btn-assist" id="assistBtn">🤝 Assist Check In/Out</button>
                 <button onclick="showPresentAbsentUsers()" class="btn-view" id="viewUsersBtn">👥 View Present/Absent</button>
-                <button id="registerFingerprintBtn" class="btn-fingerprint">
-                    <i class="fas fa-fingerprint"></i> 🔐 Register Fingerprint
+                <button id="registerBiometricBtn" class="btn-biometric">
+                    <i class="fas fa-fingerprint"></i> Register Fingerprint
                 </button>
             </div>
 
-            <!-- Admin QR Actions -->
             <div id="adminQRActions" class="admin-section" style="display: none;" data-role="admin">
                 <h2>📱 Organization QR Code Management</h2>
                 <div class="quick-actions">
                     <button onclick="generateMasterQR()" class="btn-primary">Generate Master QR Code</button>
-                    <button onclick="downloadMasterQR()" class="btn-primary">Download Master QR Code</button>
-                    <button onclick="viewMasterQR()" class="btn-primary">View Master QR Code</button>
-                    <button onclick="resetMasterQR()" class="btn-primary">Reset Master QR Code</button>
+                    <button onclick="downloadMasterQR()" class="btn-success">Download Master QR Code</button>
+                    <button onclick="viewMasterQR()" class="btn-info">View Master QR Code</button>
+                    <button onclick="resetMasterQR()" class="btn-danger">Reset Master QR Code</button>
                 </div>
                 <p style="margin-top: 10px; font-size: 12px; color: #666;">Print and display the master QR code at the entrance. All users must scan this code to check in/out.</p>
             </div>
 
-            <!-- Today's Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <h3>Total Users</h3>
@@ -594,7 +613,6 @@
                 </div>
             </div>
 
-            <!-- Charts -->
             <div class="charts-row">
                 <div class="chart-container">
                     <canvas id="attendanceChart"></canvas>
@@ -604,13 +622,11 @@
                 </div>
             </div>
 
-            <!-- Recent Activity - Grouped by Days -->
             <div class="recent-activity">
                 <h2 style="margin-bottom: 20px;">Recent Check-ins</h2>
                 <div id="groupedAttendance"></div>
             </div>
 
-            <!-- Admin Section -->
             <div id="adminSection" class="admin-section" style="display: none;" data-role="admin">
                 <h2>Admin Panel</h2>
                 <div class="quick-actions">
@@ -642,8 +658,8 @@
                 </select>
             </div>
             <div class="quick-actions">
-                <button onclick="proceedToCamera()" class="btn-primary">Proceed to Camera</button>
-                <button onclick="closeAssistModal()" class="btn-primary">Cancel</button>
+                <button onclick="proceedToCamera()" class="btn-success">Proceed to Camera</button>
+                <button onclick="closeAssistModal()" class="btn-warning">Cancel</button>
             </div>
             <div id="assistError" class="error-message"></div>
         </div>
@@ -661,8 +677,8 @@
             <div id="photoPreview" style="margin-top: 15px; display: none;">
                 <img id="capturedImage" style="width: 100%; border-radius: 12px;">
                 <div class="quick-actions" style="margin-top: 10px;">
-                    <button onclick="retakePhoto()" class="btn-primary">Retake</button>
-                    <button onclick="confirmWithPhoto()" class="btn-primary">Confirm & Proceed</button>
+                    <button onclick="retakePhoto()" class="btn-warning">Retake</button>
+                    <button onclick="confirmWithPhoto()" class="btn-success">Confirm & Proceed</button>
                 </div>
             </div>
             <div id="cameraError" class="error-message"></div>
@@ -677,8 +693,8 @@
             <div id="masterQRDisplay" style="display: flex; justify-content: center; margin: 20px 0;"></div>
             <p style="font-size: 12px; text-align: center;">All users must scan this QR code to check in/out.</p>
             <div class="quick-actions">
-                <button onclick="downloadMasterQRFromModal()" class="btn-primary">Download QR Code</button>
-                <button onclick="closeMasterQRModal()" class="btn-primary">Close</button>
+                <button onclick="downloadMasterQRFromModal()" class="btn-success">Download QR Code</button>
+                <button onclick="closeMasterQRModal()" class="btn-warning">Close</button>
             </div>
         </div>
     </div>
@@ -745,8 +761,8 @@
                 </div>
                 <input type="hidden" id="userId">
                 <div class="quick-actions">
-                    <button type="submit" class="btn-primary" id="saveUserBtn">Save User</button>
-                    <button type="button" class="btn-primary" onclick="closeUserForm()">Cancel</button>
+                    <button type="submit" class="btn-success" id="saveUserBtn">Save User</button>
+                    <button type="button" class="btn-warning" onclick="closeUserForm()">Cancel</button>
                 </div>
                 <div id="userFormError" class="error-message"></div>
             </form>
@@ -789,8 +805,8 @@
                 </div>
                 <input type="hidden" id="deptId">
                 <div class="quick-actions">
-                    <button type="submit" class="btn-primary" id="saveDeptBtn">Save Department</button>
-                    <button type="button" class="btn-primary" onclick="closeDeptForm()">Cancel</button>
+                    <button type="submit" class="btn-success" id="saveDeptBtn">Save Department</button>
+                    <button type="button" class="btn-warning" onclick="closeDeptForm()">Cancel</button>
                 </div>
                 <div id="deptFormError" class="error-message"></div>
             </form>
@@ -812,13 +828,30 @@
             <span class="close">&times;</span>
             <h2>👥 Present & Absent Users</h2>
             <div class="filter-bar">
-                <button onclick="loadPresentUsers()" class="btn-primary">✅ Show Present</button>
-                <button onclick="loadAbsentUsers()" class="btn-primary">❌ Show Absent</button>
-                <button onclick="loadAllUsersStatus()" class="btn-primary">👥 Show All</button>
+                <button onclick="loadPresentUsers()" class="btn-success">✅ Show Present</button>
+                <button onclick="loadAbsentUsers()" class="btn-danger">❌ Show Absent</button>
+                <button onclick="loadAllUsersStatus()" class="btn-info">👥 Show All</button>
             </div>
             <div id="presentAbsentContent">
                 <div class="spinner"></div>
                 <p>Loading users...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biometric Registration Modal -->
+    <div id="biometricModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-fingerprint"></i> Register Fingerprint</h2>
+            <p>Place your finger on the sensor to register your fingerprint for faster future logins.</p>
+            <div style="text-align: center; margin: 30px 0;">
+                <i class="fas fa-fingerprint" style="font-size: 80px; color: #2e7d32; animation: pulse 1s infinite;"></i>
+            </div>
+            <div id="biometricModalStatus" style="text-align: center; margin-top: 10px; color: #666;"></div>
+            <div class="quick-actions">
+                <button id="confirmBiometricBtn" class="btn-success">Register Now</button>
+                <button id="cancelBiometricBtn" class="btn-warning">Cancel</button>
             </div>
         </div>
     </div>
@@ -830,94 +863,6 @@
     <script src="js/attendance.js"></script>
     <script src="js/admin.js"></script>
     <script>
-        // Toast notification function
-        function showToast(message, type = 'success') {
-            const existingToast = document.querySelector('.toast-notification');
-            if (existingToast) existingToast.remove();
-            
-            const toast = document.createElement('div');
-            toast.className = `toast-notification ${type}`;
-            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${message}`;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Fingerprint Registration in Dashboard
-        const registerFingerprintBtn = document.getElementById('registerFingerprintBtn');
-        if (registerFingerprintBtn) {
-            registerFingerprintBtn.addEventListener('click', async () => {
-                if (!window.auth || !window.auth.currentUser) {
-                    showToast('Please log in first', 'error');
-                    return;
-                }
-                
-                const email = window.auth.currentUser.email;
-                
-                // Create modal
-                const modal = document.createElement('div');
-                modal.className = 'fingerprint-modal';
-                modal.innerHTML = `
-                    <div class="fingerprint-modal-content">
-                        <span class="close">&times;</span>
-                        <h2><i class="fas fa-fingerprint"></i> Register Fingerprint</h2>
-                        <div class="fingerprint-icon">
-                            <i class="fas fa-fingerprint"></i>
-                        </div>
-                        <p>Place your finger on the sensor to register your fingerprint.</p>
-                        <div class="reg-status" id="regStatus">🖐️ Waiting for fingerprint...</div>
-                        <button id="cancelRegBtn" class="btn-cancel">Cancel</button>
-                    </div>
-                `;
-                document.body.appendChild(modal);
-                
-                const regStatus = modal.querySelector('#regStatus');
-                const closeBtn = modal.querySelector('.close');
-                const cancelBtn = modal.querySelector('#cancelRegBtn');
-                
-                const closeModal = () => modal.remove();
-                closeBtn.onclick = closeModal;
-                cancelBtn.onclick = closeModal;
-                
-                regStatus.innerHTML = '🖐️ Place your finger on the sensor...';
-                
-                // Simulate fingerprint registration (in production, use WebAuthn API)
-                setTimeout(() => {
-                    const fingerprintData = { 
-                        email: email, 
-                        registeredAt: new Date().toISOString(),
-                        credentialId: 'fp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
-                    };
-                    localStorage.setItem('springytrack_fingerprint', JSON.stringify(fingerprintData));
-                    
-                    // Also save to Supabase if needed
-                    if (window.supabaseClient) {
-                        window.supabaseClient
-                            .from('user_credentials')
-                            .upsert({
-                                user_id: window.auth.currentUser.id,
-                                credential_id: fingerprintData.credentialId,
-                                public_key: btoa(window.auth.currentUser.id + Date.now()),
-                                created_at: new Date().toISOString()
-                            })
-                            .then(({ error }) => {
-                                if (error) console.error('Error saving to Supabase:', error);
-                            });
-                    }
-                    
-                    regStatus.innerHTML = '✅ <strong>Fingerprint registered successfully!</strong>';
-                    regStatus.style.color = '#2e7d32';
-                    
-                    showToast('✅ Fingerprint registered successfully! You can now use fingerprint login.', 'success');
-                    
-                    setTimeout(closeModal, 2000);
-                }, 2500);
-            });
-        }
-
         // Global variables
         let html5QrCode;
         let attendanceChart;
@@ -932,9 +877,178 @@
         let videoElement = null;
         let canvasElement = null;
 
-        // Handle logout
+        // Biometric storage keys (will be synced with Supabase)
+        let isBiometricRegistered = false;
+        let biometricDeviceId = null;
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.style.background = type === 'success' ? '#2e7d32' : (type === 'error' ? '#d32f2f' : '#0288d1');
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle')}"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ============================================
+        // BIOMETRIC FUNCTIONS WITH SUPABASE
+        // ============================================
+        
+        // Check if user has biometric device registered in Supabase
+        async function checkBiometricStatus() {
+            try {
+                const user = window.auth?.currentUser;
+                if (!user) return false;
+                
+                const { data, error } = await window.supabaseClient
+                    .from('biometric_devices')
+                    .select('id, device_name, is_active')
+                    .eq('user_id', user.id)
+                    .eq('is_active', true)
+                    .maybeSingle();
+                
+                if (error) throw error;
+                
+                if (data) {
+                    isBiometricRegistered = true;
+                    biometricDeviceId = data.id;
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Error checking biometric status:', error);
+                return false;
+            }
+        }
+        
+        // Register biometric device in Supabase
+        async function registerBiometricInSupabase() {
+            const user = window.auth?.currentUser;
+            if (!user) {
+                showToast('Please log in first', 'error');
+                return false;
+            }
+            
+            // Generate unique credential ID (simulated - in production use WebAuthn)
+            const credentialId = btoa(`${user.id}-${Date.now()}-${Math.random()}`);
+            const publicKey = btoa(`mock-public-key-${Date.now()}`);
+            
+            const { data, error } = await window.supabaseClient
+                .from('biometric_devices')
+                .insert([{
+                    user_id: user.id,
+                    device_name: `${navigator.platform || 'Device'} - ${new Date().toLocaleDateString()}`,
+                    credential_id: credentialId,
+                    public_key: publicKey,
+                    device_type: 'fingerprint',
+                    is_active: true
+                }])
+                .select();
+            
+            if (error) {
+                console.error('Error registering biometric:', error);
+                showToast('Failed to register fingerprint: ' + error.message, 'error');
+                return false;
+            }
+            
+            isBiometricRegistered = true;
+            biometricDeviceId = data[0].id;
+            
+            // Log the activity
+            await window.supabaseClient.rpc('log_biometric_activity', {
+                p_user_id: user.id,
+                p_action: 'REGISTER',
+                p_status: 'SUCCESS',
+                p_device_info: navigator.userAgent
+            });
+            
+            showToast('✅ Fingerprint registered successfully!', 'success');
+            return true;
+        }
+        
+        // Delete biometric device from Supabase
+        async function deleteBiometricFromSupabase() {
+            if (!biometricDeviceId) return false;
+            
+            const { error } = await window.supabaseClient
+                .from('biometric_devices')
+                .update({ is_active: false })
+                .eq('id', biometricDeviceId);
+            
+            if (error) {
+                console.error('Error deleting biometric:', error);
+                return false;
+            }
+            
+            isBiometricRegistered = false;
+            biometricDeviceId = null;
+            return true;
+        }
+        
+        // Show biometric registration modal
+        async function showBiometricRegistrationModal() {
+            // Check if already registered
+            const hasBiometric = await checkBiometricStatus();
+            if (hasBiometric) {
+                showToast('Fingerprint already registered!', 'info');
+                return;
+            }
+            
+            const modal = document.getElementById('biometricModal');
+            const statusDiv = document.getElementById('biometricModalStatus');
+            statusDiv.textContent = '';
+            modal.style.display = 'flex';
+        }
+        
+        // Perform biometric registration
+        async function performBiometricRegistration() {
+            const modal = document.getElementById('biometricModal');
+            const statusDiv = document.getElementById('biometricModalStatus');
+            const confirmBtn = document.getElementById('confirmBiometricBtn');
+            const cancelBtn = document.getElementById('cancelBiometricBtn');
+            
+            statusDiv.innerHTML = '<div class="spinner" style="width: 30px; height: 30px;"></div> Verifying fingerprint...';
+            confirmBtn.disabled = true;
+            cancelBtn.disabled = true;
+            
+            // Simulate fingerprint scan (in production, use WebAuthn API)
+            setTimeout(async () => {
+                const success = await registerBiometricInSupabase();
+                
+                if (success) {
+                    statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> ✅ Fingerprint registered successfully!';
+                    statusDiv.style.color = '#2e7d32';
+                    
+                    // Update button UI
+                    const registerBtn = document.getElementById('registerBiometricBtn');
+                    registerBtn.disabled = true;
+                    registerBtn.innerHTML = '<i class="fas fa-check-circle"></i> Fingerprint Registered';
+                    
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 2000);
+                } else {
+                    statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ❌ Registration failed. Please try again.';
+                    statusDiv.style.color = '#d32f2f';
+                    confirmBtn.disabled = false;
+                    cancelBtn.disabled = false;
+                }
+            }, 2000);
+        }
+        
+        // Close biometric modal
+        function closeBiometricModal() {
+            document.getElementById('biometricModal').style.display = 'none';
+        }
+
+        // ============================================
+        // LOGOUT HANDLER
+        // ============================================
+        
         async function handleLogout() {
             try {
+                // Note: Don't delete biometric on logout - keep for next session
                 if (window.auth) {
                     await window.auth.logout();
                 }
@@ -945,6 +1059,10 @@
             }
         }
 
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
         function showError(message) {
             document.getElementById('loadingSpinner').style.display = 'none';
             document.getElementById('errorContainer').style.display = 'flex';
@@ -990,6 +1108,15 @@
                 }
 
                 if (!window.attendance) window.attendance = new AttendanceManager();
+                
+                // Check biometric status
+                await checkBiometricStatus();
+                const registerBtn = document.getElementById('registerBiometricBtn');
+                if (isBiometricRegistered) {
+                    registerBtn.disabled = true;
+                    registerBtn.innerHTML = '<i class="fas fa-check-circle"></i> Fingerprint Registered';
+                }
+                
                 await loadStats();
                 await loadRecentAttendanceGrouped();
                 await window.attendance.checkTodayStatus();
@@ -999,10 +1126,18 @@
             }
         }
 
-        // ============= MASTER QR FUNCTIONS =============
+        // Biometric button event listeners
+        document.getElementById('registerBiometricBtn').addEventListener('click', showBiometricRegistrationModal);
+        document.getElementById('confirmBiometricBtn').addEventListener('click', performBiometricRegistration);
+        document.getElementById('cancelBiometricBtn').addEventListener('click', closeBiometricModal);
+
+        // ============================================
+        // MASTER QR FUNCTIONS
+        // ============================================
+        
         async function generateMasterQR() {
             const result = await window.admin.generateMasterQR();
-            if (result.success) showToast('✅ Master QR code generated successfully!', 'success');
+            if (result.success) showToast('Master QR code generated successfully!', 'success');
         }
         
         async function downloadMasterQR() {
@@ -1012,7 +1147,7 @@
                 link.download = 'organization-master-qr.png';
                 link.href = result.qrCodeUrl;
                 link.click();
-                showToast('✅ Master QR code downloaded!', 'success');
+                showToast('Master QR code downloaded!', 'success');
             } else {
                 showToast('No master QR code found. Generate one first.', 'error');
             }
@@ -1024,7 +1159,7 @@
                 link.download = 'organization-master-qr.png';
                 link.href = currentMasterQRDataUrl;
                 link.click();
-                showToast('✅ QR code downloaded!', 'success');
+                showToast('QR code downloaded!', 'success');
             }
         }
         
@@ -1042,7 +1177,7 @@
         async function resetMasterQR() {
             if (confirm('Reset master QR code? This will invalidate all existing QR codes.')) {
                 await window.admin.resetMasterQR();
-                showToast('Master QR code reset. Generate a new one.', 'warning');
+                showToast('Master QR code reset. Generate a new one.', 'info');
             }
         }
         
@@ -1050,7 +1185,10 @@
             document.getElementById('masterQRModal').style.display = 'none';
         }
 
-        // ============= ASSIST FUNCTIONS =============
+        // ============================================
+        // ASSIST FUNCTIONS
+        // ============================================
+        
         async function openAssistModal() {
             const result = await window.admin.getUsers();
             const userSelect = document.getElementById('assistUserSelect');
@@ -1128,10 +1266,7 @@
             stopCamera();
             document.getElementById('cameraModal').style.display = 'none';
             
-            const loadingMsg = document.createElement('div');
-            loadingMsg.className = 'loading-spinner';
-            loadingMsg.innerHTML = '<div class="spinner"></div><p>Processing...</p>';
-            document.body.appendChild(loadingMsg);
+            showToast('Processing attendance with photo...', 'info');
             
             try {
                 await window.attendance.supabase.from('attendance_photos').insert([{
@@ -1158,7 +1293,6 @@
             } catch (error) {
                 showToast('Error: ' + error.message, 'error');
             } finally {
-                loadingMsg.remove();
                 assistUserId = null;
                 assistAction = null;
                 capturedPhotoData = null;
@@ -1178,7 +1312,10 @@
             document.getElementById('cameraModal').style.display = 'none';
         };
 
-        // ============= LOAD ATTENDANCE FUNCTIONS =============
+        // ============================================
+        // LOAD ATTENDANCE FUNCTIONS
+        // ============================================
+        
         async function loadStats() {
             const stats = await window.attendance.getTodayStats();
             if (stats) {
@@ -1221,7 +1358,16 @@
                         </div>
                         <div class="attendance-table-container">
                             <table class="attendance-table">
-                                <thead><tr><th>Employee</th><th>Department</th><th>Check In</th><th>Check Out</th><th>Status</th><th>Method</th></tr></thead>
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Department</th>
+                                        <th>Check In</th>
+                                        <th>Check Out</th>
+                                        <th>Status</th>
+                                        <th>Method</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                 `;
                 
@@ -1234,7 +1380,16 @@
                     else if (record.status === 'late') { statusClass = 'status-late'; statusText = 'Late'; }
                     else { statusClass = 'status-absent'; statusText = 'Absent'; }
                     
-                    html += `<tr><td><strong>${escapeHtml(record.users?.full_name || 'Unknown')}</strong></td><td>${escapeHtml(deptName)}</td><td>${checkIn}</td><td>${checkOut}</td><td><span class="status-badge ${statusClass}">${statusText}</span></td><td>${record.check_in_method}</td></tr>`;
+                    html += `
+                        <tr>
+                            <td><strong>${escapeHtml(record.users?.full_name || 'Unknown')}</strong></td>
+                            <td>${escapeHtml(deptName)}</td>
+                            <td>${checkIn}</td>
+                            <td>${checkOut}</td>
+                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                            <td>${record.check_in_method}</td>
+                        </tr>
+                    `;
                 }
                 html += `</tbody></table></div></div>`;
             }
@@ -1264,7 +1419,10 @@
             });
         }
 
-        // ============= PRESENT/ABSENT FUNCTIONS =============
+        // ============================================
+        // PRESENT/ABSENT FUNCTIONS
+        // ============================================
+        
         async function showPresentAbsentUsers() {
             document.getElementById('presentAbsentModal').style.display = 'block';
             loadAllUsersStatus();
@@ -1360,7 +1518,10 @@
             }
         }
 
-        // ============= USER MANAGEMENT =============
+        // ============================================
+        // USER MANAGEMENT FUNCTIONS
+        // ============================================
+        
         async function showUserManagement() {
             const modal = document.getElementById('userModal');
             const content = document.getElementById('userManagementContent');
@@ -1369,11 +1530,11 @@
             const departments = await window.admin.getDepartments();
             const result = await window.admin.getUsers();
             if (result.success) {
-                let html = `<div class="filter-bar"><input type="text" id="userSearch" placeholder="Search..." onkeyup="filterUsers()"><select id="roleFilter" onchange="filterUsers()"><option value="">All Roles</option><option value="admin">Admin</option><option value="supervisor">Supervisor</option><option value="staff">Staff</option><option value="student">Student</option></select><select id="deptFilter" onchange="filterUsers()"><option value="">All Departments</option>${departments.success ? departments.data.map(d => `<option value="${d.id}">${d.name}</option>`).join('') : ''}</select><button onclick="openAddUserForm()" class="btn-primary">+ Add New User</button></div>
+                let html = `<div class="filter-bar"><input type="text" id="userSearch" placeholder="Search..." onkeyup="filterUsers()"><select id="roleFilter" onchange="filterUsers()"><option value="">All Roles</option><option value="admin">Admin</option><option value="supervisor">Supervisor</option><option value="staff">Staff</option><option value="student">Student</option></select><select id="deptFilter" onchange="filterUsers()"><option value="">All Departments</option>${departments.success ? departments.data.map(d => `<option value="${d.id}">${d.name}</option>`).join('') : ''}</select><button onclick="openAddUserForm()" class="btn-success">+ Add New User</button></div>
                     <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Status</th><th>Actions</th></tr></thead><tbody id="userTableBody">`;
                 result.data.forEach(user => {
                     const dept = user.departments?.name || 'Not Assigned';
-                    html += `<tr data-role="${user.role}" data-dept="${user.department_id || ''}" data-name="${user.full_name.toLowerCase()}" data-email="${user.employee_id.toLowerCase()}"><td><strong>${escapeHtml(user.full_name)}</strong></td><td>${escapeHtml(user.employee_id)}</td><td><span class="status-badge">${user.role}</span></td><td>${escapeHtml(dept)}</td><td><span class="status-badge status-${user.is_active ? 'present' : 'absent'}">${user.is_active ? 'Active' : 'Inactive'}</span></td><td><button onclick="openEditUserForm('${user.id}')" class="btn-primary">Edit</button> <button onclick="toggleUserStatus('${user.id}', ${user.is_active})" class="btn-primary">${user.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
+                    html += `<tr data-role="${user.role}" data-dept="${user.department_id || ''}" data-name="${user.full_name.toLowerCase()}" data-email="${user.employee_id.toLowerCase()}"><td><strong>${escapeHtml(user.full_name)}</strong></td><td>${escapeHtml(user.employee_id)}</td><td><span class="status-badge">${user.role}</span></td><td>${escapeHtml(dept)}</td><td><span class="status-badge status-${user.is_active ? 'present' : 'absent'}">${user.is_active ? 'Active' : 'Inactive'}</span></td><td><button onclick="openEditUserForm('${user.id}')" class="btn-info">Edit</button> <button onclick="toggleUserStatus('${user.id}', ${user.is_active})" class="btn-warning">${user.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
                 });
                 html += `</tbody></table></div>`;
                 content.innerHTML = html;
@@ -1495,7 +1656,10 @@
             }
         }
 
-        // ============= DEPARTMENT MANAGEMENT =============
+        // ============================================
+        // DEPARTMENT MANAGEMENT
+        // ============================================
+        
         async function showDepartmentManagement() {
             const modal = document.getElementById('deptModal');
             const content = document.getElementById('deptManagementContent');
@@ -1503,10 +1667,10 @@
             modal.style.display = 'block';
             const result = await window.admin.getDepartments();
             if (result.success) {
-                let html = `<button onclick="openAddDepartmentForm()" class="btn-primary" style="margin-bottom:15px;">+ Add Department</button>
+                let html = `<button onclick="openAddDepartmentForm()" class="btn-success" style="margin-bottom:15px;">+ Add Department</button>
                     <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Name</th><th>Description</th><th>Head</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
                 result.data.forEach(dept => {
-                    html += `<tr><td><strong>${escapeHtml(dept.name)}</strong></td><td>${escapeHtml(dept.description || 'N/A')}</td><td>${dept.head_of_department?.full_name || 'Not assigned'}</td><td><span class="status-badge status-${dept.is_active ? 'present' : 'absent'}">${dept.is_active ? 'Active' : 'Inactive'}</span></td><td><button onclick="openEditDepartmentForm('${dept.id}')" class="btn-primary">Edit</button> <button onclick="toggleDepartmentStatus('${dept.id}', ${dept.is_active})" class="btn-primary">${dept.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
+                    html += `<tr><td style="padding:12px;"><strong>${escapeHtml(dept.name)}</strong></td><td style="padding:12px;">${escapeHtml(dept.description || 'N/A')}</td><td style="padding:12px;">${dept.head_of_department?.full_name || 'Not assigned'}</td><td style="padding:12px;"><span class="status-badge status-${dept.is_active ? 'present' : 'absent'}">${dept.is_active ? 'Active' : 'Inactive'}</span></td><td style="padding:12px;"><button onclick="openEditDepartmentForm('${dept.id}')" class="btn-info">Edit</button> <button onclick="toggleDepartmentStatus('${dept.id}', ${dept.is_active})" class="btn-warning">${dept.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
                 });
                 html += `</tbody></table></div>`;
                 content.innerHTML = html;
@@ -1602,7 +1766,10 @@
             }
         }
 
-        // ============= REPORTS =============
+        // ============================================
+        // REPORTS
+        // ============================================
+        
         function showReports() {
             const modal = document.getElementById('reportsModal');
             const today = new Date().toISOString().split('T')[0];
@@ -1615,8 +1782,8 @@
                         <option value="summary">Summary Report</option>
                         <option value="detailed">Detailed Report</option>
                     </select>
-                    <button onclick="generateReport()" class="btn-primary">Generate</button>
-                    <button onclick="exportReport()" class="btn-primary">Export CSV</button>
+                    <button onclick="generateReport()" class="btn-success">Generate</button>
+                    <button onclick="exportReport()" class="btn-info">Export CSV</button>
                 </div>
                 <div id="reportResults"><p>Select date range and click Generate</p></div>
             `;
@@ -1640,7 +1807,7 @@
                             const dept = r.users?.departments?.name || 'Not Assigned';
                             const statusText = r.status === 'present' ? 'Present' : (r.status === 'late' ? 'Late' : 'Absent');
                             const statusClass = r.status === 'present' ? 'status-present' : (r.status === 'late' ? 'status-late' : 'status-absent');
-                            html += `<tr><td>${r.date}</td><td>${escapeHtml(r.users?.full_name || 'Unknown')}</td><td>${r.check_in_time ? new Date(r.check_in_time).toLocaleTimeString() : '-'}</td><td>${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td><td><span class="status-badge ${statusClass}">${statusText}</span></td><td>${r.check_in_method}</td></tr>`;
+                            html += `<tr><td style="padding:10px;">${r.date}</td><td style="padding:10px;">${escapeHtml(r.users?.full_name || 'Unknown')}</td><td style="padding:10px;">${r.check_in_time ? new Date(r.check_in_time).toLocaleTimeString() : '-'}</td><td style="padding:10px;">${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td><td style="padding:10px;"><span class="status-badge ${statusClass}">${statusText}</span></td><td style="padding:10px;">${r.check_in_method}</td></tr>`;
                         });
                         html += `</tbody></table></div>`;
                         if (data.length > 20) html += '<p>Showing first 20 records. Export for full data.</p>';
@@ -1670,6 +1837,7 @@
                 if (modal) modal.style.display = 'none';
                 if (html5QrCode && modal?.id === 'qrModal') html5QrCode.stop();
                 if (modal?.id === 'cameraModal') stopCamera();
+                if (modal?.id === 'biometricModal') closeBiometricModal();
             };
         });
         
@@ -1678,6 +1846,7 @@
                 event.target.style.display = 'none';
                 if (html5QrCode && event.target.id === 'qrModal') html5QrCode.stop();
                 if (event.target.id === 'cameraModal') stopCamera();
+                if (event.target.id === 'biometricModal') closeBiometricModal();
             }
         };
     </script>
