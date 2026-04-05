@@ -15,15 +15,15 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a3a 100%);
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a3a 50%, #0d0d2b 100%);
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Animated Floating Orbs Background */
-        .orb-container {
+        /* Animated Floating Lines and Balls */
+        .animated-bg {
             position: fixed;
             top: 0;
             left: 0;
@@ -33,113 +33,45 @@
             overflow: hidden;
         }
 
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(60px);
-            opacity: 0.5;
-            animation: floatOrb 25s infinite ease-in-out;
-        }
-
-        .orb-1 {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(46, 125, 50, 0.4) 0%, rgba(27, 94, 32, 0.1) 100%);
-            top: -150px;
-            left: -150px;
-            animation-delay: 0s;
-        }
-
-        .orb-2 {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(33, 150, 243, 0.3) 0%, rgba(25, 118, 210, 0.1) 100%);
-            bottom: -200px;
-            right: -200px;
-            animation-delay: 5s;
-        }
-
-        .orb-3 {
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, rgba(156, 39, 176, 0.3) 0%, rgba(123, 31, 162, 0.1) 100%);
-            top: 30%;
-            left: 15%;
-            animation-delay: 10s;
-        }
-
-        .orb-4 {
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(0, 188, 212, 0.3) 0%, rgba(0, 150, 136, 0.1) 100%);
-            bottom: 15%;
-            right: 5%;
-            animation-delay: 15s;
-        }
-
-        .orb-5 {
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255, 152, 0, 0.25) 0%, rgba(255, 87, 34, 0.1) 100%);
-            top: 60%;
-            right: 20%;
-            animation-delay: 20s;
-        }
-
-        .orb-6 {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(76, 175, 80, 0.25) 0%, rgba(56, 142, 60, 0.1) 100%);
-            top: 10%;
-            right: -100px;
-            animation-delay: 25s;
-        }
-
-        @keyframes floatOrb {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-            25% {
-                transform: translate(80px, -50px) scale(1.1);
-            }
-            50% {
-                transform: translate(-50px, 80px) scale(0.9);
-            }
-            75% {
-                transform: translate(50px, 50px) scale(1.05);
-            }
-        }
-
-        /* Animated Lines */
-        .line-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .moving-line {
+        .floating-line {
             position: absolute;
             background: linear-gradient(90deg, transparent, rgba(46, 125, 50, 0.3), transparent);
             height: 2px;
-            width: 100%;
-            animation: moveLine 15s linear infinite;
+            animation: moveLine 8s linear infinite;
         }
-
-        .moving-line:nth-child(1) { top: 15%; animation-delay: 0s; }
-        .moving-line:nth-child(2) { top: 35%; animation-delay: 3s; }
-        .moving-line:nth-child(3) { top: 55%; animation-delay: 6s; }
-        .moving-line:nth-child(4) { top: 75%; animation-delay: 9s; }
-        .moving-line:nth-child(5) { top: 85%; animation-delay: 12s; }
 
         @keyframes moveLine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% { transform: translateX(-100%); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateX(100%); opacity: 0; }
         }
+
+        .floating-ball {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(46, 125, 50, 0.4), rgba(27, 94, 32, 0.1));
+            backdrop-filter: blur(5px);
+            animation: floatBall 15s infinite ease-in-out;
+        }
+
+        @keyframes floatBall {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -20px) scale(1.1); }
+            50% { transform: translate(-20px, 40px) scale(0.9); }
+            75% { transform: translate(20px, 20px) scale(1.05); }
+        }
+
+        .ball-1 { width: 300px; height: 300px; top: -100px; left: -100px; animation-delay: 0s; }
+        .ball-2 { width: 400px; height: 400px; bottom: -150px; right: -150px; animation-delay: 3s; }
+        .ball-3 { width: 200px; height: 200px; top: 40%; left: 10%; animation-delay: 6s; }
+        .ball-4 { width: 250px; height: 250px; bottom: 20%; right: 15%; animation-delay: 9s; }
+        .ball-5 { width: 180px; height: 180px; top: 60%; right: 30%; animation-delay: 12s; }
+        .ball-6 { width: 350px; height: 350px; top: 10%; right: -100px; animation-delay: 15s; }
+
+        .line-1 { top: 20%; width: 100%; animation-duration: 6s; }
+        .line-2 { top: 40%; width: 80%; animation-duration: 8s; animation-delay: 2s; }
+        .line-3 { top: 60%; width: 120%; animation-duration: 10s; animation-delay: 4s; }
+        .line-4 { top: 80%; width: 90%; animation-duration: 7s; animation-delay: 1s; }
 
         /* Glassmorphism Header */
         .glass-header {
@@ -183,7 +115,7 @@
 
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4); }
-            50% { box-shadow: 0 0 0 15px rgba(46, 125, 50, 0); }
+            50% { box-shadow: 0 0 0 10px rgba(46, 125, 50, 0); }
         }
 
         .logo-text {
@@ -247,14 +179,8 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Left Side - Info Section */
@@ -331,137 +257,6 @@
             margin-top: 5px;
         }
 
-        /* Testimonial Slider Styles */
-        .testimonial-slider {
-            margin-top: 40px;
-            position: relative;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-            padding: 25px;
-        }
-
-        .testimonial-container {
-            position: relative;
-            min-height: 160px;
-        }
-
-        .testimonial-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .testimonial-slide.active {
-            opacity: 1;
-            visibility: visible;
-            position: relative;
-        }
-
-        .testimonial-slide p {
-            font-size: 14px;
-            font-style: italic;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .author-avatar {
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .author-info {
-            flex: 1;
-        }
-
-        .author-name {
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .author-title {
-            font-size: 11px;
-            opacity: 0.7;
-        }
-
-        .author-rating {
-            display: flex;
-            gap: 3px;
-            margin-top: 5px;
-        }
-
-        .author-rating i {
-            font-size: 10px;
-            color: #fbbf24;
-        }
-
-        .slider-dots {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 20px;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .dot.active {
-            width: 24px;
-            background: white;
-            border-radius: 4px;
-        }
-
-        .slider-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 30px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            z-index: 10;
-        }
-
-        .slider-nav:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-
-        .slider-nav.prev {
-            left: -15px;
-        }
-
-        .slider-nav.next {
-            right: -15px;
-        }
-
         /* Right Side - Form Section */
         .form-section {
             flex: 0.8;
@@ -536,7 +331,6 @@
             cursor: pointer;
             color: #94a3b8;
             transition: color 0.3s ease;
-            z-index: 2;
         }
 
         .password-toggle:hover {
@@ -599,22 +393,17 @@
             box-shadow: 0 10px 25px -5px rgba(46, 125, 50, 0.4);
         }
 
-        .btn-login:active {
-            transform: translateY(1px);
-        }
-
         .btn-login:disabled {
             opacity: 0.6;
             transform: none;
             cursor: not-allowed;
         }
 
-        /* Biometric Button */
         .biometric-btn {
-            background: white;
-            color: #2e7d32;
+            background: linear-gradient(135deg, #1a1a3a 0%, #2d2d5a 100%);
+            color: #a5d6a7;
             padding: 14px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid rgba(46, 125, 50, 0.3);
             border-radius: 16px;
             font-size: 16px;
             font-weight: 600;
@@ -631,13 +420,10 @@
 
         .biometric-btn:hover {
             border-color: #2e7d32;
-            background: #f8fafc;
+            background: linear-gradient(135deg, #2d2d5a 0%, #3d3d6a 100%);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.2);
-        }
-
-        .biometric-btn:active {
-            transform: translateY(1px);
+            box-shadow: 0 5px 20px rgba(46, 125, 50, 0.3);
+            color: white;
         }
 
         .biometric-btn i {
@@ -647,12 +433,6 @@
 
         .biometric-btn:hover i {
             transform: scale(1.1);
-        }
-
-        .biometric-btn.disabled, .biometric-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
         }
 
         .divider {
@@ -704,6 +484,17 @@
             display: none;
         }
 
+        .info-message {
+            background: #e3f2fd;
+            color: #0288d1;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 16px;
+            display: none;
+        }
+
         .trust-badge {
             margin-top: 30px;
             text-align: center;
@@ -732,8 +523,8 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -748,6 +539,7 @@
             width: 90%;
             position: relative;
             animation: slideDown 0.3s ease;
+            text-align: center;
         }
         
         .modal-content h2 {
@@ -775,77 +567,69 @@
             color: #1e293b;
         }
 
-        .biometric-status {
-            margin-top: 15px;
-            font-size: 12px;
-            text-align: center;
-            display: none;
+        .fingerprint-icon {
+            font-size: 80px;
+            color: #2e7d32;
+            margin: 20px 0;
+            animation: pulse 1s infinite;
         }
-        
+
+        .biometric-status-text {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: white;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 14px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
         
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .biometric-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #2e7d32;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Responsive */
         @media (max-width: 968px) {
             .login-card {
                 flex-direction: column;
                 max-width: 500px;
             }
-            
             .info-section {
                 padding: 35px 30px;
             }
-            
             .info-section h1 {
                 font-size: 32px;
             }
-            
             .form-section {
                 padding: 35px 30px;
             }
-            
             .glass-header {
                 padding: 10px 20px;
             }
-            
             .stats-badge {
                 display: none;
             }
-            
             .logo-text {
                 font-size: 20px;
-            }
-            
-            .slider-nav {
-                display: none;
             }
         }
 
@@ -858,23 +642,18 @@
     </style>
 </head>
 <body>
-    <!-- Animated Floating Orbs Background -->
-    <div class="orb-container">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-        <div class="orb orb-4"></div>
-        <div class="orb orb-5"></div>
-        <div class="orb orb-6"></div>
-    </div>
-
-    <!-- Animated Lines -->
-    <div class="line-container">
-        <div class="moving-line"></div>
-        <div class="moving-line"></div>
-        <div class="moving-line"></div>
-        <div class="moving-line"></div>
-        <div class="moving-line"></div>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-ball ball-1"></div>
+        <div class="floating-ball ball-2"></div>
+        <div class="floating-ball ball-3"></div>
+        <div class="floating-ball ball-4"></div>
+        <div class="floating-ball ball-5"></div>
+        <div class="floating-ball ball-6"></div>
+        <div class="floating-line line-1"></div>
+        <div class="floating-line line-2"></div>
+        <div class="floating-line line-3"></div>
+        <div class="floating-line line-4"></div>
     </div>
 
     <!-- Glassmorphism Header -->
@@ -904,7 +683,7 @@
 
     <div class="container">
         <div class="login-card">
-            <!-- Left Side - Info Section with Testimonial Slider -->
+            <!-- Left Side - Info Section -->
             <div class="info-section">
                 <div class="welcome-badge">
                     <i class="fas fa-rocket"></i> Welcome to Springytrack
@@ -925,79 +704,6 @@
                         <span class="stat-number">10K+</span>
                         <span class="stat-label">Daily Check-ins</span>
                     </div>
-                </div>
-
-                <!-- Professional Testimonial Slider -->
-                <div class="testimonial-slider">
-                    <div class="slider-nav prev" id="prevTestimonial">
-                        <i class="fas fa-chevron-left"></i>
-                    </div>
-                    <div class="slider-nav next" id="nextTestimonial">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                    <div class="testimonial-container" id="testimonialContainer">
-                        <div class="testimonial-slide active">
-                            <p>"Springytrack has transformed how we manage employee attendance. The QR check-in feature is a game-changer! Real-time tracking and analytics have saved us countless hours."</p>
-                            <div class="testimonial-author">
-                                <div class="author-avatar">
-                                    <i class="fas fa-user-tie"></i>
-                                </div>
-                                <div class="author-info">
-                                    <div class="author-name">Sarah Johnson</div>
-                                    <div class="author-title">HR Director, TechCorp</div>
-                                    <div class="author-rating">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial-slide">
-                            <p>"The best attendance system we've ever used! Simple, intuitive, and the automated reports make monthly reviews effortless. Our team loves the QR code check-in feature."</p>
-                            <div class="testimonial-author">
-                                <div class="author-avatar">
-                                    <i class="fas fa-user-md"></i>
-                                </div>
-                                <div class="author-info">
-                                    <div class="author-name">Dr. Michael Chen</div>
-                                    <div class="author-title">Operations Manager, HealthPlus</div>
-                                    <div class="author-rating">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial-slide">
-                            <p>"Exceptional platform! The real-time dashboard gives us complete visibility into attendance patterns. The support team is incredibly responsive and helpful."</p>
-                            <div class="testimonial-author">
-                                <div class="author-avatar">
-                                    <i class="fas fa-user-graduate"></i>
-                                </div>
-                                <div class="author-info">
-                                    <div class="author-name">Emily Rodriguez</div>
-                                    <div class="author-title">CEO, StartUp Labs</div>
-                                    <div class="author-rating">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial-slide">
-                            <p>"Implementing Springytrack was the best decision we made this year. Reduced administrative work by 70% and improved accuracy dramatically. Highly recommended!"</p>
-                            <div class="testimonial-author">
-                                <div class="author-avatar">
-                                    <i class="fas fa-user-astronaut"></i>
-                                </div>
-                                <div class="author-info">
-                                    <div class="author-name">James Wilson</div>
-                                    <div class="author-title">IT Director, Global Systems</div>
-                                    <div class="author-rating">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="slider-dots" id="sliderDots"></div>
                 </div>
             </div>
 
@@ -1033,12 +739,12 @@
                 </div>
 
                 <button id="biometricBtn" class="biometric-btn">
-                    <i class="fas fa-fingerprint"></i> Sign in with Biometric
+                    <i class="fas fa-fingerprint"></i> Sign in with Fingerprint
                 </button>
 
-                <div id="biometricStatus" class="biometric-status"></div>
-
+                <div id="biometricStatus" class="info-message"></div>
                 <div id="errorMessage" class="error-message"></div>
+                <div id="successMessage" class="success-message"></div>
 
                 <div class="trust-badge">
                     <p>
@@ -1077,13 +783,13 @@
     <div id="biometricModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2><i class="fas fa-fingerprint"></i> Biometric Authentication</h2>
-            <p id="biometricModalMessage">Place your finger on the sensor to authenticate.</p>
-            <div style="text-align: center; margin: 30px 0;">
-                <i class="fas fa-fingerprint" style="font-size: 80px; color: #2e7d32; animation: pulse 1s infinite;"></i>
+            <h2><i class="fas fa-fingerprint"></i> Fingerprint Authentication</h2>
+            <div class="fingerprint-icon">
+                <i class="fas fa-fingerprint"></i>
             </div>
-            <div id="biometricModalStatus" style="text-align: center; margin-top: 10px; color: #666;"></div>
-            <button id="cancelBiometricBtn" class="btn-login" style="background: #64748b; margin-top: 20px;">Cancel</button>
+            <p id="biometricModalMessage">Please authenticate using your fingerprint</p>
+            <div id="biometricModalStatus" class="biometric-status-text"></div>
+            <button id="cancelBiometricBtn" class="btn-login" style="background: #64748b; margin-top: 20px; width: 100%;">Cancel</button>
         </div>
     </div>
 
@@ -1095,169 +801,315 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_jTsJmSF195H4U6Og7oOdSA_2VI1_xnd';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        // Helper functions
+        function showToast(message, type = 'success') {
+            const existingToast = document.querySelector('.toast-notification');
+            if (existingToast) existingToast.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.style.background = type === 'success' ? '#2e7d32' : (type === 'error' ? '#dc2626' : '#0288d1');
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle')}"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => { errorDiv.style.display = 'none'; }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => { successDiv.style.display = 'none'; }, 3000);
+        }
+
+        function showInfo(message) {
+            const infoDiv = document.getElementById('biometricStatus');
+            infoDiv.textContent = message;
+            infoDiv.style.display = 'block';
+            setTimeout(() => { infoDiv.style.display = 'none'; }, 3000);
+        }
+
         // ============================================
-        // BIOMETRIC AUTHENTICATION SYSTEM
+        // WEBAUTHN BIOMETRIC FUNCTIONS
         // ============================================
         
-        // Check if user has biometric device registered in Supabase
-        async function checkBiometricStatusForUser(email) {
+        // Check if user has registered biometric
+        async function hasBiometric(userId) {
             try {
-                // First get the user ID from email
-                const { data: userData, error: userError } = await supabaseClient
-                    .from('users')
-                    .select('id')
-                    .eq('employee_id', email)
-                    .single();
-                
-                if (userError || !userData) {
-                    console.log('User not found:', userError);
-                    return false;
-                }
-                
-                // Check if user has active biometric device
                 const { data, error } = await supabaseClient
-                    .from('biometric_devices')
-                    .select('id, device_name, is_active')
-                    .eq('user_id', userData.id)
-                    .eq('is_active', true)
-                    .maybeSingle();
+                    .rpc('has_biometric', { p_user_id: userId });
                 
-                if (error) {
-                    console.error('Error checking biometric:', error);
-                    return false;
-                }
-                
-                return !!data;
+                if (error) throw error;
+                return data;
             } catch (error) {
-                console.error('Error checking biometric status:', error);
+                console.error('Error checking biometric:', error);
                 return false;
             }
         }
-        
-        // Authenticate with biometric
-        async function authenticateWithBiometric(email) {
-            return new Promise(async (resolve) => {
-                // Check if biometric is registered for this user
-                const hasBiometric = await checkBiometricStatusForUser(email);
-                
-                if (!hasBiometric) {
-                    const statusDiv = document.getElementById('biometricStatus');
-                    statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Biometric authentication not set up for this account. Please log in with email first to register.';
-                    statusDiv.style.display = 'block';
-                    statusDiv.style.color = '#dc2626';
-                    setTimeout(() => {
-                        statusDiv.style.display = 'none';
-                    }, 4000);
-                    resolve(false);
-                    return;
+
+        // Register biometric using WebAuthn API
+        async function registerBiometric() {
+            const user = window.auth?.currentUser;
+            if (!user) {
+                showError('Please log in first');
+                return false;
+            }
+
+            // Check if already registered
+            const hasBiom = await hasBiometric(user.id);
+            if (hasBiom) {
+                showInfo('Fingerprint already registered!');
+                return false;
+            }
+
+            const modal = document.getElementById('biometricModal');
+            const messageEl = document.getElementById('biometricModalMessage');
+            const statusEl = document.getElementById('biometricModalStatus');
+            
+            messageEl.textContent = 'Preparing fingerprint registration...';
+            statusEl.innerHTML = '';
+            modal.style.display = 'flex';
+
+            try {
+                // Check if WebAuthn is supported
+                if (!window.PublicKeyCredential) {
+                    throw new Error('WebAuthn is not supported on this browser');
                 }
+
+                // Generate a challenge
+                const challenge = btoa(JSON.stringify({
+                    user_id: user.id,
+                    timestamp: Date.now(),
+                    random: Math.random()
+                }));
+
+                // Store challenge in Supabase
+                const { error: challengeError } = await supabaseClient
+                    .from('biometric_challenges')
+                    .insert({
+                        user_id: user.id,
+                        challenge: challenge,
+                        expires_at: new Date(Date.now() + 5 * 60 * 1000).toISOString()
+                    });
+
+                if (challengeError) throw challengeError;
+
+                messageEl.textContent = 'Please authenticate using your fingerprint sensor...';
                 
-                // Show biometric authentication modal
-                const modal = document.getElementById('biometricModal');
-                const message = document.getElementById('biometricModalMessage');
-                const statusDiv = document.getElementById('biometricModalStatus');
+                // Create credential options
+                const publicKeyCredentialCreationOptions = {
+                    challenge: new TextEncoder().encode(challenge),
+                    rp: {
+                        name: 'Springytrack',
+                        id: window.location.hostname
+                    },
+                    user: {
+                        id: new TextEncoder().encode(user.id),
+                        name: user.email,
+                        displayName: user.profile?.full_name || user.email
+                    },
+                    pubKeyCredParams: [
+                        { alg: -7, type: 'public-key' },  // ES256
+                        { alg: -257, type: 'public-key' } // RS256
+                    ],
+                    authenticatorSelection: {
+                        authenticatorAttachment: 'platform',
+                        userVerification: 'required',
+                        residentKey: 'required'
+                    },
+                    timeout: 60000,
+                    attestation: 'none'
+                };
+
+                // Create credential
+                const credential = await navigator.credentials.create({
+                    publicKey: publicKeyCredentialCreationOptions
+                });
+
+                if (!credential) throw new Error('Failed to create credential');
+
+                // Store credential in Supabase
+                const { error: storeError } = await supabaseClient
+                    .from('biometric_credentials')
+                    .insert({
+                        user_id: user.id,
+                        credential_id: btoa(String.fromCharCode(...new Uint8Array(credential.rawId))),
+                        public_key: btoa(JSON.stringify(credential.response.getPublicKey())),
+                        device_name: navigator.userAgent,
+                        device_type: 'fingerprint',
+                        transports: credential.response.getTransports?.() || [],
+                        is_active: true
+                    });
+
+                if (storeError) throw storeError;
+
+                // Log success
+                await supabaseClient.rpc('log_biometric_activity', {
+                    p_user_id: user.id,
+                    p_action: 'REGISTER',
+                    p_status: 'SUCCESS',
+                    p_credential_id: btoa(String.fromCharCode(...new Uint8Array(credential.rawId)))
+                });
+
+                messageEl.textContent = '✅ Fingerprint registered successfully!';
+                statusEl.innerHTML = '<span style="color: #2e7d32;">Registration complete!</span>';
                 
-                message.textContent = 'Place your finger on the sensor to authenticate.';
-                statusDiv.textContent = '';
-                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    showSuccess('Fingerprint registered successfully! You can now use it to log in.');
+                }, 2000);
                 
-                // Simulate biometric authentication
-                setTimeout(async () => {
-                    statusDiv.innerHTML = '<div class="biometric-spinner"></div> Verifying fingerprint...';
-                    
-                    setTimeout(async () => {
-                        statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> ✅ Biometric verified! Logging in...';
-                        statusDiv.style.color = '#166534';
-                        
-                        // Attempt to login with the email
-                        if (window.auth) {
-                            const result = await window.auth.login(email, 'TempPass123!');
-                            
-                            if (result.success) {
-                                setTimeout(() => {
-                                    modal.style.display = 'none';
-                                    resolve(true);
-                                }, 1000);
-                            } else {
-                                statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ❌ Login failed. Please try again.';
-                                statusDiv.style.color = '#dc2626';
-                                setTimeout(() => {
-                                    modal.style.display = 'none';
-                                    resolve(false);
-                                }, 2000);
-                            }
-                        } else {
-                            statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ❌ Authentication system not ready.';
-                            statusDiv.style.color = '#dc2626';
-                            setTimeout(() => {
-                                modal.style.display = 'none';
-                                resolve(false);
-                            }, 2000);
-                        }
-                    }, 1500);
-                }, 500);
-            });
+                return true;
+
+            } catch (error) {
+                console.error('Registration error:', error);
+                messageEl.textContent = '❌ Registration failed';
+                statusEl.innerHTML = `<span style="color: #dc2626;">Error: ${error.message}</span>`;
+                
+                await supabaseClient.rpc('log_biometric_activity', {
+                    p_user_id: user.id,
+                    p_action: 'REGISTER',
+                    p_status: 'FAILED',
+                    p_error_message: error.message
+                });
+                
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 3000);
+                
+                return false;
+            }
         }
 
-        // ============================================
-        // TESTIMONIAL SLIDER
-        // ============================================
-        
-        const testimonials = document.querySelectorAll('.testimonial-slide');
-        const dotsContainer = document.getElementById('sliderDots');
-        let currentIndex = 0;
-        let slideInterval;
+        // Authenticate with biometric using WebAuthn API
+        async function authenticateWithBiometric() {
+            const modal = document.getElementById('biometricModal');
+            const messageEl = document.getElementById('biometricModalMessage');
+            const statusEl = document.getElementById('biometricModalStatus');
+            
+            messageEl.textContent = 'Please authenticate using your fingerprint...';
+            statusEl.innerHTML = '';
+            modal.style.display = 'flex';
 
-        // Create dots
-        testimonials.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            if (index === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => goToSlide(index));
-            dotsContainer.appendChild(dot);
-        });
+            try {
+                // Check if WebAuthn is supported
+                if (!window.PublicKeyCredential) {
+                    throw new Error('WebAuthn is not supported on this browser');
+                }
 
-        const dots = document.querySelectorAll('.dot');
+                // Get user's credential IDs
+                const { data: credentials, error: credError } = await supabaseClient
+                    .from('biometric_credentials')
+                    .select('credential_id')
+                    .eq('is_active', true);
 
-        function updateSlides() {
-            testimonials.forEach((slide, index) => {
-                slide.classList.toggle('active', index === currentIndex);
-            });
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentIndex);
-            });
+                if (credError) throw credError;
+                if (!credentials || credentials.length === 0) {
+                    throw new Error('No registered fingerprint found. Please log in with email first to register.');
+                }
+
+                // Generate challenge
+                const challenge = btoa(JSON.stringify({
+                    timestamp: Date.now(),
+                    random: Math.random()
+                }));
+
+                // Create assertion options
+                const publicKeyCredentialRequestOptions = {
+                    challenge: new TextEncoder().encode(challenge),
+                    allowCredentials: credentials.map(cred => ({
+                        id: Uint8Array.from(atob(cred.credential_id), c => c.charCodeAt(0)),
+                        type: 'public-key',
+                        transports: ['internal', 'hybrid']
+                    })),
+                    timeout: 60000,
+                    userVerification: 'required',
+                    rpId: window.location.hostname
+                };
+
+                // Get assertion
+                const assertion = await navigator.credentials.get({
+                    publicKey: publicKeyCredentialRequestOptions
+                });
+
+                if (!assertion) throw new Error('Authentication failed');
+
+                // Verify the assertion (simplified - in production, verify signature on server)
+                const credentialId = btoa(String.fromCharCode(...new Uint8Array(assertion.rawId)));
+                
+                // Get the user associated with this credential
+                const { data: credentialData, error: credDataError } = await supabaseClient
+                    .from('biometric_credentials')
+                    .select('user_id')
+                    .eq('credential_id', credentialId)
+                    .single();
+
+                if (credDataError) throw credDataError;
+                if (!credentialData) throw new Error('Credential not found');
+
+                // Update last used timestamp
+                await supabaseClient
+                    .from('biometric_credentials')
+                    .update({ last_used: new Date().toISOString() })
+                    .eq('credential_id', credentialId);
+
+                // Get user email
+                const { data: userData, error: userError } = await supabaseClient
+                    .from('users')
+                    .select('employee_id')
+                    .eq('id', credentialData.user_id)
+                    .single();
+
+                if (userError) throw userError;
+
+                // Log success
+                await supabaseClient.rpc('log_biometric_activity', {
+                    p_user_id: credentialData.user_id,
+                    p_action: 'AUTHENTICATE',
+                    p_status: 'SUCCESS',
+                    p_credential_id: credentialId
+                });
+
+                messageEl.textContent = '✅ Authentication successful! Logging in...';
+                statusEl.innerHTML = '<span style="color: #2e7d32;">Verified!</span>';
+                
+                // Login with the user's email
+                if (window.auth) {
+                    const result = await window.auth.login(userData.employee_id, 'TempPass123!');
+                    if (result.success) {
+                        setTimeout(() => {
+                            modal.style.display = 'none';
+                            showSuccess('Biometric login successful! Redirecting...');
+                        }, 1500);
+                        return true;
+                    } else {
+                        throw new Error('Login failed');
+                    }
+                }
+
+            } catch (error) {
+                console.error('Authentication error:', error);
+                messageEl.textContent = '❌ Authentication failed';
+                statusEl.innerHTML = `<span style="color: #dc2626;">Error: ${error.message}</span>`;
+                
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    if (error.message.includes('No registered fingerprint')) {
+                        showInfo('No fingerprint registered. Please log in with email first.');
+                    } else {
+                        showError('Biometric authentication failed: ' + error.message);
+                    }
+                }, 2000);
+                
+                return false;
+            }
         }
-
-        function nextSlide() {
-            currentIndex = (currentIndex + 1) % testimonials.length;
-            updateSlides();
-            resetInterval();
-        }
-
-        function prevSlide() {
-            currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
-            updateSlides();
-            resetInterval();
-        }
-
-        function goToSlide(index) {
-            currentIndex = index;
-            updateSlides();
-            resetInterval();
-        }
-
-        function startAutoSlide() {
-            slideInterval = setInterval(nextSlide, 5000);
-        }
-
-        function resetInterval() {
-            clearInterval(slideInterval);
-            startAutoSlide();
-        }
-
-        document.getElementById('prevTestimonial').addEventListener('click', prevSlide);
-        document.getElementById('nextTestimonial').addEventListener('click', nextSlide);
-        startAutoSlide();
 
         // ============================================
         // PASSWORD TOGGLE
@@ -1266,11 +1118,13 @@
         const passwordToggle = document.getElementById('passwordToggle');
         const passwordInput = document.getElementById('password');
         
-        passwordToggle.addEventListener('click', () => {
-            const type = passwordInput.type === 'password' ? 'text' : 'password';
-            passwordInput.type = type;
-            passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
-        });
+        if (passwordToggle && passwordInput) {
+            passwordToggle.addEventListener('click', () => {
+                const type = passwordInput.type === 'password' ? 'text' : 'password';
+                passwordInput.type = type;
+                passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+            });
+        }
 
         // ============================================
         // LIVE STATS
@@ -1318,8 +1172,7 @@
             loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
             
             if (!window.auth) {
-                errorDiv.textContent = 'System initializing... Please refresh the page.';
-                errorDiv.style.display = 'block';
+                showError('System initializing... Please refresh the page.');
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
                 return;
@@ -1329,14 +1182,12 @@
                 const result = await window.auth.login(email, password);
                 
                 if (!result.success) {
-                    errorDiv.textContent = result.error;
-                    errorDiv.style.display = 'block';
+                    showError(result.error);
                     loginBtn.disabled = false;
                     loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
                 }
             } catch (error) {
-                errorDiv.textContent = 'An unexpected error occurred';
-                errorDiv.style.display = 'block';
+                showError('An unexpected error occurred');
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
             }
@@ -1347,44 +1198,11 @@
         // ============================================
         
         const biometricBtn = document.getElementById('biometricBtn');
-        const biometricModal = document.getElementById('biometricModal');
         const cancelBiometricBtn = document.getElementById('cancelBiometricBtn');
+        const biometricModal = document.getElementById('biometricModal');
         
         biometricBtn.addEventListener('click', async () => {
-            const email = emailInput.value;
-            const statusDiv = document.getElementById('biometricStatus');
-            statusDiv.style.display = 'none';
-            
-            if (!email) {
-                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please enter your email address first.';
-                statusDiv.style.display = 'block';
-                statusDiv.style.color = '#dc2626';
-                setTimeout(() => {
-                    statusDiv.style.display = 'none';
-                }, 3000);
-                return;
-            }
-            
-            // Check if device supports biometric authentication
-            if (!window.PublicKeyCredential) {
-                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Biometric authentication is not supported on this device/browser.';
-                statusDiv.style.display = 'block';
-                statusDiv.style.color = '#dc2626';
-                setTimeout(() => {
-                    statusDiv.style.display = 'none';
-                }, 4000);
-                return;
-            }
-            
-            // Start authentication
-            const authenticated = await authenticateWithBiometric(email);
-            
-            if (authenticated) {
-                const statusDiv = document.getElementById('biometricStatus');
-                statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Biometric login successful! Redirecting...';
-                statusDiv.style.display = 'block';
-                statusDiv.style.color = '#166534';
-            }
+            await authenticateWithBiometric();
         });
         
         cancelBiometricBtn.addEventListener('click', () => {
@@ -1420,7 +1238,6 @@
             }
         }
 
-        // Handle forgot password
         const forgotForm = document.getElementById('forgotForm');
         const resetEmail = document.getElementById('resetEmail');
         const forgotError = document.getElementById('forgotError');

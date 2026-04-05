@@ -399,6 +399,7 @@
             position: relative;
             max-height: 80vh;
             overflow-y: auto;
+            text-align: center;
         }
 
         .modal-content.modal-large {
@@ -417,6 +418,18 @@
 
         .close:hover {
             color: #333;
+        }
+
+        .fingerprint-icon {
+            font-size: 80px;
+            color: #2e7d32;
+            margin: 20px 0;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
         }
 
         .form-group {
@@ -503,6 +516,7 @@
             padding: 12px;
             border-radius: 10px;
             margin-top: 10px;
+            display: none;
         }
 
         .info-message {
@@ -844,13 +858,12 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2><i class="fas fa-fingerprint"></i> Register Fingerprint</h2>
-            <p>Place your finger on the sensor to register your fingerprint for faster future logins.</p>
-            <div style="text-align: center; margin: 30px 0;">
-                <i class="fas fa-fingerprint" style="font-size: 80px; color: #2e7d32; animation: pulse 1s infinite;"></i>
+            <div class="fingerprint-icon">
+                <i class="fas fa-fingerprint"></i>
             </div>
-            <div id="biometricModalStatus" style="text-align: center; margin-top: 10px; color: #666;"></div>
-            <div class="quick-actions">
-                <button id="confirmBiometricBtn" class="btn-success">Register Now</button>
+            <p id="biometricModalMessage">Please place your finger on the sensor to register</p>
+            <div id="biometricModalStatus" style="margin-top: 10px; color: #666;"></div>
+            <div class="quick-actions" style="margin-top: 20px;">
                 <button id="cancelBiometricBtn" class="btn-warning">Cancel</button>
             </div>
         </div>
@@ -881,175 +894,178 @@
         let isBiometricRegistered = false;
         let biometricDeviceId = null;
 
-        // Supabase client
-        const supabaseClient = window.supabaseClient;
-
-        // Show toast notification
+        // Helper functions
         function showToast(message, type = 'success') {
+            const existingToast = document.querySelector('.toast-notification');
+            if (existingToast) existingToast.remove();
+            
             const toast = document.createElement('div');
             toast.className = 'toast-notification';
-            toast.style.background = type === 'success' ? '#2e7d32' : (type === 'error' ? '#d32f2f' : '#0288d1');
+            toast.style.background = type === 'success' ? '#2e7d32' : (type === 'error' ? '#dc2626' : '#0288d1');
             toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle')}"></i> ${message}`;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                setTimeout(() => { errorDiv.style.display = 'none'; }, 5000);
+            } else {
+                showToast(message, 'error');
+            }
         }
 
         // ============================================
-        // BIOMETRIC FUNCTIONS WITH SUPABASE
+        // WEBAUTHN BIOMETRIC FUNCTIONS
         // ============================================
         
-        // Check if user has biometric device registered in Supabase
-        async function checkBiometricStatus() {
+        // Check if user has registered biometric
+        async function hasBiometric(userId) {
             try {
-                const user = window.auth?.currentUser;
-                if (!user) return false;
+                const { data, error } = await window.attendance.supabase
+                    .rpc('has_biometric', { p_user_id: userId });
                 
-                const { data, error } = await supabaseClient
-                    .from('biometric_devices')
-                    .select('id, device_name, is_active')
-                    .eq('user_id', user.id)
-                    .eq('is_active', true)
-                    .maybeSingle();
-                
-                if (error) {
-                    console.error('Error checking biometric:', error);
-                    return false;
-                }
-                
-                if (data) {
-                    isBiometricRegistered = true;
-                    biometricDeviceId = data.id;
-                    return true;
-                }
-                return false;
+                if (error) throw error;
+                return data;
             } catch (error) {
-                console.error('Error checking biometric status:', error);
+                console.error('Error checking biometric:', error);
                 return false;
             }
         }
-        
-        // Register biometric device in Supabase
-        async function registerBiometricInSupabase() {
+
+        // Register biometric using WebAuthn API
+        async function registerBiometric() {
             const user = window.auth?.currentUser;
             if (!user) {
                 showToast('Please log in first', 'error');
                 return false;
             }
-            
-            // Generate unique credential ID (simulated - in production use WebAuthn)
-            const credentialId = btoa(`${user.id}-${Date.now()}-${Math.random()}`);
-            const publicKey = btoa(`mock-public-key-${Date.now()}`);
-            
-            const { data, error } = await supabaseClient
-                .from('biometric_devices')
-                .insert([{
-                    user_id: user.id,
-                    device_name: `${navigator.platform || 'Device'} - ${new Date().toLocaleDateString()}`,
-                    credential_id: credentialId,
-                    public_key: publicKey,
-                    device_type: 'fingerprint',
-                    is_active: true
-                }])
-                .select();
-            
-            if (error) {
-                console.error('Error registering biometric:', error);
-                showToast('Failed to register fingerprint: ' + error.message, 'error');
+
+            // Check if already registered
+            const hasBiom = await hasBiometric(user.id);
+            if (hasBiom) {
+                showToast('Fingerprint already registered!', 'info');
                 return false;
             }
+
+            const modal = document.getElementById('biometricModal');
+            const messageEl = document.getElementById('biometricModalMessage');
+            const statusEl = document.getElementById('biometricModalStatus');
             
-            isBiometricRegistered = true;
-            biometricDeviceId = data[0].id;
-            
-            // Log the activity
+            messageEl.textContent = 'Preparing fingerprint registration...';
+            statusEl.innerHTML = '';
+            modal.style.display = 'flex';
+
             try {
-                await supabaseClient.rpc('log_biometric_activity', {
+                // Check if WebAuthn is supported
+                if (!window.PublicKeyCredential) {
+                    throw new Error('WebAuthn is not supported on this browser');
+                }
+
+                // Generate a challenge
+                const challenge = btoa(JSON.stringify({
+                    user_id: user.id,
+                    timestamp: Date.now(),
+                    random: Math.random()
+                }));
+
+                // Create credential options
+                const publicKeyCredentialCreationOptions = {
+                    challenge: new TextEncoder().encode(challenge),
+                    rp: {
+                        name: 'Springytrack',
+                        id: window.location.hostname
+                    },
+                    user: {
+                        id: new TextEncoder().encode(user.id),
+                        name: user.email,
+                        displayName: user.profile?.full_name || user.email
+                    },
+                    pubKeyCredParams: [
+                        { alg: -7, type: 'public-key' },  // ES256
+                        { alg: -257, type: 'public-key' } // RS256
+                    ],
+                    authenticatorSelection: {
+                        authenticatorAttachment: 'platform',
+                        userVerification: 'required',
+                        residentKey: 'required'
+                    },
+                    timeout: 60000,
+                    attestation: 'none'
+                };
+
+                messageEl.textContent = 'Please authenticate using your fingerprint sensor...';
+
+                // Create credential
+                const credential = await navigator.credentials.create({
+                    publicKey: publicKeyCredentialCreationOptions
+                });
+
+                if (!credential) throw new Error('Failed to create credential');
+
+                // Store credential in Supabase
+                const credentialId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+
+                const { error: storeError } = await window.attendance.supabase
+                    .from('biometric_credentials')
+                    .insert({
+                        user_id: user.id,
+                        credential_id: credentialId,
+                        public_key: btoa(JSON.stringify(credential.response.getPublicKey())),
+                        device_name: navigator.userAgent,
+                        device_type: 'fingerprint',
+                        transports: credential.response.getTransports?.() || [],
+                        is_active: true
+                    });
+
+                if (storeError) throw storeError;
+
+                // Log success
+                await window.attendance.supabase.rpc('log_biometric_activity', {
                     p_user_id: user.id,
                     p_action: 'REGISTER',
                     p_status: 'SUCCESS',
-                    p_device_info: navigator.userAgent
+                    p_credential_id: credentialId
                 });
-            } catch (logError) {
-                console.error('Error logging biometric activity:', logError);
-            }
-            
-            showToast('✅ Fingerprint registered successfully!', 'success');
-            return true;
-        }
-        
-        // Delete biometric device from Supabase
-        async function deleteBiometricFromSupabase() {
-            if (!biometricDeviceId) return false;
-            
-            const { error } = await supabaseClient
-                .from('biometric_devices')
-                .update({ is_active: false })
-                .eq('id', biometricDeviceId);
-            
-            if (error) {
-                console.error('Error deleting biometric:', error);
+
+                messageEl.textContent = '✅ Fingerprint registered successfully!';
+                statusEl.innerHTML = '<span style="color: #2e7d32;">Registration complete!</span>';
+                
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    showToast('Fingerprint registered successfully!', 'success');
+                    
+                    // Update button
+                    const registerBtn = document.getElementById('registerBiometricBtn');
+                    if (registerBtn) {
+                        registerBtn.disabled = true;
+                        registerBtn.innerHTML = '<i class="fas fa-check-circle"></i> Fingerprint Registered';
+                    }
+                }, 2000);
+                
+                return true;
+
+            } catch (error) {
+                console.error('Registration error:', error);
+                messageEl.textContent = '❌ Registration failed';
+                statusEl.innerHTML = `<span style="color: #dc2626;">Error: ${error.message}</span>`;
+                
+                await window.attendance.supabase.rpc('log_biometric_activity', {
+                    p_user_id: user.id,
+                    p_action: 'REGISTER',
+                    p_status: 'FAILED',
+                    p_error_message: error.message
+                });
+                
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 3000);
+                
                 return false;
             }
-            
-            isBiometricRegistered = false;
-            biometricDeviceId = null;
-            return true;
-        }
-        
-        // Show biometric registration modal
-        async function showBiometricRegistrationModal() {
-            // Check if already registered
-            const hasBiometric = await checkBiometricStatus();
-            if (hasBiometric) {
-                showToast('Fingerprint already registered!', 'info');
-                return;
-            }
-            
-            const modal = document.getElementById('biometricModal');
-            const statusDiv = document.getElementById('biometricModalStatus');
-            statusDiv.textContent = '';
-            modal.style.display = 'flex';
-        }
-        
-        // Perform biometric registration
-        async function performBiometricRegistration() {
-            const modal = document.getElementById('biometricModal');
-            const statusDiv = document.getElementById('biometricModalStatus');
-            const confirmBtn = document.getElementById('confirmBiometricBtn');
-            const cancelBtn = document.getElementById('cancelBiometricBtn');
-            
-            statusDiv.innerHTML = '<div class="spinner" style="width: 30px; height: 30px;"></div> Verifying fingerprint...';
-            confirmBtn.disabled = true;
-            cancelBtn.disabled = true;
-            
-            // Simulate fingerprint scan (in production, use WebAuthn API)
-            setTimeout(async () => {
-                const success = await registerBiometricInSupabase();
-                
-                if (success) {
-                    statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> ✅ Fingerprint registered successfully!';
-                    statusDiv.style.color = '#2e7d32';
-                    
-                    // Update button UI
-                    const registerBtn = document.getElementById('registerBiometricBtn');
-                    registerBtn.disabled = true;
-                    registerBtn.innerHTML = '<i class="fas fa-check-circle"></i> Fingerprint Registered';
-                    
-                    setTimeout(() => {
-                        modal.style.display = 'none';
-                    }, 2000);
-                } else {
-                    statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ❌ Registration failed. Please try again.';
-                    statusDiv.style.color = '#d32f2f';
-                    confirmBtn.disabled = false;
-                    cancelBtn.disabled = false;
-                }
-            }, 2000);
-        }
-        
-        // Close biometric modal
-        function closeBiometricModal() {
-            document.getElementById('biometricModal').style.display = 'none';
         }
 
         // ============================================
@@ -1072,7 +1088,7 @@
         // INITIALIZATION
         // ============================================
         
-        function showError(message) {
+        function showErrorMsg(message) {
             document.getElementById('loadingSpinner').style.display = 'none';
             document.getElementById('errorContainer').style.display = 'flex';
             document.getElementById('errorMessage').textContent = message;
@@ -1081,7 +1097,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('loadingSpinner').style.display = 'flex';
             if (!window.auth) {
-                showError('Authentication system not initialized.');
+                showErrorMsg('Authentication system not initialized.');
                 return;
             }
             checkAuthentication();
@@ -1119,9 +1135,10 @@
                 if (!window.attendance) window.attendance = new AttendanceManager();
                 
                 // Check biometric status
-                await checkBiometricStatus();
+                const hasBiom = await hasBiometric(window.auth.currentUser.id);
                 const registerBtn = document.getElementById('registerBiometricBtn');
-                if (isBiometricRegistered) {
+                if (hasBiom) {
+                    isBiometricRegistered = true;
                     registerBtn.disabled = true;
                     registerBtn.innerHTML = '<i class="fas fa-check-circle"></i> Fingerprint Registered';
                 }
@@ -1131,14 +1148,22 @@
                 await window.attendance.checkTodayStatus();
                 setupRealtimeListeners();
             } catch (error) {
-                showError('Error loading dashboard: ' + error.message);
+                showErrorMsg('Error loading dashboard: ' + error.message);
             }
         }
 
-        // Biometric button event listeners
-        document.getElementById('registerBiometricBtn').addEventListener('click', showBiometricRegistrationModal);
-        document.getElementById('confirmBiometricBtn').addEventListener('click', performBiometricRegistration);
-        document.getElementById('cancelBiometricBtn').addEventListener('click', closeBiometricModal);
+        // Biometric button event listener
+        const registerBiometricBtn = document.getElementById('registerBiometricBtn');
+        if (registerBiometricBtn) {
+            registerBiometricBtn.addEventListener('click', registerBiometric);
+        }
+        
+        const cancelBiometricBtn = document.getElementById('cancelBiometricBtn');
+        if (cancelBiometricBtn) {
+            cancelBiometricBtn.addEventListener('click', () => {
+                document.getElementById('biometricModal').style.display = 'none';
+            });
+        }
 
         // ============================================
         // MASTER QR FUNCTIONS
@@ -1400,7 +1425,7 @@
                         </tr>
                     `;
                 }
-                html += `</tbody></table></div></div>`;
+                html += `</tbody><tr></div></div>`;
             }
             container.innerHTML = html;
         }
@@ -1520,7 +1545,7 @@
                     const dept = u.departments?.name || 'Not Assigned';
                     html += `<tr><td style="padding:10px;"><strong>${escapeHtml(u.full_name)}</strong></td><td style="padding:10px;">${escapeHtml(u.employee_id)}</td><td style="padding:10px;">${escapeHtml(dept)}</td><td style="padding:10px;">${u.role}</td></tr>`;
                 });
-                html += `</tbody><tr></div>`;
+                html += `</tbody></table></div>`;
                 content.innerHTML = html;
             } catch (error) {
                 content.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
@@ -1846,7 +1871,6 @@
                 if (modal) modal.style.display = 'none';
                 if (html5QrCode && modal?.id === 'qrModal') html5QrCode.stop();
                 if (modal?.id === 'cameraModal') stopCamera();
-                if (modal?.id === 'biometricModal') closeBiometricModal();
             };
         });
         
@@ -1855,7 +1879,6 @@
                 event.target.style.display = 'none';
                 if (html5QrCode && event.target.id === 'qrModal') html5QrCode.stop();
                 if (event.target.id === 'cameraModal') stopCamera();
-                if (event.target.id === 'biometricModal') closeBiometricModal();
             }
         };
     </script>
