@@ -9,8 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -19,7 +17,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f7fa;
             color: #333;
         }
@@ -37,10 +35,7 @@
         .nav-brand {
             font-size: 1.5rem;
             font-weight: bold;
-            background: linear-gradient(135deg, #fff 0%, #a5d6a7 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: #4caf50;
         }
 
         .nav-menu {
@@ -65,7 +60,6 @@
 
         .nav-menu button:hover {
             background: #3e5a6b;
-            transform: translateY(-2px);
         }
 
         .container {
@@ -74,7 +68,6 @@
             padding: 20px;
         }
 
-        /* Quick Actions */
         .quick-actions {
             display: flex;
             gap: 15px;
@@ -87,7 +80,7 @@
             color: white;
             padding: 12px 24px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -105,11 +98,12 @@
             color: white;
             padding: 12px 24px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .btn-checkout:hover {
@@ -122,11 +116,12 @@
             color: white;
             padding: 12px 24px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .btn-assist:hover {
@@ -139,11 +134,12 @@
             color: white;
             padding: 12px 24px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .btn-view:hover {
@@ -151,88 +147,6 @@
             box-shadow: 0 4px 12px rgba(123,31,162,0.4);
         }
 
-        .btn-biometric {
-            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-biometric:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(46,125,50,0.4);
-        }
-
-        .btn-biometric:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #f57c00 0%, #ef6c00 100%);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-info {
-            background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -243,15 +157,10 @@
         .stat-card {
             background: white;
             padding: 20px;
-            border-radius: 16px;
+            border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             text-align: center;
             border-top: 4px solid #2e7d32;
-            transition: transform 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
         }
 
         .stat-card h3 {
@@ -268,7 +177,6 @@
             color: #2e7d32;
         }
 
-        /* Charts */
         .charts-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -279,15 +187,14 @@
         .chart-container {
             background: white;
             padding: 20px;
-            border-radius: 16px;
+            border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        /* Date Group */
         .date-group {
             margin-bottom: 30px;
             background: white;
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
@@ -358,10 +265,9 @@
             color: #c62828;
         }
 
-        /* Admin Section */
         .admin-section {
             background: white;
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 20px;
             margin: 20px 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -374,7 +280,6 @@
             padding-bottom: 10px;
         }
 
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -385,21 +290,18 @@
             height: 100%;
             background-color: rgba(0,0,0,0.5);
             backdrop-filter: blur(5px);
-            align-items: center;
-            justify-content: center;
         }
 
         .modal-content {
             background: white;
             margin: 50px auto;
             padding: 30px;
-            border-radius: 20px;
-            max-width: 500px;
+            border-radius: 16px;
+            max-width: 600px;
             width: 90%;
             position: relative;
             max-height: 80vh;
             overflow-y: auto;
-            text-align: center;
         }
 
         .modal-content.modal-large {
@@ -413,23 +315,10 @@
             font-size: 28px;
             cursor: pointer;
             color: #999;
-            transition: color 0.3s;
         }
 
         .close:hover {
             color: #333;
-        }
-
-        .fingerprint-icon {
-            font-size: 80px;
-            color: #2e7d32;
-            margin: 20px 0;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
         }
 
         .form-group {
@@ -445,17 +334,10 @@
 
         .form-control {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #2e7d32;
-            box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
         }
 
         .filter-bar {
@@ -466,10 +348,9 @@
         }
 
         .filter-bar input, .filter-bar select {
-            padding: 10px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 14px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
         }
 
         .spinner {
@@ -504,8 +385,8 @@
         .error-message {
             color: #d32f2f;
             background: #ffebee;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 8px;
             margin-top: 10px;
             display: none;
         }
@@ -513,52 +394,24 @@
         .success-message {
             color: #2e7d32;
             background: #e8f5e9;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 8px;
             margin-top: 10px;
-            display: none;
         }
 
         .info-message {
             color: #0288d1;
             background: #e3f2fd;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 8px;
             text-align: center;
         }
 
-        .toast-notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #2e7d32;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            z-index: 10000;
-            animation: slideIn 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
         @media (max-width: 768px) {
-            .quick-actions {
-                flex-direction: column;
-            }
-            .quick-actions button {
-                width: 100%;
-            }
-            .charts-row {
-                grid-template-columns: 1fr;
-            }
-            .attendance-table th, .attendance-table td {
-                padding: 8px 10px;
-                font-size: 12px;
-            }
+            .quick-actions { flex-direction: column; }
+            .quick-actions button { width: 100%; }
+            .charts-row { grid-template-columns: 1fr; }
+            .attendance-table th, .attendance-table td { padding: 8px 10px; font-size: 12px; }
         }
     </style>
 </head>
@@ -592,9 +445,6 @@
                 <button onclick="window.attendance.checkOut()" class="btn-checkout" id="checkOutBtn">⏰ Check Out</button>
                 <button onclick="openAssistModal()" class="btn-assist" id="assistBtn">🤝 Assist Check In/Out</button>
                 <button onclick="showPresentAbsentUsers()" class="btn-view" id="viewUsersBtn">👥 View Present/Absent</button>
-                <button id="registerBiometricBtn" class="btn-biometric">
-                    <i class="fas fa-fingerprint"></i> Register Fingerprint
-                </button>
             </div>
 
             <div id="adminQRActions" class="admin-section" style="display: none;" data-role="admin">
@@ -609,35 +459,19 @@
             </div>
 
             <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Total Users</h3>
-                    <div id="totalUsers">0</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Present</h3>
-                    <div id="presentCount">0</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Absent</h3>
-                    <div id="absentCount">0</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Late</h3>
-                    <div id="lateCount">0</div>
-                </div>
+                <div class="stat-card"><h3>Total Users</h3><div id="totalUsers">0</div></div>
+                <div class="stat-card"><h3>Present</h3><div id="presentCount">0</div></div>
+                <div class="stat-card"><h3>Absent</h3><div id="absentCount">0</div></div>
+                <div class="stat-card"><h3>Late</h3><div id="lateCount">0</div></div>
             </div>
 
             <div class="charts-row">
-                <div class="chart-container">
-                    <canvas id="attendanceChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <canvas id="departmentChart"></canvas>
-                </div>
+                <div class="chart-container"><canvas id="attendanceChart"></canvas></div>
+                <div class="chart-container"><canvas id="departmentChart"></canvas></div>
             </div>
 
             <div class="recent-activity">
-                <h2 style="margin-bottom: 20px;">Recent Check-ins</h2>
+                <h2>Recent Check-ins</h2>
                 <div id="groupedAttendance"></div>
             </div>
 
@@ -652,7 +486,6 @@
         </div>
     </div>
 
-    <!-- Assist Modal -->
     <div id="assistModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -679,7 +512,6 @@
         </div>
     </div>
 
-    <!-- Camera Modal -->
     <div id="cameraModal" class="modal">
         <div class="modal-content" style="max-width: 500px;">
             <span class="close">&times;</span>
@@ -699,7 +531,6 @@
         </div>
     </div>
 
-    <!-- Master QR Modal -->
     <div id="masterQRModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -713,7 +544,6 @@
         </div>
     </div>
 
-    <!-- QR Scanner Modal -->
     <div id="qrModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -722,7 +552,6 @@
         </div>
     </div>
 
-    <!-- User Management Modal -->
     <div id="userModal" class="modal">
         <div class="modal-content modal-large">
             <span class="close">&times;</span>
@@ -731,7 +560,6 @@
         </div>
     </div>
 
-    <!-- Add/Edit User Modal -->
     <div id="userFormModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -769,9 +597,7 @@
                     <input type="tel" id="userPhone" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="userActive" checked> Active
-                    </label>
+                    <label><input type="checkbox" id="userActive" checked> Active</label>
                 </div>
                 <input type="hidden" id="userId">
                 <div class="quick-actions">
@@ -783,7 +609,6 @@
         </div>
     </div>
 
-    <!-- Department Management Modal -->
     <div id="deptModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -792,7 +617,6 @@
         </div>
     </div>
 
-    <!-- Add/Edit Department Modal -->
     <div id="deptFormModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -813,9 +637,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="deptActive" checked> Active
-                    </label>
+                    <label><input type="checkbox" id="deptActive" checked> Active</label>
                 </div>
                 <input type="hidden" id="deptId">
                 <div class="quick-actions">
@@ -827,7 +649,6 @@
         </div>
     </div>
 
-    <!-- Reports Modal -->
     <div id="reportsModal" class="modal">
         <div class="modal-content modal-large">
             <span class="close">&times;</span>
@@ -836,7 +657,6 @@
         </div>
     </div>
 
-    <!-- Present/Absent Users Modal -->
     <div id="presentAbsentModal" class="modal">
         <div class="modal-content modal-large">
             <span class="close">&times;</span>
@@ -853,22 +673,6 @@
         </div>
     </div>
 
-    <!-- Biometric Registration Modal -->
-    <div id="biometricModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2><i class="fas fa-fingerprint"></i> Register Fingerprint</h2>
-            <div class="fingerprint-icon">
-                <i class="fas fa-fingerprint"></i>
-            </div>
-            <p id="biometricModalMessage">Please place your finger on the sensor to register</p>
-            <div id="biometricModalStatus" style="margin-top: 10px; color: #666;"></div>
-            <div class="quick-actions" style="margin-top: 20px;">
-                <button id="cancelBiometricBtn" class="btn-warning">Cancel</button>
-            </div>
-        </div>
-    </div>
-
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/location-service.js"></script>
@@ -876,13 +680,10 @@
     <script src="js/attendance.js"></script>
     <script src="js/admin.js"></script>
     <script>
-        // Global variables
         let html5QrCode;
         let attendanceChart;
         let departmentChart;
         let currentMasterQRDataUrl = null;
-        
-        // Assist variables
         let assistUserId = null;
         let assistAction = null;
         let capturedPhotoData = null;
@@ -890,205 +691,16 @@
         let videoElement = null;
         let canvasElement = null;
 
-        // Biometric variables
-        let isBiometricRegistered = false;
-        let biometricDeviceId = null;
-
-        // Helper functions
-        function showToast(message, type = 'success') {
-            const existingToast = document.querySelector('.toast-notification');
-            if (existingToast) existingToast.remove();
-            
-            const toast = document.createElement('div');
-            toast.className = 'toast-notification';
-            toast.style.background = type === 'success' ? '#2e7d32' : (type === 'error' ? '#dc2626' : '#0288d1');
-            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle')}"></i> ${message}`;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+        async function handleLogout() {
+            try {
+                if (window.auth) await window.auth.logout();
+                window.location.href = 'index.html';
+            } catch (error) {
+                window.location.href = 'index.html';
+            }
         }
 
         function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            if (errorDiv) {
-                errorDiv.textContent = message;
-                errorDiv.style.display = 'block';
-                setTimeout(() => { errorDiv.style.display = 'none'; }, 5000);
-            } else {
-                showToast(message, 'error');
-            }
-        }
-
-        // ============================================
-        // WEBAUTHN BIOMETRIC FUNCTIONS
-        // ============================================
-        
-        // Check if user has registered biometric
-        async function hasBiometric(userId) {
-            try {
-                const { data, error } = await window.attendance.supabase
-                    .rpc('has_biometric', { p_user_id: userId });
-                
-                if (error) throw error;
-                return data;
-            } catch (error) {
-                console.error('Error checking biometric:', error);
-                return false;
-            }
-        }
-
-        // Register biometric using WebAuthn API
-        async function registerBiometric() {
-            const user = window.auth?.currentUser;
-            if (!user) {
-                showToast('Please log in first', 'error');
-                return false;
-            }
-
-            // Check if already registered
-            const hasBiom = await hasBiometric(user.id);
-            if (hasBiom) {
-                showToast('Fingerprint already registered!', 'info');
-                return false;
-            }
-
-            const modal = document.getElementById('biometricModal');
-            const messageEl = document.getElementById('biometricModalMessage');
-            const statusEl = document.getElementById('biometricModalStatus');
-            
-            messageEl.textContent = 'Preparing fingerprint registration...';
-            statusEl.innerHTML = '';
-            modal.style.display = 'flex';
-
-            try {
-                // Check if WebAuthn is supported
-                if (!window.PublicKeyCredential) {
-                    throw new Error('WebAuthn is not supported on this browser');
-                }
-
-                // Generate a challenge
-                const challenge = btoa(JSON.stringify({
-                    user_id: user.id,
-                    timestamp: Date.now(),
-                    random: Math.random()
-                }));
-
-                // Create credential options
-                const publicKeyCredentialCreationOptions = {
-                    challenge: new TextEncoder().encode(challenge),
-                    rp: {
-                        name: 'Springytrack',
-                        id: window.location.hostname
-                    },
-                    user: {
-                        id: new TextEncoder().encode(user.id),
-                        name: user.email,
-                        displayName: user.profile?.full_name || user.email
-                    },
-                    pubKeyCredParams: [
-                        { alg: -7, type: 'public-key' },  // ES256
-                        { alg: -257, type: 'public-key' } // RS256
-                    ],
-                    authenticatorSelection: {
-                        authenticatorAttachment: 'platform',
-                        userVerification: 'required',
-                        residentKey: 'required'
-                    },
-                    timeout: 60000,
-                    attestation: 'none'
-                };
-
-                messageEl.textContent = 'Please authenticate using your fingerprint sensor...';
-
-                // Create credential
-                const credential = await navigator.credentials.create({
-                    publicKey: publicKeyCredentialCreationOptions
-                });
-
-                if (!credential) throw new Error('Failed to create credential');
-
-                // Store credential in Supabase
-                const credentialId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
-
-                const { error: storeError } = await window.attendance.supabase
-                    .from('biometric_credentials')
-                    .insert({
-                        user_id: user.id,
-                        credential_id: credentialId,
-                        public_key: btoa(JSON.stringify(credential.response.getPublicKey())),
-                        device_name: navigator.userAgent,
-                        device_type: 'fingerprint',
-                        transports: credential.response.getTransports?.() || [],
-                        is_active: true
-                    });
-
-                if (storeError) throw storeError;
-
-                // Log success
-                await window.attendance.supabase.rpc('log_biometric_activity', {
-                    p_user_id: user.id,
-                    p_action: 'REGISTER',
-                    p_status: 'SUCCESS',
-                    p_credential_id: credentialId
-                });
-
-                messageEl.textContent = '✅ Fingerprint registered successfully!';
-                statusEl.innerHTML = '<span style="color: #2e7d32;">Registration complete!</span>';
-                
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    showToast('Fingerprint registered successfully!', 'success');
-                    
-                    // Update button
-                    const registerBtn = document.getElementById('registerBiometricBtn');
-                    if (registerBtn) {
-                        registerBtn.disabled = true;
-                        registerBtn.innerHTML = '<i class="fas fa-check-circle"></i> Fingerprint Registered';
-                    }
-                }, 2000);
-                
-                return true;
-
-            } catch (error) {
-                console.error('Registration error:', error);
-                messageEl.textContent = '❌ Registration failed';
-                statusEl.innerHTML = `<span style="color: #dc2626;">Error: ${error.message}</span>`;
-                
-                await window.attendance.supabase.rpc('log_biometric_activity', {
-                    p_user_id: user.id,
-                    p_action: 'REGISTER',
-                    p_status: 'FAILED',
-                    p_error_message: error.message
-                });
-                
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                }, 3000);
-                
-                return false;
-            }
-        }
-
-        // ============================================
-        // LOGOUT HANDLER
-        // ============================================
-        
-        async function handleLogout() {
-            try {
-                if (window.auth) {
-                    await window.auth.logout();
-                }
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error('Logout error:', error);
-                window.location.href = 'index.html';
-            }
-        }
-
-        // ============================================
-        // INITIALIZATION
-        // ============================================
-        
-        function showErrorMsg(message) {
             document.getElementById('loadingSpinner').style.display = 'none';
             document.getElementById('errorContainer').style.display = 'flex';
             document.getElementById('errorMessage').textContent = message;
@@ -1097,7 +709,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('loadingSpinner').style.display = 'flex';
             if (!window.auth) {
-                showErrorMsg('Authentication system not initialized.');
+                showError('Authentication system not initialized.');
                 return;
             }
             checkAuthentication();
@@ -1120,10 +732,7 @@
 
         async function initializeDashboard() {
             try {
-                const userNameElement = document.getElementById('userName');
-                if (userNameElement) {
-                    userNameElement.textContent = window.auth.currentUser.profile?.full_name || window.auth.currentUser.email;
-                }
+                document.getElementById('userName').textContent = window.auth.currentUser.profile?.full_name || window.auth.currentUser.email;
                 document.getElementById('loadingSpinner').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
 
@@ -1133,45 +742,18 @@
                 }
 
                 if (!window.attendance) window.attendance = new AttendanceManager();
-                
-                // Check biometric status
-                const hasBiom = await hasBiometric(window.auth.currentUser.id);
-                const registerBtn = document.getElementById('registerBiometricBtn');
-                if (hasBiom) {
-                    isBiometricRegistered = true;
-                    registerBtn.disabled = true;
-                    registerBtn.innerHTML = '<i class="fas fa-check-circle"></i> Fingerprint Registered';
-                }
-                
                 await loadStats();
                 await loadRecentAttendanceGrouped();
                 await window.attendance.checkTodayStatus();
                 setupRealtimeListeners();
             } catch (error) {
-                showErrorMsg('Error loading dashboard: ' + error.message);
+                showError('Error loading dashboard: ' + error.message);
             }
         }
 
-        // Biometric button event listener
-        const registerBiometricBtn = document.getElementById('registerBiometricBtn');
-        if (registerBiometricBtn) {
-            registerBiometricBtn.addEventListener('click', registerBiometric);
-        }
-        
-        const cancelBiometricBtn = document.getElementById('cancelBiometricBtn');
-        if (cancelBiometricBtn) {
-            cancelBiometricBtn.addEventListener('click', () => {
-                document.getElementById('biometricModal').style.display = 'none';
-            });
-        }
-
-        // ============================================
-        // MASTER QR FUNCTIONS
-        // ============================================
-        
         async function generateMasterQR() {
             const result = await window.admin.generateMasterQR();
-            if (result.success) showToast('Master QR code generated successfully!', 'success');
+            if (result.success) alert('✅ Master QR code generated successfully!');
         }
         
         async function downloadMasterQR() {
@@ -1181,9 +763,9 @@
                 link.download = 'organization-master-qr.png';
                 link.href = result.qrCodeUrl;
                 link.click();
-                showToast('Master QR code downloaded!', 'success');
+                alert('✅ Master QR code downloaded!');
             } else {
-                showToast('No master QR code found. Generate one first.', 'error');
+                alert('No master QR code found. Generate one first.');
             }
         }
         
@@ -1193,7 +775,7 @@
                 link.download = 'organization-master-qr.png';
                 link.href = currentMasterQRDataUrl;
                 link.click();
-                showToast('QR code downloaded!', 'success');
+                alert('✅ QR code downloaded!');
             }
         }
         
@@ -1204,14 +786,14 @@
                 document.getElementById('masterQRDisplay').innerHTML = `<img src="${result.qrCodeUrl}" style="width: 250px;">`;
                 document.getElementById('masterQRModal').style.display = 'block';
             } else {
-                showToast('No master QR code found. Generate one first.', 'error');
+                alert('No master QR code found. Generate one first.');
             }
         }
         
         async function resetMasterQR() {
             if (confirm('Reset master QR code? This will invalidate all existing QR codes.')) {
                 await window.admin.resetMasterQR();
-                showToast('Master QR code reset. Generate a new one.', 'info');
+                alert('Master QR code reset. Generate a new one.');
             }
         }
         
@@ -1219,10 +801,6 @@
             document.getElementById('masterQRModal').style.display = 'none';
         }
 
-        // ============================================
-        // ASSIST FUNCTIONS
-        // ============================================
-        
         async function openAssistModal() {
             const result = await window.admin.getUsers();
             const userSelect = document.getElementById('assistUserSelect');
@@ -1294,13 +872,15 @@
         
         async function confirmWithPhoto() {
             if (!capturedPhotoData) {
-                showToast('Capture a photo first.', 'error');
+                alert('Capture a photo first.');
                 return;
             }
             stopCamera();
             document.getElementById('cameraModal').style.display = 'none';
-            
-            showToast('Processing attendance with photo...', 'info');
+            const loadingMsg = document.createElement('div');
+            loadingMsg.className = 'loading-spinner';
+            loadingMsg.innerHTML = '<div class="spinner"></div><p>Processing...</p>';
+            document.body.appendChild(loadingMsg);
             
             try {
                 await window.attendance.supabase.from('attendance_photos').insert([{
@@ -1318,15 +898,16 @@
                 }
                 
                 if (result.success) {
-                    showToast(`✅ Successfully ${assistAction === 'checkin' ? 'checked in' : 'checked out'} staff member.`, 'success');
+                    alert(`✅ Successfully ${assistAction === 'checkin' ? 'checked in' : 'checked out'} staff member.`);
                     await loadStats();
                     await loadRecentAttendanceGrouped();
                 } else {
-                    showToast(`Failed: ${result.error}`, 'error');
+                    alert(`Failed: ${result.error}`);
                 }
             } catch (error) {
-                showToast('Error: ' + error.message, 'error');
+                alert('Error: ' + error.message);
             } finally {
+                loadingMsg.remove();
                 assistUserId = null;
                 assistAction = null;
                 capturedPhotoData = null;
@@ -1346,10 +927,6 @@
             document.getElementById('cameraModal').style.display = 'none';
         };
 
-        // ============================================
-        // LOAD ATTENDANCE FUNCTIONS
-        // ============================================
-        
         async function loadStats() {
             const stats = await window.attendance.getTodayStats();
             if (stats) {
@@ -1377,8 +954,8 @@
             const grouped = {};
             data.forEach(r => { if (!grouped[r.date]) grouped[r.date] = []; grouped[r.date].push(r); });
             const sortedDates = Object.keys(grouped).sort().reverse();
-            
             let html = '';
+            
             for (const date of sortedDates) {
                 const records = grouped[date];
                 const dateObj = new Date(date);
@@ -1393,17 +970,9 @@
                         <div class="attendance-table-container">
                             <table class="attendance-table">
                                 <thead>
-                                    <tr>
-                                        <th>Employee</th>
-                                        <th>Department</th>
-                                        <th>Check In</th>
-                                        <th>Check Out</th>
-                                        <th>Status</th>
-                                        <th>Method</th>
-                                    </tr>
+                                    <tr><th>Employee</th><th>Department</th><th>Check In</th><th>Check Out</th><th>Status</th><th>Method</th></tr>
                                 </thead>
-                                <tbody>
-                `;
+                                <tbody>`;
                 
                 for (const record of records) {
                     const deptName = record.users?.departments?.name || 'Not Assigned';
@@ -1414,18 +983,9 @@
                     else if (record.status === 'late') { statusClass = 'status-late'; statusText = 'Late'; }
                     else { statusClass = 'status-absent'; statusText = 'Absent'; }
                     
-                    html += `
-                        <tr>
-                            <td><strong>${escapeHtml(record.users?.full_name || 'Unknown')}</strong></td>
-                            <td>${escapeHtml(deptName)}</td>
-                            <td>${checkIn}</td>
-                            <td>${checkOut}</td>
-                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                            <td>${record.check_in_method}</td>
-                        </tr>
-                    `;
+                    html += `<tr><td><strong>${escapeHtml(record.users?.full_name || 'Unknown')}</strong></td><td>${escapeHtml(deptName)}</td><td>${checkIn}</td><td>${checkOut}</td><td><span class="status-badge ${statusClass}">${statusText}</span></td><td>${record.check_in_method}</td></tr>`;
                 }
-                html += `</tbody><tr></div></div>`;
+                html += `</tbody></table></div></div>`;
             }
             container.innerHTML = html;
         }
@@ -1453,10 +1013,6 @@
             });
         }
 
-        // ============================================
-        // PRESENT/ABSENT FUNCTIONS
-        // ============================================
-        
         async function showPresentAbsentUsers() {
             document.getElementById('presentAbsentModal').style.display = 'block';
             loadAllUsersStatus();
@@ -1494,7 +1050,7 @@
                         if (a.check_out_time) checkOut = new Date(a.check_out_time).toLocaleTimeString();
                         sClass = status === 'present' ? 'status-present' : 'status-late';
                     }
-                    html += `<tr><td style="padding:10px;"><strong>${escapeHtml(u.full_name)}</strong></td><td style="padding:10px;">${escapeHtml(u.employee_id)}</td><td style="padding:10px;">${escapeHtml(dept)}</td><td style="padding:10px;">${u.role}</td><td style="padding:10px;"><span class="status-badge ${sClass}">${sText}</span></td><td style="padding:10px;">${checkIn}</td><td style="padding:10px;">${checkOut}</td></tr>`;
+                    html += `<tr><td><strong>${escapeHtml(u.full_name)}</strong></td><td>${escapeHtml(u.employee_id)}</td><td>${escapeHtml(dept)}</td><td>${u.role}</td><td><span class="status-badge ${sClass}">${sText}</span></td><td>${checkIn}</td><td>${checkOut}</td></tr>`;
                 });
                 html += `</tbody></table></div>`;
                 content.innerHTML = html;
@@ -1520,7 +1076,7 @@
                     const dept = u.departments?.name || 'Not Assigned';
                     const sClass = r.status === 'present' ? 'status-present' : 'status-late';
                     const sText = r.status === 'present' ? 'Present' : 'Late';
-                    html += `<tr><td style="padding:10px;"><strong>${escapeHtml(u.full_name)}</strong></td><td style="padding:10px;">${escapeHtml(u.employee_id)}</td><td style="padding:10px;">${escapeHtml(dept)}</td><td style="padding:10px;">${u.role}</td><td style="padding:10px;"><span class="status-badge ${sClass}">${sText}</span></td><td style="padding:10px;">${new Date(r.check_in_time).toLocaleTimeString()}</td><td style="padding:10px;">${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td></tr>`;
+                    html += `<tr><td><strong>${escapeHtml(u.full_name)}</strong></td><td>${escapeHtml(u.employee_id)}</td><td>${escapeHtml(dept)}</td><td>${u.role}</td><td><span class="status-badge ${sClass}">${sText}</span></td><td>${new Date(r.check_in_time).toLocaleTimeString()}</td><td>${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td></tr>`;
                 });
                 html += `</tbody></table></div>`;
                 content.innerHTML = html;
@@ -1543,7 +1099,7 @@
                     <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Employee</th><th>Email</th><th>Department</th><th>Role</th></tr></thead><tbody>`;
                 absentUsers.forEach(u => {
                     const dept = u.departments?.name || 'Not Assigned';
-                    html += `<tr><td style="padding:10px;"><strong>${escapeHtml(u.full_name)}</strong></td><td style="padding:10px;">${escapeHtml(u.employee_id)}</td><td style="padding:10px;">${escapeHtml(dept)}</td><td style="padding:10px;">${u.role}</td></tr>`;
+                    html += `<tr><td><strong>${escapeHtml(u.full_name)}</strong></td><td>${escapeHtml(u.employee_id)}</td><td>${escapeHtml(dept)}</td><td>${u.role}</td></tr>`;
                 });
                 html += `</tbody></table></div>`;
                 content.innerHTML = html;
@@ -1552,10 +1108,6 @@
             }
         }
 
-        // ============================================
-        // USER MANAGEMENT FUNCTIONS
-        // ============================================
-        
         async function showUserManagement() {
             const modal = document.getElementById('userModal');
             const content = document.getElementById('userManagementContent');
@@ -1658,7 +1210,7 @@
             };
             if (!isEdit) {
                 userData.password = document.getElementById('userPassword').value;
-                if (!userData.password) { showToast('Password required', 'error'); return; }
+                if (!userData.password) { alert('Password required'); return; }
             }
             const saveBtn = document.getElementById('saveUserBtn');
             const original = saveBtn.textContent;
@@ -1668,7 +1220,7 @@
             saveBtn.textContent = original;
             saveBtn.disabled = false;
             if (result.success) {
-                showToast(`User ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
+                alert(`User ${isEdit ? 'updated' : 'created'} successfully!`);
                 closeUserForm();
                 showUserManagement();
                 loadStats();
@@ -1683,17 +1235,13 @@
             if (confirm(`Deactivate this user?`)) {
                 const result = await window.admin.updateUser(userId, { is_active: !currentStatus });
                 if (result.success) {
-                    showToast('Status updated', 'success');
+                    alert('Status updated');
                     showUserManagement();
                     loadStats();
                 }
             }
         }
 
-        // ============================================
-        // DEPARTMENT MANAGEMENT
-        // ============================================
-        
         async function showDepartmentManagement() {
             const modal = document.getElementById('deptModal');
             const content = document.getElementById('deptManagementContent');
@@ -1704,7 +1252,7 @@
                 let html = `<button onclick="openAddDepartmentForm()" class="btn-success" style="margin-bottom:15px;">+ Add Department</button>
                     <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Name</th><th>Description</th><th>Head</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
                 result.data.forEach(dept => {
-                    html += `<tr><td style="padding:12px;"><strong>${escapeHtml(dept.name)}</strong></td><td style="padding:12px;">${escapeHtml(dept.description || 'N/A')}</td><td style="padding:12px;">${dept.head_of_department?.full_name || 'Not assigned'}</td><td style="padding:12px;"><span class="status-badge status-${dept.is_active ? 'present' : 'absent'}">${dept.is_active ? 'Active' : 'Inactive'}</span></td><td style="padding:12px;"><button onclick="openEditDepartmentForm('${dept.id}')" class="btn-info">Edit</button> <button onclick="toggleDepartmentStatus('${dept.id}', ${dept.is_active})" class="btn-warning">${dept.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
+                    html += `<tr><td>${escapeHtml(dept.name)}</td><td>${escapeHtml(dept.description || 'N/A')}</td><td>${dept.head_of_department?.full_name || 'Not assigned'}</td><td><span class="status-badge status-${dept.is_active ? 'present' : 'absent'}">${dept.is_active ? 'Active' : 'Inactive'}</span></td><td><button onclick="openEditDepartmentForm('${dept.id}')" class="btn-info">Edit</button> <button onclick="toggleDepartmentStatus('${dept.id}', ${dept.is_active})" class="btn-warning">${dept.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
                 });
                 html += `</tbody></table></div>`;
                 content.innerHTML = html;
@@ -1781,7 +1329,7 @@
             saveBtn.textContent = original;
             saveBtn.disabled = false;
             if (result.success) {
-                showToast(`Department ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
+                alert(`Department ${isEdit ? 'updated' : 'created'} successfully!`);
                 closeDeptForm();
                 showDepartmentManagement();
             } else {
@@ -1794,16 +1342,12 @@
             if (confirm(`Deactivate this department?`)) {
                 const result = await window.admin.updateDepartment(deptId, { is_active: !currentStatus });
                 if (result.success) {
-                    showToast('Status updated', 'success');
+                    alert('Status updated');
                     showDepartmentManagement();
                 }
             }
         }
 
-        // ============================================
-        // REPORTS
-        // ============================================
-        
         function showReports() {
             const modal = document.getElementById('reportsModal');
             const today = new Date().toISOString().split('T')[0];
@@ -1812,15 +1356,11 @@
                 <div class="filter-bar">
                     <input type="date" id="startDate" value="${lastWeek}">
                     <input type="date" id="endDate" value="${today}">
-                    <select id="reportType">
-                        <option value="summary">Summary Report</option>
-                        <option value="detailed">Detailed Report</option>
-                    </select>
+                    <select id="reportType"><option value="summary">Summary Report</option><option value="detailed">Detailed Report</option></select>
                     <button onclick="generateReport()" class="btn-success">Generate</button>
                     <button onclick="exportReport()" class="btn-info">Export CSV</button>
                 </div>
-                <div id="reportResults"><p>Select date range and click Generate</p></div>
-            `;
+                <div id="reportResults"><p>Select date range and click Generate</p></div>`;
             modal.style.display = 'block';
         }
 
@@ -1841,7 +1381,7 @@
                             const dept = r.users?.departments?.name || 'Not Assigned';
                             const statusText = r.status === 'present' ? 'Present' : (r.status === 'late' ? 'Late' : 'Absent');
                             const statusClass = r.status === 'present' ? 'status-present' : (r.status === 'late' ? 'status-late' : 'status-absent');
-                            html += `<tr><td style="padding:10px;">${r.date}</td><td style="padding:10px;">${escapeHtml(r.users?.full_name || 'Unknown')}</td><td style="padding:10px;">${r.check_in_time ? new Date(r.check_in_time).toLocaleTimeString() : '-'}</td><td style="padding:10px;">${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td><td style="padding:10px;"><span class="status-badge ${statusClass}">${statusText}</span></td><td style="padding:10px;">${r.check_in_method}</td></tr>`;
+                            html += `<tr><td>${r.date}</td><td>${escapeHtml(r.users?.full_name || 'Unknown')}</td><td>${r.check_in_time ? new Date(r.check_in_time).toLocaleTimeString() : '-'}</td><td>${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td><td><span class="status-badge ${statusClass}">${statusText}</span></td><td>${r.check_in_method}</td></tr>`;
                         });
                         html += `</tbody></table></div>`;
                         if (data.length > 20) html += '<p>Showing first 20 records. Export for full data.</p>';
@@ -1855,7 +1395,7 @@
             }
         }
 
-        function exportReport() { showToast('Export to CSV feature ready.', 'info'); }
+        function exportReport() { alert('Export to CSV feature ready.'); }
 
         function setupRealtimeListeners() {
             window.addEventListener('attendance-updated', () => {
