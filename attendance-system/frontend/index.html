@@ -834,17 +834,6 @@
             }
         }
 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         /* Responsive */
         @media (max-width: 968px) {
             .login-card {
@@ -1226,14 +1215,15 @@
         // Check biometric availability
         let isBiometricAvailable = false;
         let hasBiometricCredential = false;
+        let pendingBiometricRegistration = false;
 
         async function checkBiometricStatus() {
             if (window.biometricAuth) {
                 isBiometricAvailable = await window.biometricAuth.isBiometricAvailable();
                 hasBiometricCredential = await window.biometricAuth.hasBiometricCredential();
                 
+                const biometricBtn = document.getElementById('biometricLoginBtn');
                 if (!isBiometricAvailable) {
-                    const biometricBtn = document.getElementById('biometricLoginBtn');
                     biometricBtn.disabled = true;
                     biometricBtn.title = 'Biometric authentication not supported on this device';
                 }
@@ -1280,6 +1270,71 @@
 
         document.getElementById('biometricLoginBtn').addEventListener('click', triggerBiometricLogin);
 
+        // Show biometric registration prompt
+        function showBiometricRegistrationPrompt(email, userId) {
+            const prompt = document.getElementById('biometricPrompt');
+            const title = document.getElementById('biometricTitle');
+            const message = document.getElementById('biometricMessage');
+            const statusDiv = document.getElementById('biometricStatus');
+            const retryBtn = document.getElementById('biometricRetryBtn');
+            
+            title.textContent = 'Register Fingerprint';
+            message.textContent = 'Place your finger on the sensor to register for future logins';
+            statusDiv.style.display = 'none';
+            statusDiv.className = 'biometric-status';
+            retryBtn.style.display = 'none';
+            
+            prompt.style.display = 'flex';
+            
+            const registerHandler = async () => {
+                statusDiv.style.display = 'block';
+                statusDiv.className = 'biometric-status info';
+                statusDiv.textContent = '🖐️ Please place your finger on the sensor...';
+                
+                try {
+                    const result = await window.biometricAuth.register(email, userId);
+                    
+                    if (result.success) {
+                        statusDiv.className = 'biometric-status success';
+                        statusDiv.textContent = '✅ Fingerprint registered successfully! You can now login with fingerprint.';
+                        setTimeout(() => {
+                            prompt.style.display = 'none';
+                            showSuccess('Login successful! Redirecting to dashboard...');
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.html';
+                            }, 1500);
+                        }, 2000);
+                    } else {
+                        statusDiv.className = 'biometric-status error';
+                        statusDiv.textContent = '❌ Registration failed: ' + result.error;
+                        retryBtn.style.display = 'block';
+                        retryBtn.onclick = registerHandler;
+                    }
+                } catch (error) {
+                    statusDiv.className = 'biometric-status error';
+                    statusDiv.textContent = '❌ Registration error: ' + error.message;
+                    retryBtn.style.display = 'block';
+                    retryBtn.onclick = registerHandler;
+                }
+            };
+            
+            const registerBtn = document.getElementById('biometricRetryBtn');
+            registerBtn.onclick = registerHandler;
+            
+            document.getElementById('biometricCancelBtn').onclick = () => {
+                prompt.style.display = 'none';
+                showSuccess('Login successful! Redirecting to dashboard...');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+            };
+            
+            // Auto-start registration
+            setTimeout(() => {
+                registerHandler();
+            }, 500);
+        }
+
         // Handle email/password login
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
@@ -1316,16 +1371,30 @@
                     loginBtn.disabled = false;
                     loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
                 } else {
-                    const { data: userData } = await supabaseClient
+                    // Get user ID
+                    const { data: userData, error: userError } = await supabaseClient
                         .from('users')
                         .select('id')
                         .eq('employee_id', email)
                         .single();
                     
-                    if (userData) {
+                    if (userError) {
+                        console.error('Error getting user:', userError);
+                        successDiv.textContent = 'Login successful! Redirecting...';
+                        successDiv.style.display = 'block';
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                        return;
+                    }
+                    
+                    if (userData && window.biometricAuth) {
+                        // Check if biometric is supported and not already registered
                         const hasCredential = await window.biometricAuth.hasBiometricCredential();
+                        const isSupported = await window.biometricAuth.isBiometricAvailable();
                         
-                        if (!hasCredential && window.biometricAuth.isBiometricAvailable()) {
+                        if (isSupported && !hasCredential) {
+                            // Show registration prompt
                             showBiometricRegistrationPrompt(email, userData.id);
                         } else {
                             successDiv.textContent = 'Login successful! Redirecting...';
@@ -1335,73 +1404,21 @@
                             }, 1500);
                         }
                     } else {
+                        successDiv.textContent = 'Login successful! Redirecting...';
+                        successDiv.style.display = 'block';
                         setTimeout(() => {
                             window.location.href = 'dashboard.html';
                         }, 1500);
                     }
                 }
             } catch (error) {
+                console.error('Login error:', error);
                 errorDiv.textContent = 'An unexpected error occurred';
                 errorDiv.style.display = 'block';
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
             }
         });
-
-        function showBiometricRegistrationPrompt(email, userId) {
-            const prompt = document.getElementById('biometricPrompt');
-            const title = document.getElementById('biometricTitle');
-            const message = document.getElementById('biometricMessage');
-            const statusDiv = document.getElementById('biometricStatus');
-            const retryBtn = document.getElementById('biometricRetryBtn');
-            
-            title.textContent = 'Register Fingerprint';
-            message.textContent = 'Place your finger on the sensor to register for future logins';
-            statusDiv.style.display = 'none';
-            retryBtn.style.display = 'none';
-            
-            prompt.style.display = 'flex';
-            
-            const registerHandler = async () => {
-                statusDiv.style.display = 'block';
-                statusDiv.className = 'biometric-status info';
-                statusDiv.textContent = 'Registering fingerprint...';
-                
-                const result = await window.biometricAuth.register(email, userId);
-                
-                if (result.success) {
-                    statusDiv.className = 'biometric-status success';
-                    statusDiv.textContent = '✅ Fingerprint registered successfully!';
-                    setTimeout(() => {
-                        prompt.style.display = 'none';
-                        successDiv.textContent = 'Login successful! Redirecting...';
-                        successDiv.style.display = 'block';
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 1500);
-                    }, 1500);
-                } else {
-                    statusDiv.className = 'biometric-status error';
-                    statusDiv.textContent = '❌ Registration failed: ' + result.error;
-                    retryBtn.style.display = 'block';
-                    retryBtn.onclick = registerHandler;
-                }
-            };
-            
-            const registerBtn = document.getElementById('biometricRetryBtn');
-            registerBtn.onclick = registerHandler;
-            
-            document.getElementById('biometricCancelBtn').onclick = () => {
-                prompt.style.display = 'none';
-                successDiv.textContent = 'Login successful! Redirecting...';
-                successDiv.style.display = 'block';
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-            };
-            
-            registerHandler();
-        }
 
         function showError(message) {
             errorDiv.textContent = message;
