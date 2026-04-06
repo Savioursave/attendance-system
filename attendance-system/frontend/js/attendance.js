@@ -2,8 +2,71 @@ class AttendanceManager {
     constructor() {
         this.supabase = window.supabaseClient;
         this.currentLocation = null;
+        this.isOnline = navigator.onLine;
         this.initRealtimeSubscription();
+        this.initOfflineListener();
         console.log('✅ AttendanceManager initialized');
+    }
+
+    initOfflineListener() {
+        window.addEventListener('online', async () => {
+            console.log('Back online - checking pending attendance records');
+            this.isOnline = true;
+            await this.syncOfflineAttendance();
+        });
+        
+        window.addEventListener('offline', () => {
+            console.log('Offline mode activated');
+            this.isOnline = false;
+            this.showNotification('You are offline. Attendance will be saved locally and synced when back online.', 'warning');
+        });
+    }
+
+    async syncOfflineAttendance() {
+        if (!window.offlineSync) {
+            console.log('Offline sync not available');
+            return;
+        }
+        
+        const syncResult = await window.offlineSync.syncPendingRecords();
+        if (syncResult) {
+            this.showNotification('✅ Offline attendance records synced successfully!', 'success');
+            window.dispatchEvent(new CustomEvent('attendance-updated'));
+        }
+    }
+
+    showNotification(message, type = 'info') {
+        const colors = {
+            success: '#4caf50',
+            error: '#f44336',
+            warning: '#ff9800',
+            info: '#2196f3'
+        };
+        
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: ${colors[type]};
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            max-width: 350px;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 4000);
     }
 
     async checkIn(method = 'manual', targetUserId = null) {
@@ -14,8 +77,13 @@ class AttendanceManager {
             const currentUser = window.auth?.currentUser;
             if (!currentUser) {
                 console.error('❌ Not authenticated');
-                alert('You must be logged in to check in');
+                this.showNotification('You must be logged in to check in', 'error');
                 return { success: false, error: 'Not authenticated' };
+            }
+
+            // If offline, save locally and return
+            if (!this.isOnline) {
+                return await this.saveOfflineCheckIn(method, targetUserId, currentUser);
             }
 
             // Determine who is checking in (self or helping someone)
@@ -23,9 +91,8 @@ class AttendanceManager {
             const checkInUserId = targetUserId || currentUser.id;
             
             if (isHelping) {
-                // Check if helper has permission to help others
                 if (currentUser.profile?.role !== 'admin' && currentUser.profile?.role !== 'supervisor') {
-                    alert('Only admins and supervisors can check in on behalf of others');
+                    this.showNotification('Only admins and supervisors can check in on behalf of others', 'error');
                     return { success: false, error: 'Insufficient permissions' };
                 }
                 console.log(`👥 Helping user: ${targetUserId}`);
@@ -40,40 +107,104 @@ class AttendanceManager {
                 
                 if (!locationResult.success || !locationResult.isWithin) {
                     const message = window.locationService.getLocationMessage(locationResult);
-                    alert(message);
+                    this.showNotification(message, 'error');
                     return { success: false, error: 'Location check failed', locationResult };
                 }
                 
-                // Store location
                 this.currentLocation = locationResult.location;
                 console.log('✅ Location verified - within premises');
             } catch (locationError) {
                 console.error('Location error:', locationError);
-                alert(`Location check failed: ${locationError.message}. Please enable location services and ensure you are within the organization premises.`);
+                this.showNotification(`Location check failed: ${locationError.message}. Please enable location services.`, 'error');
                 return { success: false, error: locationError.message };
             }
 
             // STEP 2: Show QR scanner for master QR verification
             return new Promise((resolve) => {
                 this.showQRScannerForCheckIn(async (qrData) => {
+                    if (!qrData) {
+                        resolve({ success: false, error: 'QR scan cancelled' });
+                        return;
+                    }
+                    
                     // STEP 3: Verify QR matches master QR
                     const qrVerification = await window.qrManager.verifyQR(qrData);
                     
                     if (!qrVerification.verified) {
-                        alert(qrVerification.message);
+                        this.showNotification(qrVerification.message, 'error');
                         resolve({ success: false, error: qrVerification.message });
                         return;
                     }
                     
                     // STEP 4: Process the check-in
-                    const result = await this.processCheckIn(checkInUserId, method, locationResult.location);
+                    const result = await this.processCheckIn(checkInUserId, method, this.currentLocation);
                     resolve(result);
                 });
             });
             
         } catch (error) {
             console.error('❌ Check-in error:', error);
-            alert('Check-in failed: ' + error.message);
+            this.showNotification('Check-in failed: ' + error.message, 'error');
+            return { success: false, error: error.message };
+        }
+    }
+
+    async saveOfflineCheckIn(method, targetUserId, currentUser) {
+        try {
+            console.log('📱 Offline mode: Saving check-in locally');
+            
+            const isHelping = targetUserId && targetUserId !== currentUser.id;
+            const checkInUserId = targetUserId || currentUser.id;
+            const today = new Date().toISOString().split('T')[0];
+            const checkInTime = new Date().toISOString();
+            
+            // Determine status based on time
+            const cutoffTime = new Date();
+            cutoffTime.setHours(9, 0, 0, 0);
+            let status = 'present';
+            if (new Date(checkInTime) > cutoffTime) {
+                status = 'late';
+            }
+            
+            // Get user details for display
+            let userFullName = currentUser.profile?.full_name || currentUser.email;
+            if (isHelping) {
+                const { data: userData } = await this.supabase
+                    .from('users')
+                    .select('full_name')
+                    .eq('id', targetUserId)
+                    .single();
+                if (userData) {
+                    userFullName = userData.full_name;
+                }
+            }
+            
+            const checkinData = {
+                userId: checkInUserId,
+                date: today,
+                check_in_time: checkInTime,
+                method: method,
+                status: status,
+                location: null,
+                helpedBy: isHelping ? currentUser.id : null,
+                userFullName: userFullName
+            };
+            
+            if (window.offlineSync) {
+                await window.offlineSync.savePendingCheckin(checkinData);
+            } else {
+                // Fallback to localStorage if offlineSync not available
+                const offlineQueue = JSON.parse(localStorage.getItem('offline_attendance_queue') || '[]');
+                offlineQueue.push(checkinData);
+                localStorage.setItem('offline_attendance_queue', JSON.stringify(offlineQueue));
+            }
+            
+            this.showNotification(`✅ Check-in saved locally (Offline Mode)\n${userFullName} checked in at ${new Date().toLocaleTimeString()}\nStatus: ${status}\n\nThis will sync when back online.`, 'success');
+            
+            return { success: true, offline: true, data: checkinData };
+        } catch (error) {
+            console.error('Offline save error:', error);
+            this.showNotification('Failed to save check-in offline: ' + error.message, 'error');
             return { success: false, error: error.message };
         }
     }
@@ -98,6 +229,7 @@ class AttendanceManager {
             }
 
             if (existing && existing.check_in_time) {
+                this.showNotification('Already checked in today', 'warning');
                 return { 
                     success: false, 
                     error: 'Already checked in today',
@@ -158,8 +290,7 @@ class AttendanceManager {
                 user: userData?.full_name
             });
 
-            const message = `✅ Check-in successful for ${userData?.full_name || 'user'} at ${new Date().toLocaleTimeString()}\nStatus: ${status}`;
-            alert(message);
+            this.showNotification(`✅ Check-in successful for ${userData?.full_name || 'user'} at ${new Date().toLocaleTimeString()}\nStatus: ${status}`, 'success');
 
             window.dispatchEvent(new CustomEvent('attendance-updated'));
 
@@ -176,8 +307,13 @@ class AttendanceManager {
             
             const currentUser = window.auth?.currentUser;
             if (!currentUser) {
-                alert('You must be logged in to check out');
+                this.showNotification('You must be logged in to check out', 'error');
                 return { success: false, error: 'Not authenticated' };
+            }
+
+            // If offline, save locally
+            if (!this.isOnline) {
+                return await this.saveOfflineCheckOut(targetUserId, currentUser);
             }
 
             const isHelping = targetUserId && targetUserId !== currentUser.id;
@@ -185,7 +321,7 @@ class AttendanceManager {
             
             if (isHelping) {
                 if (currentUser.profile?.role !== 'admin' && currentUser.profile?.role !== 'supervisor') {
-                    alert('Only admins and supervisors can check out on behalf of others');
+                    this.showNotification('Only admins and supervisors can check out on behalf of others', 'error');
                     return { success: false, error: 'Insufficient permissions' };
                 }
                 console.log(`👥 Helping user check out: ${targetUserId}`);
@@ -198,23 +334,28 @@ class AttendanceManager {
                 const locationResult = await window.locationService.checkLocation();
                 if (!locationResult.success || !locationResult.isWithin) {
                     const message = window.locationService.getLocationMessage(locationResult);
-                    alert(message);
+                    this.showNotification(message, 'error');
                     return { success: false, error: 'Location check failed' };
                 }
                 this.currentLocation = locationResult.location;
                 console.log('✅ Location verified');
             } catch (locationError) {
-                alert(`Location check failed: ${locationError.message}`);
+                this.showNotification(`Location check failed: ${locationError.message}`, 'error');
                 return { success: false, error: locationError.message };
             }
 
             // STEP 2: Show QR scanner for master QR verification
             return new Promise((resolve) => {
                 this.showQRScannerForCheckIn(async (qrData) => {
+                    if (!qrData) {
+                        resolve({ success: false, error: 'QR scan cancelled' });
+                        return;
+                    }
+                    
                     const qrVerification = await window.qrManager.verifyQR(qrData);
                     
                     if (!qrVerification.verified) {
-                        alert(qrVerification.message);
+                        this.showNotification(qrVerification.message, 'error');
                         resolve({ success: false, error: qrVerification.message });
                         return;
                     }
@@ -226,7 +367,54 @@ class AttendanceManager {
             
         } catch (error) {
             console.error('❌ Check-out error:', error);
-            alert('Check-out failed: ' + error.message);
+            this.showNotification('Check-out failed: ' + error.message, 'error');
+            return { success: false, error: error.message };
+        }
+    }
+
+    async saveOfflineCheckOut(targetUserId, currentUser) {
+        try {
+            console.log('📱 Offline mode: Saving check-out locally');
+            
+            const isHelping = targetUserId && targetUserId !== currentUser.id;
+            const checkOutUserId = targetUserId || currentUser.id;
+            const today = new Date().toISOString().split('T')[0];
+            const checkOutTime = new Date().toISOString();
+            
+            // Get user details
+            let userFullName = currentUser.profile?.full_name || currentUser.email;
+            if (isHelping) {
+                const { data: userData } = await this.supabase
+                    .from('users')
+                    .select('full_name')
+                    .eq('id', targetUserId)
+                    .single();
+                if (userData) {
+                    userFullName = userData.full_name;
+                }
+            }
+            
+            const checkoutData = {
+                userId: checkOutUserId,
+                date: today,
+                check_out_time: checkOutTime,
+                helpedBy: isHelping ? currentUser.id : null,
+                userFullName: userFullName
+            };
+            
+            if (window.offlineSync) {
+                await window.offlineSync.savePendingCheckout(checkoutData);
+            } else {
+                const offlineQueue = JSON.parse(localStorage.getItem('offline_attendance_queue') || '[]');
+                offlineQueue.push(checkoutData);
+                localStorage.setItem('offline_attendance_queue', JSON.stringify(offlineQueue));
+            }
+            
+            this.showNotification(`✅ Check-out saved locally (Offline Mode)\n${userFullName} checked out at ${new Date().toLocaleTimeString()}\n\nThis will sync when back online.`, 'success');
+            
+            return { success: true, offline: true, data: checkoutData };
+        } catch (error) {
+            console.error('Offline save error:', error);
             return { success: false, error: error.message };
         }
     }
@@ -278,7 +466,7 @@ class AttendanceManager {
             const checkOutDate = new Date(checkOutTime);
             const hoursWorked = ((checkOutDate - checkInTime) / (1000 * 60 * 60)).toFixed(2);
             
-            alert(`✅ Check-out successful for ${userData?.full_name || 'user'} at ${new Date().toLocaleTimeString()}\nHours worked: ${hoursWorked}`);
+            this.showNotification(`✅ Check-out successful for ${userData?.full_name || 'user'} at ${new Date().toLocaleTimeString()}\nHours worked: ${hoursWorked}`, 'success');
 
             window.dispatchEvent(new CustomEvent('attendance-updated'));
 
@@ -290,7 +478,6 @@ class AttendanceManager {
     }
 
     showQRScannerForCheckIn(callback) {
-        // Create modal if doesn't exist
         let modal = document.getElementById('qrScanModal');
         if (!modal) {
             modal = document.createElement('div');
@@ -307,10 +494,9 @@ class AttendanceManager {
             `;
             document.body.appendChild(modal);
             
-            // Close button
             modal.querySelector('.close').onclick = () => {
-                if (html5QrCode) {
-                    html5QrCode.stop();
+                if (window.currentQrScanner) {
+                    window.currentQrScanner.stop();
                 }
                 modal.style.display = 'none';
                 callback(null);
@@ -332,6 +518,7 @@ class AttendanceManager {
                 statusDiv.style.display = 'none';
                 html5QrCode.stop();
                 modal.style.display = 'none';
+                window.currentQrScanner = null;
                 callback(qrMessage);
             },
             (error) => {
@@ -343,10 +530,8 @@ class AttendanceManager {
             }
         );
         
-        // Store reference to stop on close
         window.currentQrScanner = html5QrCode;
         
-        // Handle modal close
         const closeHandler = () => {
             if (window.currentQrScanner) {
                 window.currentQrScanner.stop();
@@ -465,26 +650,22 @@ class AttendanceManager {
             
             const checkInBtn = document.getElementById('checkInBtn');
             const checkOutBtn = document.getElementById('checkOutBtn');
-            const gpsBtn = document.getElementById('gpsBtn');
             const assistBtn = document.getElementById('assistBtn');
 
-            if (!checkInBtn || !checkOutBtn || !gpsBtn) return;
+            if (!checkInBtn || !checkOutBtn) return;
 
             if (status) {
                 if (status.check_in_time && !status.check_out_time) {
                     checkInBtn.disabled = true;
-                    gpsBtn.disabled = true;
                     checkOutBtn.disabled = false;
                     if (assistBtn) assistBtn.disabled = false;
                 } else if (status.check_out_time) {
                     checkInBtn.disabled = true;
-                    gpsBtn.disabled = true;
                     checkOutBtn.disabled = true;
                     if (assistBtn) assistBtn.disabled = true;
                 }
             } else {
                 checkInBtn.disabled = false;
-                gpsBtn.disabled = false;
                 checkOutBtn.disabled = true;
                 if (assistBtn) assistBtn.disabled = false;
             }
@@ -541,4 +722,21 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
             console.log('✅ AttendanceManager attached to window');
         }
     }, 500);
+}
+
+// Add animation styles for notifications
+if (!document.querySelector('#notification-styles')) {
+    const style = document.createElement('style');
+    style.id = 'notification-styles';
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
 }
