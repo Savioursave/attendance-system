@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Springytrack - Smart Attendance System</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
@@ -15,15 +15,91 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FF6B6B 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            transition: background 0.3s ease;
         }
 
-        /* Animated Background Shapes */
-        .bg-shapes {
+        body.light-mode {
+            background: linear-gradient(135deg, #f5f5dc 0%, #fff8dc 50%, #faf0e6 100%);
+        }
+
+        body.light-mode .header {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        body.light-mode .logo-text {
+            color: #1a1a2e;
+        }
+
+        body.light-mode .nav-menu a {
+            color: #1a1a2e;
+        }
+
+        body.light-mode .nav-menu a:hover {
+            color: #2e7d32;
+        }
+
+        body.light-mode .content-section h1,
+        body.light-mode .content-section p,
+        body.light-mode .badge,
+        body.light-mode .slider-title h2,
+        body.light-mode .slider-title p,
+        body.light-mode .slider-card h3,
+        body.light-mode .slider-card p,
+        body.light-mode .login-card h2,
+        body.light-mode .login-card p,
+        body.light-mode .benefits h2,
+        body.light-mode .benefits > p,
+        body.light-mode .benefit-card h3,
+        body.light-mode .benefit-card p,
+        body.light-mode .footer-col h3,
+        body.light-mode .footer-col p,
+        body.light-mode .footer-col ul li a,
+        body.light-mode .footer-bottom p {
+            color: #1a1a2e;
+        }
+
+        body.light-mode .marquee-content {
+            color: #1a1a2e;
+        }
+
+        body.light-mode .login-card {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        body.light-mode .input-group input {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .input-group input::placeholder {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        body.light-mode .biometric-btn {
+            background: rgba(0, 0, 0, 0.05);
+            color: #2e7d32;
+        }
+
+        body.light-mode .benefit-card {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        body.light-mode .slider-card {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        body.light-mode .footer {
+            background: linear-gradient(135deg, #e8e8e8 0%, #f0f0f0 100%);
+        }
+
+        /* Animated Water Fountain Background */
+        .water-fountain {
             position: fixed;
             top: 0;
             left: 0;
@@ -31,45 +107,86 @@
             height: 100%;
             z-index: 0;
             overflow: hidden;
+            pointer-events: none;
         }
 
-        .shape {
+        .water-particle {
             position: absolute;
-            background: rgba(255, 255, 255, 0.05);
+            background: radial-gradient(circle, rgba(46, 125, 50, 0.4), rgba(255, 215, 0, 0.2));
             border-radius: 50%;
-            animation: float 20s infinite ease-in-out;
+            animation: fountain 4s infinite ease-in-out;
         }
 
-        .shape:nth-child(1) { width: 400px; height: 400px; top: -150px; right: -100px; animation-delay: 0s; }
-        .shape:nth-child(2) { width: 600px; height: 600px; bottom: -200px; left: -150px; animation-delay: 3s; }
-        .shape:nth-child(3) { width: 250px; height: 250px; top: 40%; right: 20%; animation-delay: 6s; }
-        .shape:nth-child(4) { width: 350px; height: 350px; bottom: 20%; right: 10%; animation-delay: 9s; }
-        .shape:nth-child(5) { width: 180px; height: 180px; top: 20%; left: 15%; animation-delay: 12s; }
-        .shape:nth-child(6) { width: 500px; height: 500px; bottom: 30%; left: 20%; animation-delay: 15s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-            50% { transform: translateY(-50px) rotate(10deg) scale(1.05); }
+        @keyframes fountain {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-20vh) scale(1);
+                opacity: 0;
+            }
         }
 
-        /* Curved Waves */
-        .wave {
+        /* Moving Background Image */
+        .moving-bg {
             position: fixed;
-            bottom: 0;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 120px;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,170.7C672,160,768,160,864,165.3C960,171,1056,181,1152,186.7C1248,192,1344,192,1392,192L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') repeat-x;
+            height: 100%;
+            z-index: 0;
+            background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=1080&fit=crop');
             background-size: cover;
-            z-index: 1;
-            opacity: 0.3;
+            background-position: center;
+            opacity: 0.15;
+            animation: moveBg 20s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes moveBg {
+            0% {
+                transform: scale(1);
+                opacity: 0.15;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.2;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.15;
+            }
         }
 
         /* Header */
         .header {
-            position: relative;
-            z-index: 10;
-            padding: 20px 50px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 15px 40px;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            padding: 10px 40px;
+            background: rgba(0, 0, 0, 0.95);
+        }
+
+        body.light-mode .header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -82,43 +199,178 @@
         }
 
         .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: white;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            color: #DC143C;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+            font-size: 20px;
+            color: #FFD700;
         }
 
         .logo-text {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             color: white;
-            letter-spacing: -0.5px;
         }
 
         .logo-text span {
             color: #FFD700;
         }
 
-        .nav-links {
+        .nav-menu {
             display: flex;
             gap: 30px;
+            align-items: center;
         }
 
-        .nav-links a {
+        .nav-menu a {
             color: rgba(255,255,255,0.8);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            position: relative;
         }
 
-        .nav-links a:hover {
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #FFD700;
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-menu a:hover {
+            color: #FFD700;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+
+        .theme-icon {
+            font-size: 18px;
+            color: #FFD700;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 28px;
             color: white;
+            cursor: pointer;
+            z-index: 1001;
+            transition: transform 0.3s;
+        }
+
+        .hamburger:hover {
+            transform: scale(1.1);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1002;
+            padding: 80px 30px;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        body.light-mode .mobile-menu {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            transform: translateX(-20px);
+            opacity: 0;
+        }
+
+        .mobile-menu.active a {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .mobile-menu a:nth-child(1) { transition-delay: 0.1s; }
+        .mobile-menu a:nth-child(2) { transition-delay: 0.2s; }
+        .mobile-menu a:nth-child(3) { transition-delay: 0.3s; }
+        .mobile-menu a:nth-child(4) { transition-delay: 0.4s; }
+        .mobile-menu a:nth-child(5) { transition-delay: 0.5s; }
+
+        body.light-mode .mobile-menu a {
+            color: #1a1a2e;
+            border-bottom-color: rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu a:hover {
+            color: #FFD700;
+            padding-left: 15px;
+        }
+
+        .mobile-menu .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .mobile-menu .close-menu:hover {
+            transform: rotate(90deg);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1001;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
         }
 
         /* Hero Section */
@@ -128,17 +380,41 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 60px 50px;
+            padding: 120px 50px 80px;
             max-width: 1400px;
             margin: 0 auto;
             gap: 60px;
         }
 
-        /* Left Side - App Mockup */
-        .mockup-section {
+        /* Left Side - Images Gallery */
+        .image-gallery {
             flex: 1;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             animation: fadeInLeft 0.8s ease-out;
+        }
+
+        .hero-image {
+            width: 100%;
+            border-radius: 30px;
+            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s;
+            object-fit: cover;
+        }
+
+        .hero-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 40px 60px -20px rgba(0,0,0,0.4);
+        }
+
+        .image-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .image-row .hero-image {
+            width: calc(50% - 10px);
         }
 
         @keyframes fadeInLeft {
@@ -152,91 +428,6 @@
             }
         }
 
-        .mockup-stack {
-            position: relative;
-            height: 500px;
-        }
-
-        .mockup-card {
-            position: absolute;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.3);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .mockup-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .mockup-card:nth-child(1) {
-            width: 280px;
-            height: 500px;
-            top: 0;
-            left: 0;
-            transform: rotate(-8deg);
-            z-index: 1;
-        }
-
-        .mockup-card:nth-child(2) {
-            width: 280px;
-            height: 500px;
-            top: 20px;
-            left: 60px;
-            transform: rotate(-2deg);
-            z-index: 2;
-        }
-
-        .mockup-card:nth-child(3) {
-            width: 280px;
-            height: 500px;
-            top: 10px;
-            left: 120px;
-            transform: rotate(4deg);
-            z-index: 3;
-            box-shadow: 0 40px 60px -20px rgba(0,0,0,0.4);
-        }
-
-        .mockup-screen {
-            padding: 20px;
-            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-            height: 100%;
-        }
-
-        .mockup-header {
-            background: #DC143C;
-            height: 40px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-        }
-
-        .mockup-line {
-            height: 10px;
-            background: #e0e0e0;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-
-        .mockup-line.short {
-            width: 60%;
-        }
-
-        .mockup-circle {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #DC143C, #8B0000);
-            border-radius: 50%;
-            margin: 20px auto;
-        }
-
-        /* Right Side - Content */
-        .content-section {
-            flex: 1;
-            color: white;
-            animation: fadeInRight 0.8s ease-out;
-        }
-
         @keyframes fadeInRight {
             from {
                 opacity: 0;
@@ -248,16 +439,24 @@
             }
         }
 
+        /* Right Side - Content */
+        .content-section {
+            flex: 1;
+            color: white;
+            animation: fadeInRight 0.8s ease-out;
+        }
+
         .badge {
             display: inline-block;
-            background: rgba(255,255,255,0.2);
+            background: rgba(46, 125, 50, 0.2);
             backdrop-filter: blur(10px);
             padding: 8px 20px;
             border-radius: 40px;
             font-size: 13px;
             font-weight: 500;
             margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid rgba(46, 125, 50, 0.3);
+            color: #FFD700;
         }
 
         .content-section h1 {
@@ -269,19 +468,6 @@
 
         .content-section h1 .highlight {
             color: #FFD700;
-            position: relative;
-            display: inline-block;
-        }
-
-        .content-section h1 .highlight::after {
-            content: '';
-            position: absolute;
-            bottom: 5px;
-            left: 0;
-            width: 100%;
-            height: 12px;
-            background: rgba(255,215,0,0.3);
-            border-radius: 10px;
         }
 
         .content-section p {
@@ -306,23 +492,183 @@
             gap: 15px;
         }
 
-        /* Login Card Section */
+        /* Moving Text Marquee */
+        .marquee {
+            position: relative;
+            z-index: 10;
+            background: rgba(46, 125, 50, 0.2);
+            backdrop-filter: blur(5px);
+            padding: 15px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 20px 0;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+            font-size: 18px;
+            font-weight: 500;
+            color: #FFD700;
+            transition: color 0.3s ease;
+        }
+
+        .marquee-content span {
+            margin: 0 40px;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Motion Slider */
+        .slider-section {
+            position: relative;
+            z-index: 10;
+            padding: 60px 50px;
+            background: rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .slider-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .slider-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .slider-title h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .slider-title p {
+            opacity: 0.8;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .slider-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 30px;
+        }
+
+        .slider-card {
+            min-width: calc(33.333% - 20px);
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(46, 125, 50, 0.2);
+        }
+
+        .slider-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .slider-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: transform 0.3s;
+        }
+
+        .slider-card:hover .slider-icon {
+            transform: rotateY(180deg);
+        }
+
+        .slider-icon i {
+            font-size: 36px;
+            color: #FFD700;
+        }
+
+        .slider-card h3 {
+            font-size: 20px;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .slider-card p {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(46, 125, 50, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+            color: #FFD700;
+        }
+
+        .slider-btn:hover {
+            background: #2e7d32;
+            transform: translateY(-50%) scale(1.1);
+            color: white;
+        }
+
+        .slider-btn.prev {
+            left: -20px;
+        }
+
+        .slider-btn.next {
+            right: -20px;
+        }
+
+        /* Login Section */
         .login-section {
             position: relative;
             z-index: 10;
             display: flex;
             justify-content: center;
-            padding: 40px 50px 80px;
+            padding: 80px 50px;
         }
 
         .login-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
             border-radius: 40px;
             padding: 50px;
             max-width: 500px;
             width: 100%;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
             animation: fadeInUp 0.6s ease-out 0.3s both;
+            border: 1px solid rgba(46, 125, 50, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
         }
 
         @keyframes fadeInUp {
@@ -338,13 +684,13 @@
 
         .login-card h2 {
             font-size: 28px;
-            color: #1e293b;
+            color: white;
             margin-bottom: 8px;
             text-align: center;
         }
 
         .login-card p {
-            color: #64748b;
+            color: rgba(255,255,255,0.7);
             text-align: center;
             margin-bottom: 30px;
         }
@@ -362,17 +708,23 @@
         .input-group input {
             width: 100%;
             padding: 16px 16px 16px 48px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid rgba(255,255,255,0.2);
             border-radius: 16px;
             font-size: 15px;
             transition: all 0.3s ease;
-            font-family: inherit;
+            background: rgba(255,255,255,0.1);
+            color: white;
         }
 
         .input-group input:focus {
             outline: none;
-            border-color: #DC143C;
-            box-shadow: 0 0 0 4px rgba(220,20,60,0.1);
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.2);
+            transform: scale(1.02);
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255,255,255,0.5);
         }
 
         .input-group .input-icon {
@@ -381,7 +733,22 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 18px;
-            color: #94a3b8;
+            color: #FFD700;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #FFD700;
+            z-index: 2;
+            transition: color 0.3s;
+        }
+
+        .password-toggle:hover {
+            color: #2e7d32;
         }
 
         .forgot-link {
@@ -390,14 +757,19 @@
         }
 
         .forgot-link a {
-            color: #DC143C;
+            color: #FFD700;
             text-decoration: none;
             font-size: 13px;
             font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .forgot-link a:hover {
+            color: #2e7d32;
         }
 
         .btn-login {
-            background: linear-gradient(135deg, #DC143C 0%, #8B0000 100%);
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
             color: white;
             padding: 16px;
             border: none;
@@ -410,19 +782,14 @@
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(220,20,60,0.4);
-        }
-
-        .btn-login:disabled {
-            opacity: 0.6;
-            transform: none;
+            box-shadow: 0 10px 25px -5px rgba(46, 125, 50, 0.4);
         }
 
         .biometric-btn {
-            background: white;
-            color: #DC143C;
+            background: rgba(255,255,255,0.1);
+            color: #FFD700;
             padding: 14px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid rgba(46, 125, 50, 0.5);
             border-radius: 16px;
             font-size: 16px;
             font-weight: 600;
@@ -436,25 +803,19 @@
         }
 
         .biometric-btn:hover {
-            border-color: #DC143C;
-            background: #fef2f2;
+            border-color: #FFD700;
+            background: rgba(46, 125, 50, 0.2);
             transform: translateY(-2px);
         }
 
         .biometric-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
-        }
-
-        .biometric-btn i {
-            font-size: 20px;
         }
 
         .divider {
             display: flex;
             align-items: center;
-            text-align: center;
             margin: 25px 0;
         }
 
@@ -462,18 +823,16 @@
         .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
         }
 
         .divider span {
             padding: 0 10px;
-            color: #94a3b8;
+            color: rgba(255,255,255,0.5);
             font-size: 12px;
         }
 
-        .error-message {
-            background: #fee2e2;
-            color: #dc2626;
+        .error-message, .success-message {
             padding: 12px;
             border-radius: 12px;
             font-size: 13px;
@@ -482,22 +841,21 @@
             display: none;
         }
 
+        .error-message {
+            background: rgba(220, 38, 38, 0.2);
+            color: #ef4444;
+        }
+
         .success-message {
-            background: #dcfce7;
-            color: #166534;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            text-align: center;
-            margin-top: 16px;
-            display: none;
+            background: rgba(46, 125, 50, 0.2);
+            color: #4ade80;
         }
 
         .biometric-status {
             font-size: 12px;
             text-align: center;
             margin-top: 10px;
-            color: #64748b;
+            color: rgba(255,255,255,0.6);
             display: none;
         }
 
@@ -505,19 +863,19 @@
         .benefits {
             position: relative;
             z-index: 10;
-            background: white;
+            background: rgba(0, 0, 0, 0.5);
             padding: 80px 50px;
             text-align: center;
         }
 
         .benefits h2 {
             font-size: 36px;
-            color: #1e293b;
+            color: white;
             margin-bottom: 15px;
         }
 
         .benefits > p {
-            color: #64748b;
+            color: rgba(255,255,255,0.7);
             margin-bottom: 60px;
         }
 
@@ -531,92 +889,250 @@
 
         .benefit-card {
             padding: 30px;
-            background: #f8fafc;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
             border-radius: 24px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(46, 125, 50, 0.2);
         }
 
         .benefit-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.1);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
+            border-color: rgba(255, 215, 0, 0.5);
         }
 
         .benefit-icon {
             width: 70px;
             height: 70px;
-            background: linear-gradient(135deg, #DC143C, #8B0000);
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
+            transition: transform 0.3s;
+        }
+
+        .benefit-card:hover .benefit-icon {
+            transform: rotateY(180deg);
         }
 
         .benefit-icon i {
             font-size: 32px;
-            color: white;
+            color: #FFD700;
         }
 
         .benefit-card h3 {
             font-size: 20px;
-            color: #1e293b;
+            color: white;
             margin-bottom: 10px;
         }
 
         .benefit-card p {
-            color: #64748b;
+            color: rgba(255,255,255,0.7);
             font-size: 14px;
-            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: rgba(255,255,255,0.7);
+            padding: 60px 50px 30px;
+            overflow: hidden;
+        }
+
+        /* S-Shape Moving Animation */
+        .s-shape {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .s-shape::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 80%;
+            height: 200%;
+            background: radial-gradient(ellipse at center, rgba(46, 125, 50, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: rotate(25deg);
+            animation: sMove 8s infinite ease-in-out;
+        }
+
+        .s-shape::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -10%;
+            width: 60%;
+            height: 150%;
+            background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: rotate(-15deg);
+            animation: sMove2 6s infinite ease-in-out;
+        }
+
+        @keyframes sMove {
+            0%, 100% { transform: rotate(25deg) translate(0, 0) scale(1); }
+            50% { transform: rotate(30deg) translate(30px, -30px) scale(1.1); }
+        }
+
+        @keyframes sMove2 {
+            0%, 100% { transform: rotate(-15deg) translate(0, 0) scale(1); }
+            50% { transform: rotate(-20deg) translate(-30px, 30px) scale(1.1); }
+        }
+
+        /* Wavy Border Top */
+        .footer-wavy {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,64L80,58.7C160,53,320,43,480,48C640,53,800,75,960,80C1120,85,1280,75,1360,69.3L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z" fill="rgba(46,125,50,0.3)"></path></svg>') repeat-x;
+            background-size: cover;
+            opacity: 0.6;
+            animation: waveMove 10s infinite linear;
+        }
+
+        @keyframes waveMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .footer-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-col h3 {
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .footer-col p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .footer-col .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-col .social-links a {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .footer-col .social-links a:hover {
+            background: #2e7d32;
+            transform: translateY(-3px) rotate(360deg);
+            color: #FFD700;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-col ul li a:hover {
+            color: #FFD700;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding-top: 40px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
         /* Modal */
         .modal {
             position: fixed;
-            z-index: 1000;
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(5px);
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: fadeIn 0.3s ease;
+            display: none;
         }
         
         .modal-content {
-            background: white;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
             padding: 40px;
             border-radius: 32px;
             max-width: 450px;
             width: 90%;
             text-align: center;
-            animation: slideDown 0.3s ease;
+            border: 1px solid rgba(46, 125, 50, 0.3);
+            animation: modalPop 0.3s ease;
+        }
+
+        @keyframes modalPop {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
         
         .modal-content h2 {
             margin-bottom: 15px;
-            color: #1e293b;
+            color: white;
         }
         
         .modal-content p {
             margin-bottom: 20px;
-            color: #64748b;
-        }
-        
-        .modal .close {
-            position: absolute;
-            right: 22px;
-            top: 22px;
-            font-size: 28px;
-            cursor: pointer;
-            color: #94a3b8;
+            color: rgba(255,255,255,0.7);
         }
         
         .fingerprint-icon {
             font-size: 80px;
-            color: #DC143C;
+            color: #FFD700;
             margin: 20px 0;
             animation: pulse 1.5s infinite;
         }
@@ -627,7 +1143,7 @@
         }
 
         .modal-btn {
-            background: linear-gradient(135deg, #DC143C 0%, #8B0000 100%);
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
             color: white;
             padding: 14px 30px;
             border: none;
@@ -636,28 +1152,17 @@
             font-weight: 600;
             cursor: pointer;
             margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.05);
         }
 
         .modal-btn-secondary {
-            background: #e2e8f0;
-            color: #1e293b;
+            background: rgba(255,255,255,0.1);
+            color: white;
             margin-left: 10px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         /* Responsive */
@@ -665,127 +1170,146 @@
             .hero {
                 flex-direction: column;
                 text-align: center;
-                padding: 40px 30px;
+                padding: 100px 30px 60px;
             }
             
             .content-section h1 {
                 font-size: 40px;
             }
             
-            .mockup-stack {
-                height: 400px;
+            .content-section p {
+                margin-left: auto;
+                margin-right: auto;
             }
             
-            .mockup-card:nth-child(1),
-            .mockup-card:nth-child(2),
-            .mockup-card:nth-child(3) {
-                width: 220px;
-                height: 400px;
-            }
-            
-            .mockup-card:nth-child(1) { left: 0; }
-            .mockup-card:nth-child(2) { left: 40px; }
-            .mockup-card:nth-child(3) { left: 80px; }
-            
-            .header {
-                padding: 20px 30px;
-            }
-            
-            .nav-links {
+            .nav-menu {
                 display: none;
             }
             
-            .benefits {
-                padding: 60px 30px;
+            .hamburger {
+                display: block;
+            }
+            
+            .slider-card {
+                min-width: calc(50% - 15px);
             }
             
             .benefits h2 {
                 font-size: 28px;
             }
+            
+            .footer {
+                padding: 40px 30px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slider-card {
+                min-width: calc(100% - 0px);
+            }
+            
+            .login-card {
+                margin: 0 20px;
+                padding: 30px;
+            }
+            
+            .image-row {
+                flex-direction: column;
+            }
+            
+            .image-row .hero-image {
+                width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
-            .mockup-card:nth-child(1),
-            .mockup-card:nth-child(2),
-            .mockup-card:nth-child(3) {
-                width: 180px;
-                height: 350px;
+            .header {
+                padding: 12px 20px;
             }
             
-            .mockup-card:nth-child(1) { left: 0; }
-            .mockup-card:nth-child(2) { left: 30px; }
-            .mockup-card:nth-child(3) { left: 60px; }
-            
-            .login-card {
-                padding: 30px;
+            .hero {
+                padding: 80px 20px 40px;
             }
+            
+            .content-section h1 {
+                font-size: 32px;
+            }
+            
+            .theme-text {
+                display: none;
+            }
+        }
+
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <div class="bg-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-    <div class="wave"></div>
+    <!-- Animated Water Fountain Background -->
+    <div class="water-fountain" id="waterFountain"></div>
+    
+    <!-- Moving Background Image -->
+    <div class="moving-bg"></div>
 
     <!-- Header -->
-    <header class="header">
-        <div class="logo">
-            <div class="logo-icon">
-                <i class="fas fa-chart-line"></i>
+    <header class="header" id="header">
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="logo-text">Springy<span>track</span></div>
             </div>
-            <div class="logo-text">Springy<span>track</span></div>
-        </div>
-        <div class="nav-links">
-            <a href="#">Features</a>
-            <a href="#">Pricing</a>
-            <a href="#">Contact</a>
+            <div class="nav-menu">
+                <a href="#">Home</a>
+                <a href="#features">Features</a>
+                <a href="#benefits">Benefits</a>
+                <a href="#login">Login</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="theme-toggle" id="themeToggle">
+                <i class="fas fa-sun theme-icon"></i>
+                <span class="theme-text">Light / Dark</span>
+                <i class="fas fa-moon" style="color: #FFD700;"></i>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
         </div>
     </header>
 
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="close-menu" id="closeMenu">
+            <i class="fas fa-times"></i>
+        </div>
+        <a href="#">Home</a>
+        <a href="#features">Features</a>
+        <a href="#benefits">Benefits</a>
+        <a href="#login">Login</a>
+        <a href="#contact">Contact</a>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
     <!-- Hero Section -->
     <div class="hero">
-        <div class="mockup-section">
-            <div class="mockup-stack">
-                <div class="mockup-card">
-                    <div class="mockup-screen">
-                        <div class="mockup-header"></div>
-                        <div class="mockup-line"></div>
-                        <div class="mockup-line short"></div>
-                        <div class="mockup-line"></div>
-                        <div class="mockup-circle"></div>
-                        <div class="mockup-line"></div>
-                        <div class="mockup-line short"></div>
-                    </div>
-                </div>
-                <div class="mockup-card">
-                    <div class="mockup-screen">
-                        <div class="mockup-header"></div>
-                        <div class="mockup-line"></div>
-                        <div class="mockup-line short"></div>
-                        <div class="mockup-circle"></div>
-                        <div class="mockup-line"></div>
-                    </div>
-                </div>
-                <div class="mockup-card">
-                    <div class="mockup-screen">
-                        <div class="mockup-header"></div>
-                        <div class="mockup-line"></div>
-                        <div class="mockup-line short"></div>
-                        <div class="mockup-circle"></div>
-                        <div class="mockup-line"></div>
-                        <div class="mockup-line short"></div>
-                        <div class="mockup-line"></div>
-                    </div>
-                </div>
+        <div class="image-gallery reveal">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop" alt="Analytics Dashboard" class="hero-image" onerror="this.src='https://placehold.co/500x300/2e7d32/white?text=Analytics'">
+            <div class="image-row">
+                <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=300&h=250&fit=crop" alt="Computer Setup" class="hero-image" onerror="this.src='https://placehold.co/300x250/2e7d32/white?text=Computer'">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=300&h=250&fit=crop" alt="Laptop Workspace" class="hero-image" onerror="this.src='https://placehold.co/300x250/2e7d32/white?text=Laptop'">
             </div>
         </div>
-        <div class="content-section">
+        <div class="content-section reveal">
             <div class="badge">
                 <i class="fas fa-robot"></i> AI-Powered Attendance
             </div>
@@ -795,9 +1319,87 @@
         </div>
     </div>
 
+    <!-- Moving Text Marquee -->
+    <div class="marquee">
+        <div class="marquee-content">
+            <span>✨ Springytrack - Smart Attendance System</span>
+            <span>🚀 Real-time Tracking & Analytics</span>
+            <span>🔒 Secure Biometric Authentication</span>
+            <span>📱 Mobile Friendly Access</span>
+            <span>🌟 Trusted by 500+ Organizations</span>
+            <span>✨ Springytrack - Smart Attendance System</span>
+            <span>🚀 Real-time Tracking & Analytics</span>
+            <span>🔒 Secure Biometric Authentication</span>
+            <span>📱 Mobile Friendly Access</span>
+            <span>🌟 Trusted by 500+ Organizations</span>
+        </div>
+    </div>
+
+    <!-- Motion Slider Section -->
+    <div class="slider-section" id="features">
+        <div class="slider-container">
+            <div class="slider-title reveal">
+                <h2>Powerful Features</h2>
+                <p>Everything you need for seamless attendance management</p>
+            </div>
+            <div class="slider-wrapper">
+                <div class="slider-btn prev" id="prevBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="slider-track" id="sliderTrack">
+                    <div class="slider-card">
+                        <div class="slider-icon">
+                            <i class="fas fa-fingerprint"></i>
+                        </div>
+                        <h3>Biometric Security</h3>
+                        <p>Secure fingerprint authentication for authorized access only</p>
+                    </div>
+                    <div class="slider-card">
+                        <div class="slider-icon">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <h3>QR Code Check-in</h3>
+                        <p>Fast and contactless attendance tracking</p>
+                    </div>
+                    <div class="slider-card">
+                        <div class="slider-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Real-time Analytics</h3>
+                        <p>Live dashboards and comprehensive reports</p>
+                    </div>
+                    <div class="slider-card">
+                        <div class="slider-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Secure & Reliable</h3>
+                        <p>Enterprise-grade security for your data</p>
+                    </div>
+                    <div class="slider-card">
+                        <div class="slider-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Mobile Friendly</h3>
+                        <p>Access from any device, anywhere</p>
+                    </div>
+                    <div class="slider-card">
+                        <div class="slider-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>Real-time Tracking</h3>
+                        <p>Live employee location and status</p>
+                    </div>
+                </div>
+                <div class="slider-btn next" id="nextBtn">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Login Section -->
     <div class="login-section" id="login">
-        <div class="login-card">
+        <div class="login-card reveal">
             <h2>Welcome Back</h2>
             <p>Sign in to access your dashboard</p>
 
@@ -809,6 +1411,9 @@
                 <div class="input-group">
                     <span class="input-icon"><i class="fas fa-lock"></i></span>
                     <input type="password" id="password" placeholder="Password" required>
+                    <span class="password-toggle" id="passwordToggle">
+                        <i class="fas fa-eye"></i>
+                    </span>
                 </div>
                 <div class="forgot-link">
                     <a href="#" id="forgotPasswordLink">Forgot Password?</a>
@@ -833,32 +1438,32 @@
     </div>
 
     <!-- Benefits Section -->
-    <div class="benefits">
-        <h2>Why Choose Springytrack?</h2>
-        <p>Everything you need for seamless attendance management</p>
+    <div class="benefits" id="benefits">
+        <h2 class="reveal">Why Choose Springytrack?</h2>
+        <p class="reveal">Everything you need for seamless attendance management</p>
         <div class="benefits-grid">
-            <div class="benefit-card">
+            <div class="benefit-card reveal">
                 <div class="benefit-icon">
                     <i class="fas fa-fingerprint"></i>
                 </div>
                 <h3>Biometric Security</h3>
                 <p>Secure fingerprint authentication for authorized access only</p>
             </div>
-            <div class="benefit-card">
+            <div class="benefit-card reveal">
                 <div class="benefit-icon">
                     <i class="fas fa-qrcode"></i>
                 </div>
                 <h3>QR Code Check-in</h3>
                 <p>Fast and contactless attendance tracking</p>
             </div>
-            <div class="benefit-card">
+            <div class="benefit-card reveal">
                 <div class="benefit-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <h3>Real-time Analytics</h3>
                 <p>Live dashboards and comprehensive reports</p>
             </div>
-            <div class="benefit-card">
+            <div class="benefit-card reveal">
                 <div class="benefit-icon">
                     <i class="fas fa-shield-alt"></i>
                 </div>
@@ -868,41 +1473,71 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="s-shape"></div>
+        <div class="footer-wavy"></div>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Springytrack</h3>
+                <p>Smart Attendance Management System designed to streamline workforce tracking with cutting-edge technology.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#benefits">Benefits</a></li>
+                    <li><a href="#login">Login</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contact</h3>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> support@springytrack.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Springytrack. All rights reserved.</p>
+        </div>
+    </footer>
+
     <!-- Biometric Registration Modal -->
-    <div id="biometricModal" class="modal" style="display: none;">
+    <div id="biometricModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
             <h2><i class="fas fa-fingerprint"></i> Register Fingerprint</h2>
             <p>Place your finger on the sensor to register your fingerprint for future logins.</p>
             <div class="fingerprint-icon">
                 <i class="fas fa-fingerprint"></i>
             </div>
-            <div id="modalStatus" style="margin: 10px 0; color: #666;">Waiting for fingerprint...</div>
+            <div id="modalStatus" style="margin: 10px 0; color: rgba(255,255,255,0.7);">Waiting for fingerprint...</div>
             <button id="cancelModalBtn" class="modal-btn modal-btn-secondary">Cancel</button>
         </div>
     </div>
 
     <!-- Biometric Login Modal -->
-    <div id="biometricLoginModal" class="modal" style="display: none;">
+    <div id="biometricLoginModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
             <h2><i class="fas fa-fingerprint"></i> Fingerprint Authentication</h2>
             <p>Place your finger on the sensor to authenticate.</p>
             <div class="fingerprint-icon">
                 <i class="fas fa-fingerprint"></i>
             </div>
-            <div id="loginModalStatus" style="margin: 10px 0; color: #666;">Waiting for fingerprint...</div>
+            <div id="loginModalStatus" style="margin: 10px 0; color: rgba(255,255,255,0.7);">Waiting for fingerprint...</div>
             <button id="cancelLoginModalBtn" class="modal-btn modal-btn-secondary">Cancel</button>
         </div>
     </div>
 
     <!-- Forgot Password Modal -->
-    <div id="forgotModal" class="modal" style="display: none;">
+    <div id="forgotModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
             <h2><i class="fas fa-key"></i> Reset Password</h2>
             <p>Enter your email address to receive a reset link.</p>
-            <input type="email" id="resetEmail" placeholder="Your email" style="width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; margin-bottom: 20px;">
+            <input type="email" id="resetEmail" placeholder="Your email" style="width: 100%; padding: 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(46,125,50,0.3); border-radius: 12px; margin-bottom: 20px; color: white;">
             <button id="sendResetBtn" class="modal-btn" style="width: 100%;">Send Reset Link</button>
             <div id="forgotError" class="error-message" style="margin-top: 15px;"></div>
         </div>
@@ -911,32 +1546,169 @@
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // Supabase configuration
-        const SUPABASE_URL = 'https://hesxkxbtreqfxmhrdwml.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_jTsJmSF195H4U6Og7oOdSA_2VI1_xnd';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Create water fountain particles
+        function createWaterFountain() {
+            const container = document.getElementById('waterFountain');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'water-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = particle.style.height = Math.random() * 30 + 10 + 'px';
+                particle.style.animationDelay = Math.random() * 4 + 's';
+                particle.style.animationDuration = Math.random() * 3 + 3 + 's';
+                container.appendChild(particle);
+            }
+        }
+        createWaterFountain();
 
-        // DOM Elements
-        const loginForm = document.getElementById('loginForm');
-        const emailInput = document.getElementById('email');
+        // Password visibility toggle
         const passwordInput = document.getElementById('password');
-        const errorDiv = document.getElementById('errorMessage');
-        const successDiv = document.getElementById('successMessage');
-        const loginBtn = document.getElementById('loginBtn');
-        const biometricBtn = document.getElementById('biometricBtn');
-        const biometricStatus = document.getElementById('biometricStatus');
+        const passwordToggle = document.getElementById('passwordToggle');
+
+        passwordToggle.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        // Theme Toggle with light mode handling
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const icon = themeToggle.querySelector('.theme-icon');
+            if (document.body.classList.contains('light-mode')) {
+                icon.className = 'fas fa-moon theme-icon';
+            } else {
+                icon.className = 'fas fa-sun theme-icon';
+            }
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const overlay = document.getElementById('overlay');
+        const closeMenu = document.getElementById('closeMenu');
+
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        closeMenu.addEventListener('click', closeMobileMenu);
+        overlay.addEventListener('click', closeMobileMenu);
+
+        // Scroll Reveal
+        const reveals = document.querySelectorAll('.reveal');
+        function reveal() {
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const revealTop = element.getBoundingClientRect().top;
+                const revealPoint = 150;
+                if (revealTop < windowHeight - revealPoint) {
+                    element.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', reveal);
+        reveal();
+
+        // Auto-moving slider
+        const sliderTrack = document.getElementById('sliderTrack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0;
+        let cardWidth = 0;
+        let visibleCards = 3;
+        let autoSlideInterval;
+
+        function updateSlider() {
+            if (window.innerWidth <= 768) {
+                visibleCards = 1;
+            } else if (window.innerWidth <= 968) {
+                visibleCards = 2;
+            } else {
+                visibleCards = 3;
+            }
+            const cards = document.querySelectorAll('.slider-card');
+            if (cards.length === 0) return;
+            cardWidth = cards[0].offsetWidth + 30;
+            const maxIndex = Math.max(0, cards.length - visibleCards);
+            currentIndex = Math.min(currentIndex, maxIndex);
+            sliderTrack.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+        }
+
+        function nextSlide() {
+            const cards = document.querySelectorAll('.slider-card');
+            const maxIndex = Math.max(0, cards.length - visibleCards);
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+                updateSlider();
+            } else {
+                currentIndex = 0;
+                updateSlider();
+            }
+        }
+
+        function prevSlide() {
+            const cards = document.querySelectorAll('.slider-card');
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlider();
+            } else {
+                const maxIndex = Math.max(0, cards.length - visibleCards);
+                currentIndex = maxIndex;
+                updateSlider();
+            }
+        }
+
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(nextSlide, 4000);
+        }
+
+        prevBtn.addEventListener('click', () => {
+            clearInterval(autoSlideInterval);
+            prevSlide();
+            startAutoSlide();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            clearInterval(autoSlideInterval);
+            nextSlide();
+            startAutoSlide();
+        });
+
+        window.addEventListener('resize', () => {
+            clearInterval(autoSlideInterval);
+            updateSlider();
+            startAutoSlide();
+        });
         
-        // Modal elements
-        const biometricModal = document.getElementById('biometricModal');
-        const biometricLoginModal = document.getElementById('biometricLoginModal');
-        const forgotModal = document.getElementById('forgotModal');
-        const modalStatus = document.getElementById('modalStatus');
-        const loginModalStatus = document.getElementById('loginModalStatus');
-        
+        updateSlider();
+        startAutoSlide();
+
+        // Biometric variables
         let isRegistered = localStorage.getItem('biometricRegistered') === 'true';
         let registeredEmail = localStorage.getItem('biometricEmail');
-        
-        // Update biometric button state based on registration
+        const biometricBtn = document.getElementById('biometricBtn');
+        const biometricStatus = document.getElementById('biometricStatus');
+
         function updateBiometricButton() {
             if (isRegistered && registeredEmail) {
                 biometricBtn.disabled = false;
@@ -948,10 +1720,15 @@
                 biometricStatus.style.display = 'block';
             }
         }
-        
         updateBiometricButton();
-        
-        // Handle login form submission
+
+        // Login form
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const errorDiv = document.getElementById('errorMessage');
+        const successDiv = document.getElementById('successMessage');
+        const loginBtn = document.getElementById('loginBtn');
+
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -980,18 +1757,30 @@
                     loginBtn.disabled = false;
                     loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
                 } else {
-                    // Successful login - trigger biometric registration
                     successDiv.textContent = 'Login successful! Redirecting...';
                     successDiv.style.display = 'block';
                     
-                    // Check if biometric is already registered for this email
                     if (localStorage.getItem('biometricEmail') !== email) {
-                        // Show biometric registration modal
                         setTimeout(() => {
-                            showBiometricRegistration(email);
+                            const modal = document.getElementById('biometricModal');
+                            const modalStatus = document.getElementById('modalStatus');
+                            modal.style.display = 'flex';
+                            modalStatus.textContent = 'Place your finger on the sensor to register...';
+                            
+                            setTimeout(() => {
+                                modalStatus.textContent = '✅ Fingerprint registered successfully!';
+                                localStorage.setItem('biometricRegistered', 'true');
+                                localStorage.setItem('biometricEmail', email);
+                                localStorage.setItem('biometricToken', btoa(email + '-' + Date.now()));
+                                updateBiometricButton();
+                                
+                                setTimeout(() => {
+                                    modal.style.display = 'none';
+                                    window.location.href = 'dashboard.html';
+                                }, 1500);
+                            }, 3000);
                         }, 1000);
                     } else {
-                        // Already registered, just redirect
                         setTimeout(() => {
                             window.location.href = 'dashboard.html';
                         }, 1500);
@@ -1004,86 +1793,8 @@
                 loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
             }
         });
-        
-        // Show biometric registration modal
-        function showBiometricRegistration(email) {
-            biometricModal.style.display = 'flex';
-            modalStatus.textContent = 'Place your finger on the sensor to register...';
-            
-            // Simulate fingerprint registration (2 second delay)
-            setTimeout(() => {
-                modalStatus.textContent = '✅ Fingerprint registered successfully!';
-                
-                // Store biometric credential in Supabase
-                storeBiometricCredential(email);
-                
-                setTimeout(() => {
-                    biometricModal.style.display = 'none';
-                    
-                    // Redirect to dashboard
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-            }, 3000);
-        }
-        
-        // Store biometric credential in Supabase
-        async function storeBiometricCredential(email) {
-            try {
-                // Generate a secure token for biometric authentication
-                const biometricToken = btoa(email + '-' + Date.now() + '-' + Math.random().toString(36).substring(2));
-                
-                // Store in localStorage for demo
-                localStorage.setItem('biometricRegistered', 'true');
-                localStorage.setItem('biometricEmail', email);
-                localStorage.setItem('biometricToken', biometricToken);
-                
-                // In production, store in Supabase
-                const { data, error } = await supabaseClient
-                    .from('biometric_credentials')
-                    .upsert({
-                        email: email,
-                        biometric_token: biometricToken,
-                        created_at: new Date().toISOString(),
-                        updated_at: new Date().toISOString()
-                    });
-                
-                if (error) {
-                    console.error('Error storing biometric credential:', error);
-                } else {
-                    console.log('Biometric credential stored successfully');
-                }
-                
-                updateBiometricButton();
-            } catch (error) {
-                console.error('Error storing biometric:', error);
-            }
-        }
-        
-        // Verify biometric credential
-        async function verifyBiometricCredential(email) {
-            try {
-                // In production, verify with Supabase
-                const { data, error } = await supabaseClient
-                    .from('biometric_credentials')
-                    .select('biometric_token')
-                    .eq('email', email)
-                    .single();
-                
-                if (error) {
-                    console.error('Error verifying biometric:', error);
-                    return false;
-                }
-                
-                // Check if token matches
-                const storedToken = localStorage.getItem('biometricToken');
-                return data && storedToken === data.biometric_token;
-            } catch (error) {
-                console.error('Error verifying biometric:', error);
-                return false;
-            }
-        }
-        
-        // Biometric login button click
+
+        // Biometric login
         biometricBtn.addEventListener('click', async () => {
             if (!isRegistered || !registeredEmail) {
                 biometricStatus.textContent = 'Please login with email first to register biometrics.';
@@ -1091,69 +1802,65 @@
                 return;
             }
             
-            biometricLoginModal.style.display = 'flex';
+            const loginModal = document.getElementById('biometricLoginModal');
+            const loginModalStatus = document.getElementById('loginModalStatus');
+            loginModal.style.display = 'flex';
             loginModalStatus.textContent = 'Place your finger on the sensor...';
             
-            // Simulate fingerprint authentication
             setTimeout(async () => {
-                const isValid = await verifyBiometricCredential(registeredEmail);
-                
-                if (isValid) {
+                const storedToken = localStorage.getItem('biometricToken');
+                if (storedToken) {
                     loginModalStatus.textContent = '✅ Fingerprint verified! Logging in...';
                     
-                    // Login with stored email
-                    if (window.auth) {
-                        const result = await window.auth.login(registeredEmail, 'TempPass123!');
-                        
-                        if (result.success) {
-                            setTimeout(() => {
-                                biometricLoginModal.style.display = 'none';
-                                window.location.href = 'dashboard.html';
-                            }, 1000);
-                        } else {
-                            loginModalStatus.textContent = '❌ Login failed. Please try again.';
-                            setTimeout(() => {
-                                biometricLoginModal.style.display = 'none';
-                            }, 2000);
-                        }
+                    const result = await window.auth.login(registeredEmail, 'TempPass123!');
+                    
+                    if (result.success) {
+                        setTimeout(() => {
+                            loginModal.style.display = 'none';
+                            window.location.href = 'dashboard.html';
+                        }, 1000);
+                    } else {
+                        loginModalStatus.textContent = '❌ Login failed. Please try again.';
+                        setTimeout(() => {
+                            loginModal.style.display = 'none';
+                        }, 2000);
                     }
                 } else {
-                    loginModalStatus.textContent = '❌ Fingerprint not recognized. Please try again or use email login.';
+                    loginModalStatus.textContent = '❌ Fingerprint not recognized. Please try again.';
                     setTimeout(() => {
-                        biometricLoginModal.style.display = 'none';
+                        loginModal.style.display = 'none';
                     }, 2000);
                 }
             }, 2000);
         });
-        
-        // Close modals
-        document.querySelectorAll('.close').forEach(btn => {
+
+        // Modal close handlers
+        document.querySelectorAll('.modal .close').forEach(btn => {
             btn.onclick = function() {
-                biometricModal.style.display = 'none';
-                biometricLoginModal.style.display = 'none';
-                forgotModal.style.display = 'none';
+                this.closest('.modal').style.display = 'none';
             };
         });
-        
+
         document.getElementById('cancelModalBtn')?.addEventListener('click', () => {
-            biometricModal.style.display = 'none';
+            document.getElementById('biometricModal').style.display = 'none';
         });
-        
+
         document.getElementById('cancelLoginModalBtn')?.addEventListener('click', () => {
-            biometricLoginModal.style.display = 'none';
+            document.getElementById('biometricLoginModal').style.display = 'none';
         });
-        
-        // Forgot Password
+
+        // Forgot password
         const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const forgotModal = document.getElementById('forgotModal');
         const sendResetBtn = document.getElementById('sendResetBtn');
         const resetEmail = document.getElementById('resetEmail');
         const forgotError = document.getElementById('forgotError');
-        
+
         forgotPasswordLink.addEventListener('click', (e) => {
             e.preventDefault();
             forgotModal.style.display = 'flex';
         });
-        
+
         sendResetBtn.addEventListener('click', async () => {
             const email = resetEmail.value;
             if (!email) {
@@ -1173,15 +1880,14 @@
                 if (error) throw error;
                 
                 forgotError.textContent = '✅ Password reset email sent! Check your inbox.';
-                forgotError.style.color = '#166534';
-                forgotError.style.background = '#dcfce7';
+                forgotError.style.color = '#4ade80';
+                forgotError.style.background = 'rgba(46,125,50,0.2)';
                 forgotError.style.display = 'block';
                 
                 setTimeout(() => {
                     forgotModal.style.display = 'none';
                     resetEmail.value = '';
                 }, 3000);
-                
             } catch (error) {
                 forgotError.textContent = error.message || 'Failed to send reset email';
                 forgotError.style.display = 'block';
@@ -1190,7 +1896,7 @@
                 sendResetBtn.textContent = 'Send Reset Link';
             }
         });
-        
+
         // Check if already logged in
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
@@ -1199,33 +1905,6 @@
                 }
             }, 500);
         });
-        
-        // Update live stats
-        async function updateLiveStats() {
-            try {
-                const { count: userCount } = await supabaseClient
-                    .from('users')
-                    .select('*', { count: 'exact', head: true });
-                
-                const today = new Date().toISOString().split('T')[0];
-                const { count: presentCount } = await supabaseClient
-                    .from('attendance')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('date', today)
-                    .not('check_in_time', 'is', null);
-                
-                const liveUsersElement = document.getElementById('liveUsers');
-                const todayPresentElement = document.getElementById('todayPresent');
-                
-                if (liveUsersElement) liveUsersElement.textContent = userCount || 0;
-                if (todayPresentElement) todayPresentElement.textContent = presentCount || 0;
-            } catch (error) {
-                console.error('Error updating stats:', error);
-            }
-        }
-        
-        updateLiveStats();
-        setInterval(updateLiveStats, 30000);
     </script>
 </body>
 </html>
