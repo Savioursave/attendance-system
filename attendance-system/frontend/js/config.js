@@ -25,8 +25,8 @@ try {
 
 const ORGANIZATION_SETTINGS = {
     // Organization coordinates - UPDATE WITH YOUR ACTUAL ORGANIZATION LOCATION
-    latitude: 4.87588,
-    longitude: 6.92053,
+    latitude: 4.865871,
+    longitude: 6.951314,
     radius: 100,
     
     // Method to check if user is within organization premises

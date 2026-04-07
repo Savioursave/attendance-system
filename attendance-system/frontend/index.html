@@ -16,90 +16,19 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: #ffffff;
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
             transition: background 0.3s ease;
         }
 
-        body.light-mode {
-            background: linear-gradient(135deg, #f5f5dc 0%, #fff8dc 50%, #faf0e6 100%);
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
         }
 
-        body.light-mode .header {
-            background: rgba(255, 255, 255, 0.95);
-        }
-
-        body.light-mode .logo-text {
-            color: #1a1a2e;
-        }
-
-        body.light-mode .nav-menu a {
-            color: #1a1a2e;
-        }
-
-        body.light-mode .nav-menu a:hover {
-            color: #2e7d32;
-        }
-
-        body.light-mode .content-section h1,
-        body.light-mode .content-section p,
-        body.light-mode .badge,
-        body.light-mode .slider-title h2,
-        body.light-mode .slider-title p,
-        body.light-mode .slider-card h3,
-        body.light-mode .slider-card p,
-        body.light-mode .login-card h2,
-        body.light-mode .login-card p,
-        body.light-mode .benefits h2,
-        body.light-mode .benefits > p,
-        body.light-mode .benefit-card h3,
-        body.light-mode .benefit-card p,
-        body.light-mode .footer-col h3,
-        body.light-mode .footer-col p,
-        body.light-mode .footer-col ul li a,
-        body.light-mode .footer-bottom p {
-            color: #1a1a2e;
-        }
-
-        body.light-mode .marquee-content {
-            color: #1a1a2e;
-        }
-
-        body.light-mode .login-card {
-            background: rgba(255, 255, 255, 0.9);
-        }
-
-        body.light-mode .input-group input {
-            background: rgba(255, 255, 255, 0.9);
-            color: #1a1a2e;
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-
-        body.light-mode .input-group input::placeholder {
-            color: rgba(0, 0, 0, 0.5);
-        }
-
-        body.light-mode .biometric-btn {
-            background: rgba(0, 0, 0, 0.05);
-            color: #2e7d32;
-        }
-
-        body.light-mode .benefit-card {
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        body.light-mode .slider-card {
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        body.light-mode .footer {
-            background: linear-gradient(135deg, #e8e8e8 0%, #f0f0f0 100%);
-        }
-
-        /* Animated Water Fountain Background */
-        .water-fountain {
+        /* Animated Background Shapes that appear on scroll */
+        .bg-shapes {
             position: fixed;
             top: 0;
             left: 0;
@@ -110,57 +39,25 @@
             pointer-events: none;
         }
 
-        .water-particle {
+        .shape {
             position: absolute;
-            background: radial-gradient(circle, rgba(46, 125, 50, 0.4), rgba(255, 215, 0, 0.2));
             border-radius: 50%;
-            animation: fountain 4s infinite ease-in-out;
+            opacity: 0;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: translateY(50px);
         }
 
-        @keyframes fountain {
-            0% {
-                transform: translateY(100vh) scale(0);
-                opacity: 0;
-            }
-            50% {
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateY(-20vh) scale(1);
-                opacity: 0;
-            }
+        .shape.visible {
+            opacity: 0.3;
+            transform: translateY(0);
         }
 
-        /* Moving Background Image */
-        .moving-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=1080&fit=crop');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.15;
-            animation: moveBg 20s infinite alternate ease-in-out;
-            pointer-events: none;
-        }
-
-        @keyframes moveBg {
-            0% {
-                transform: scale(1);
-                opacity: 0.15;
-            }
-            50% {
-                transform: scale(1.05);
-                opacity: 0.2;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 0.15;
-            }
-        }
+        .shape:nth-child(1) { width: 400px; height: 400px; top: -150px; right: -100px; background: rgba(46, 125, 50, 0.15); }
+        .shape:nth-child(2) { width: 600px; height: 600px; bottom: -200px; left: -150px; background: rgba(255, 215, 0, 0.1); }
+        .shape:nth-child(3) { width: 250px; height: 250px; top: 40%; right: 20%; background: rgba(46, 125, 50, 0.1); }
+        .shape:nth-child(4) { width: 350px; height: 350px; bottom: 20%; right: 10%; background: rgba(255, 215, 0, 0.08); }
+        .shape:nth-child(5) { width: 180px; height: 180px; top: 20%; left: 15%; background: rgba(46, 125, 50, 0.12); }
+        .shape:nth-child(6) { width: 500px; height: 500px; bottom: 30%; left: 20%; background: rgba(255, 215, 0, 0.06); }
 
         /* Header */
         .header {
@@ -168,20 +65,21 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             z-index: 1000;
             padding: 15px 40px;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .header {
+            background: rgba(0, 0, 0, 0.85);
         }
 
         .header.scrolled {
             padding: 10px 40px;
-            background: rgba(0, 0, 0, 0.95);
-        }
-
-        body.light-mode .header.scrolled {
-            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
         }
 
         .header-container {
@@ -213,11 +111,15 @@
         .logo-text {
             font-size: 22px;
             font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        body.dark-mode .logo-text {
             color: white;
         }
 
         .logo-text span {
-            color: #FFD700;
+            color: #2e7d32;
         }
 
         .nav-menu {
@@ -227,11 +129,15 @@
         }
 
         .nav-menu a {
-            color: rgba(255,255,255,0.8);
+            color: #1a1a2e;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s;
             position: relative;
+        }
+
+        body.dark-mode .nav-menu a {
+            color: rgba(255,255,255,0.8);
         }
 
         .nav-menu a::after {
@@ -241,7 +147,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: #FFD700;
+            background: #2e7d32;
             transition: width 0.3s;
         }
 
@@ -250,7 +156,7 @@
         }
 
         .nav-menu a:hover {
-            color: #FFD700;
+            color: #2e7d32;
         }
 
         /* Theme Toggle */
@@ -258,34 +164,44 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.05);
             padding: 8px 16px;
             border-radius: 40px;
             cursor: pointer;
             transition: all 0.3s;
         }
 
+        body.dark-mode .theme-toggle {
+            background: rgba(255,255,255,0.1);
+        }
+
         .theme-toggle:hover {
-            background: rgba(255,255,255,0.2);
             transform: scale(1.05);
         }
 
         .theme-icon {
             font-size: 18px;
-            color: #FFD700;
+            color: #2e7d32;
+        }
+
+        .theme-text {
+            font-size: 13px;
+            color: #1a1a2e;
+        }
+
+        body.dark-mode .theme-text {
+            color: rgba(255,255,255,0.8);
         }
 
         .hamburger {
             display: none;
             font-size: 28px;
-            color: white;
             cursor: pointer;
-            z-index: 1001;
-            transition: transform 0.3s;
+            color: #1a1a2e;
         }
 
-        .hamburger:hover {
-            transform: scale(1.1);
+        body.dark-mode .hamburger {
+            color: white;
         }
 
         /* Mobile Menu */
@@ -295,18 +211,19 @@
             right: -100%;
             width: 70%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
             z-index: 1002;
             padding: 80px 30px;
-            transition: right 0.3s ease;
+            transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             display: flex;
             flex-direction: column;
             gap: 20px;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.1);
         }
 
-        body.light-mode .mobile-menu {
-            background: rgba(255, 255, 255, 0.95);
+        body.dark-mode .mobile-menu {
+            background: rgba(0, 0, 0, 0.95);
         }
 
         .mobile-menu.active {
@@ -314,14 +231,20 @@
         }
 
         .mobile-menu a {
-            color: white;
+            color: #1a1a2e;
             text-decoration: none;
             font-size: 18px;
             padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s;
-            transform: translateX(-20px);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            transform: translateX(20px);
             opacity: 0;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        body.dark-mode .mobile-menu a {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.1);
         }
 
         .mobile-menu.active a {
@@ -329,20 +252,15 @@
             opacity: 1;
         }
 
-        .mobile-menu a:nth-child(1) { transition-delay: 0.1s; }
-        .mobile-menu a:nth-child(2) { transition-delay: 0.2s; }
-        .mobile-menu a:nth-child(3) { transition-delay: 0.3s; }
-        .mobile-menu a:nth-child(4) { transition-delay: 0.4s; }
-        .mobile-menu a:nth-child(5) { transition-delay: 0.5s; }
-
-        body.light-mode .mobile-menu a {
-            color: #1a1a2e;
-            border-bottom-color: rgba(0,0,0,0.1);
-        }
+        .mobile-menu.active a:nth-child(1) { transition-delay: 0.1s; }
+        .mobile-menu.active a:nth-child(2) { transition-delay: 0.2s; }
+        .mobile-menu.active a:nth-child(3) { transition-delay: 0.3s; }
+        .mobile-menu.active a:nth-child(4) { transition-delay: 0.4s; }
+        .mobile-menu.active a:nth-child(5) { transition-delay: 0.5s; }
 
         .mobile-menu a:hover {
-            color: #FFD700;
-            padding-left: 15px;
+            color: #2e7d32;
+            padding-left: 10px;
         }
 
         .mobile-menu .close-menu {
@@ -367,10 +285,13 @@
             background: rgba(0,0,0,0.5);
             z-index: 1001;
             display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .overlay.active {
             display: block;
+            opacity: 1;
         }
 
         /* Hero Section */
@@ -386,35 +307,24 @@
             gap: 60px;
         }
 
-        /* Left Side - Images Gallery */
-        .image-gallery {
+        /* Left Side - Gadget Image */
+        .image-section {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
             animation: fadeInLeft 0.8s ease-out;
+            position: relative;
         }
 
         .hero-image {
             width: 100%;
+            max-width: 450px;
             border-radius: 30px;
-            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s;
+            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
             object-fit: cover;
         }
 
         .hero-image:hover {
             transform: scale(1.02);
-            box-shadow: 0 40px 60px -20px rgba(0,0,0,0.4);
-        }
-
-        .image-row {
-            display: flex;
-            gap: 20px;
-        }
-
-        .image-row .hero-image {
-            width: calc(50% - 10px);
         }
 
         @keyframes fadeInLeft {
@@ -442,20 +352,23 @@
         /* Right Side - Content */
         .content-section {
             flex: 1;
-            color: white;
             animation: fadeInRight 0.8s ease-out;
         }
 
         .badge {
             display: inline-block;
-            background: rgba(46, 125, 50, 0.2);
-            backdrop-filter: blur(10px);
+            background: rgba(46, 125, 50, 0.1);
             padding: 8px 20px;
             border-radius: 40px;
             font-size: 13px;
             font-weight: 500;
             margin-bottom: 30px;
-            border: 1px solid rgba(46, 125, 50, 0.3);
+            border: 1px solid rgba(46, 125, 50, 0.2);
+            color: #2e7d32;
+        }
+
+        body.dark-mode .badge {
+            background: rgba(46, 125, 50, 0.2);
             color: #FFD700;
         }
 
@@ -464,22 +377,31 @@
             font-weight: 800;
             line-height: 1.2;
             margin-bottom: 20px;
+            color: #1a1a2e;
+        }
+
+        body.dark-mode .content-section h1 {
+            color: white;
         }
 
         .content-section h1 .highlight {
-            color: #FFD700;
+            color: #2e7d32;
         }
 
         .content-section p {
             font-size: 18px;
-            opacity: 0.9;
             line-height: 1.6;
             margin-bottom: 30px;
             max-width: 500px;
+            color: #4a5568;
+        }
+
+        body.dark-mode .content-section p {
+            color: rgba(255,255,255,0.7);
         }
 
         .cta-link {
-            color: #FFD700;
+            color: #2e7d32;
             text-decoration: none;
             font-weight: 600;
             display: inline-flex;
@@ -493,28 +415,31 @@
         }
 
         /* Moving Text Marquee */
-        .marquee {
+        .marquee-section {
             position: relative;
             z-index: 10;
-            background: rgba(46, 125, 50, 0.2);
-            backdrop-filter: blur(5px);
+            background: linear-gradient(90deg, #2e7d32, #FFD700, #2e7d32);
             padding: 15px 0;
             overflow: hidden;
             white-space: nowrap;
-            margin: 20px 0;
         }
 
         .marquee-content {
             display: inline-block;
             animation: marquee 20s linear infinite;
-            font-size: 18px;
-            font-weight: 500;
-            color: #FFD700;
-            transition: color 0.3s ease;
         }
 
         .marquee-content span {
-            margin: 0 40px;
+            display: inline-block;
+            padding: 0 30px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .marquee-content i {
+            margin-right: 10px;
         }
 
         @keyframes marquee {
@@ -527,8 +452,12 @@
             position: relative;
             z-index: 10;
             padding: 60px 50px;
-            background: rgba(0, 0, 0, 0.3);
+            background: #f8f9fa;
             overflow: hidden;
+        }
+
+        body.dark-mode .slider-section {
+            background: rgba(0, 0, 0, 0.3);
         }
 
         .slider-container {
@@ -544,13 +473,20 @@
 
         .slider-title h2 {
             font-size: 36px;
+            color: #1a1a2e;
             margin-bottom: 15px;
+        }
+
+        body.dark-mode .slider-title h2 {
             color: white;
         }
 
         .slider-title p {
-            opacity: 0.8;
-            color: rgba(255,255,255,0.8);
+            color: #4a5568;
+        }
+
+        body.dark-mode .slider-title p {
+            color: rgba(255,255,255,0.7);
         }
 
         .slider-wrapper {
@@ -566,20 +502,23 @@
 
         .slider-card {
             min-width: calc(33.333% - 20px);
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            backdrop-filter: blur(10px);
+            background: white;
             border-radius: 24px;
             padding: 30px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(46, 125, 50, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        body.dark-mode .slider-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
         }
 
         .slider-card:hover {
             transform: translateY(-10px) scale(1.02);
-            border-color: rgba(255, 215, 0, 0.5);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
 
         .slider-icon {
@@ -605,35 +544,49 @@
 
         .slider-card h3 {
             font-size: 20px;
-            color: white;
             margin-bottom: 10px;
+            color: #1a1a2e;
+        }
+
+        body.dark-mode .slider-card h3 {
+            color: white;
         }
 
         .slider-card p {
-            color: rgba(255,255,255,0.7);
+            color: #4a5568;
             font-size: 14px;
+        }
+
+        body.dark-mode .slider-card p {
+            color: rgba(255,255,255,0.7);
         }
 
         .slider-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
-            background: rgba(46, 125, 50, 0.8);
+            width: 45px;
+            height: 45px;
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: all 0.3s;
             z-index: 10;
+            color: #2e7d32;
+        }
+
+        body.dark-mode .slider-btn {
+            background: rgba(46, 125, 50, 0.8);
             color: #FFD700;
         }
 
         .slider-btn:hover {
-            background: #2e7d32;
             transform: translateY(-50%) scale(1.1);
+            background: #2e7d32;
             color: white;
         }
 
@@ -655,20 +608,19 @@
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
+            background: white;
             border-radius: 40px;
             padding: 50px;
             max-width: 500px;
             width: 100%;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
             animation: fadeInUp 0.6s ease-out 0.3s both;
-            border: 1px solid rgba(46, 125, 50, 0.3);
-            transition: transform 0.3s;
+            border: 1px solid rgba(46, 125, 50, 0.1);
         }
 
-        .login-card:hover {
-            transform: translateY(-5px);
+        body.dark-mode .login-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
         }
 
         @keyframes fadeInUp {
@@ -684,15 +636,23 @@
 
         .login-card h2 {
             font-size: 28px;
-            color: white;
+            color: #1a1a2e;
             margin-bottom: 8px;
             text-align: center;
         }
 
+        body.dark-mode .login-card h2 {
+            color: white;
+        }
+
         .login-card p {
-            color: rgba(255,255,255,0.7);
+            color: #4a5568;
             text-align: center;
             margin-bottom: 30px;
+        }
+
+        body.dark-mode .login-card p {
+            color: rgba(255,255,255,0.7);
         }
 
         .login-form {
@@ -708,23 +668,23 @@
         .input-group input {
             width: 100%;
             padding: 16px 16px 16px 48px;
-            border: 2px solid rgba(255,255,255,0.2);
+            border: 2px solid #e2e8f0;
             border-radius: 16px;
             font-size: 15px;
             transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        body.dark-mode .input-group input {
             background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
             color: white;
         }
 
         .input-group input:focus {
             outline: none;
             border-color: #2e7d32;
-            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.2);
-            transform: scale(1.02);
-        }
-
-        .input-group input::placeholder {
-            color: rgba(255,255,255,0.5);
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
         }
 
         .input-group .input-icon {
@@ -733,7 +693,7 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 18px;
-            color: #FFD700;
+            color: #2e7d32;
         }
 
         .password-toggle {
@@ -742,13 +702,8 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: #FFD700;
-            z-index: 2;
-            transition: color 0.3s;
-        }
-
-        .password-toggle:hover {
             color: #2e7d32;
+            z-index: 2;
         }
 
         .forgot-link {
@@ -757,15 +712,10 @@
         }
 
         .forgot-link a {
-            color: #FFD700;
+            color: #2e7d32;
             text-decoration: none;
             font-size: 13px;
             font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .forgot-link a:hover {
-            color: #2e7d32;
         }
 
         .btn-login {
@@ -786,10 +736,10 @@
         }
 
         .biometric-btn {
-            background: rgba(255,255,255,0.1);
-            color: #FFD700;
+            background: #f8fafc;
+            color: #2e7d32;
             padding: 14px;
-            border: 2px solid rgba(46, 125, 50, 0.5);
+            border: 2px solid #e2e8f0;
             border-radius: 16px;
             font-size: 16px;
             font-weight: 600;
@@ -802,9 +752,14 @@
             width: 100%;
         }
 
+        body.dark-mode .biometric-btn {
+            background: rgba(255,255,255,0.1);
+            color: #FFD700;
+        }
+
         .biometric-btn:hover {
-            border-color: #FFD700;
-            background: rgba(46, 125, 50, 0.2);
+            border-color: #2e7d32;
+            background: rgba(46, 125, 50, 0.1);
             transform: translateY(-2px);
         }
 
@@ -823,12 +778,17 @@
         .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        body.dark-mode .divider::before,
+        body.dark-mode .divider::after {
+            border-bottom-color: rgba(255,255,255,0.2);
         }
 
         .divider span {
             padding: 0 10px;
-            color: rgba(255,255,255,0.5);
+            color: #94a3b8;
             font-size: 12px;
         }
 
@@ -842,20 +802,20 @@
         }
 
         .error-message {
-            background: rgba(220, 38, 38, 0.2);
-            color: #ef4444;
+            background: #fee2e2;
+            color: #dc2626;
         }
 
         .success-message {
-            background: rgba(46, 125, 50, 0.2);
-            color: #4ade80;
+            background: #dcfce7;
+            color: #166534;
         }
 
         .biometric-status {
             font-size: 12px;
             text-align: center;
             margin-top: 10px;
-            color: rgba(255,255,255,0.6);
+            color: #64748b;
             display: none;
         }
 
@@ -863,20 +823,32 @@
         .benefits {
             position: relative;
             z-index: 10;
-            background: rgba(0, 0, 0, 0.5);
+            background: #f8f9fa;
             padding: 80px 50px;
             text-align: center;
         }
 
+        body.dark-mode .benefits {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
         .benefits h2 {
             font-size: 36px;
-            color: white;
+            color: #1a1a2e;
             margin-bottom: 15px;
         }
 
+        body.dark-mode .benefits h2 {
+            color: white;
+        }
+
         .benefits > p {
-            color: rgba(255,255,255,0.7);
+            color: #4a5568;
             margin-bottom: 60px;
+        }
+
+        body.dark-mode .benefits > p {
+            color: rgba(255,255,255,0.7);
         }
 
         .benefits-grid {
@@ -889,17 +861,20 @@
 
         .benefit-card {
             padding: 30px;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
+            background: white;
             border-radius: 24px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(46, 125, 50, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .benefit-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
         }
 
         .benefit-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
-            border-color: rgba(255, 215, 0, 0.5);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.15);
         }
 
         .benefit-icon {
@@ -911,11 +886,6 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            transition: transform 0.3s;
-        }
-
-        .benefit-card:hover .benefit-icon {
-            transform: rotateY(180deg);
         }
 
         .benefit-icon i {
@@ -925,26 +895,34 @@
 
         .benefit-card h3 {
             font-size: 20px;
-            color: white;
+            color: #1a1a2e;
             margin-bottom: 10px;
         }
 
+        body.dark-mode .benefit-card h3 {
+            color: white;
+        }
+
         .benefit-card p {
-            color: rgba(255,255,255,0.7);
+            color: #4a5568;
             font-size: 14px;
         }
 
-        /* Footer */
+        body.dark-mode .benefit-card p {
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Footer with S-Shape and Wavy Design */
         .footer {
             position: relative;
             z-index: 10;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            background: #1a1a2e;
             color: rgba(255,255,255,0.7);
             padding: 60px 50px 30px;
             overflow: hidden;
         }
 
-        /* S-Shape Moving Animation */
+        /* S-Shape Animation */
         .s-shape {
             position: absolute;
             top: 0;
@@ -958,55 +936,52 @@
         .s-shape::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -20%;
-            width: 80%;
-            height: 200%;
-            background: radial-gradient(ellipse at center, rgba(46, 125, 50, 0.15) 0%, transparent 70%);
+            top: 20%;
+            left: -10%;
+            width: 40%;
+            height: 60%;
+            background: radial-gradient(ellipse, rgba(46, 125, 50, 0.15), transparent);
             border-radius: 50%;
-            transform: rotate(25deg);
             animation: sMove 8s infinite ease-in-out;
         }
 
         .s-shape::after {
             content: '';
             position: absolute;
-            bottom: -30%;
-            right: -10%;
-            width: 60%;
-            height: 150%;
-            background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            bottom: 10%;
+            right: -5%;
+            width: 35%;
+            height: 50%;
+            background: radial-gradient(ellipse, rgba(255, 215, 0, 0.12), transparent);
             border-radius: 50%;
-            transform: rotate(-15deg);
-            animation: sMove2 6s infinite ease-in-out;
+            animation: sMove2 10s infinite ease-in-out;
         }
 
         @keyframes sMove {
-            0%, 100% { transform: rotate(25deg) translate(0, 0) scale(1); }
-            50% { transform: rotate(30deg) translate(30px, -30px) scale(1.1); }
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            50% { transform: translate(30px, -20px) scale(1.1); opacity: 1; }
         }
 
         @keyframes sMove2 {
-            0%, 100% { transform: rotate(-15deg) translate(0, 0) scale(1); }
-            50% { transform: rotate(-20deg) translate(-30px, 30px) scale(1.1); }
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            50% { transform: translate(-30px, 20px) scale(1.1); opacity: 1; }
         }
 
         /* Wavy Border Top */
         .footer-wavy {
             position: absolute;
-            top: -50px;
+            top: -40px;
             left: 0;
             width: 100%;
-            height: 50px;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,64L80,58.7C160,53,320,43,480,48C640,53,800,75,960,80C1120,85,1280,75,1360,69.3L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z" fill="rgba(46,125,50,0.3)"></path></svg>') repeat-x;
+            height: 40px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,64L80,58.7C160,53,320,43,480,48C640,53,800,75,960,80C1120,85,1280,75,1360,69.3L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z" fill="rgba(46,125,50,0.2)"></path></svg>') repeat-x;
             background-size: cover;
-            opacity: 0.6;
             animation: waveMove 10s infinite linear;
         }
 
         @keyframes waveMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 1000px 0; }
+            0% { background-position-x: 0; }
+            100% { background-position-x: 100%; }
         }
 
         .footer-container {
@@ -1050,7 +1025,7 @@
 
         .footer-col .social-links a:hover {
             background: #2e7d32;
-            transform: translateY(-3px) rotate(360deg);
+            transform: translateY(-3px);
             color: #FFD700;
         }
 
@@ -1065,7 +1040,7 @@
         .footer-col ul li a {
             color: rgba(255,255,255,0.7);
             text-decoration: none;
-            transition: all 0.3s;
+            transition: color 0.3s;
         }
 
         .footer-col ul li a:hover {
@@ -1099,40 +1074,39 @@
         }
         
         .modal-content {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: white;
             padding: 40px;
             border-radius: 32px;
             max-width: 450px;
             width: 90%;
             text-align: center;
-            border: 1px solid rgba(46, 125, 50, 0.3);
-            animation: modalPop 0.3s ease;
         }
 
-        @keyframes modalPop {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+        body.dark-mode .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
         }
         
         .modal-content h2 {
             margin-bottom: 15px;
+            color: #1a1a2e;
+        }
+
+        body.dark-mode .modal-content h2 {
             color: white;
         }
         
         .modal-content p {
             margin-bottom: 20px;
+            color: #4a5568;
+        }
+
+        body.dark-mode .modal-content p {
             color: rgba(255,255,255,0.7);
         }
         
         .fingerprint-icon {
             font-size: 80px;
-            color: #FFD700;
+            color: #2e7d32;
             margin: 20px 0;
             animation: pulse 1.5s infinite;
         }
@@ -1152,17 +1126,24 @@
             font-weight: 600;
             cursor: pointer;
             margin-top: 20px;
-            transition: all 0.3s;
-        }
-
-        .modal-btn:hover {
-            transform: scale(1.05);
         }
 
         .modal-btn-secondary {
-            background: rgba(255,255,255,0.1);
-            color: white;
+            background: #e2e8f0;
+            color: #1a1a2e;
             margin-left: 10px;
+        }
+
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Responsive */
@@ -1213,12 +1194,8 @@
                 padding: 30px;
             }
             
-            .image-row {
-                flex-direction: column;
-            }
-            
-            .image-row .hero-image {
-                width: 100%;
+            .hero-image {
+                max-width: 300px;
             }
         }
 
@@ -1239,26 +1216,17 @@
                 display: none;
             }
         }
-
-        /* Scroll Reveal Animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
     </style>
 </head>
 <body>
-    <!-- Animated Water Fountain Background -->
-    <div class="water-fountain" id="waterFountain"></div>
-    
-    <!-- Moving Background Image -->
-    <div class="moving-bg"></div>
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
 
     <!-- Header -->
     <header class="header" id="header">
@@ -1279,7 +1247,7 @@
             <div class="theme-toggle" id="themeToggle">
                 <i class="fas fa-sun theme-icon"></i>
                 <span class="theme-text">Light / Dark</span>
-                <i class="fas fa-moon" style="color: #FFD700;"></i>
+                <i class="fas fa-moon"></i>
             </div>
             <div class="hamburger" id="hamburger">
                 <i class="fas fa-bars"></i>
@@ -1300,14 +1268,30 @@
     </div>
     <div class="overlay" id="overlay"></div>
 
+    <!-- Moving Text Marquee -->
+    <div class="marquee-section">
+        <div class="marquee-content">
+            <span><i class="fas fa-star"></i> Track attendance in real-time</span>
+            <span><i class="fas fa-fingerprint"></i> Secure biometric authentication</span>
+            <span><i class="fas fa-qrcode"></i> QR code check-in/out</span>
+            <span><i class="fas fa-chart-line"></i> Advanced analytics & reports</span>
+            <span><i class="fas fa-mobile-alt"></i> Mobile-friendly platform</span>
+            <span><i class="fas fa-cloud"></i> Cloud-based solution</span>
+        </div>
+        <div class="marquee-content">
+            <span><i class="fas fa-star"></i> Track attendance in real-time</span>
+            <span><i class="fas fa-fingerprint"></i> Secure biometric authentication</span>
+            <span><i class="fas fa-qrcode"></i> QR code check-in/out</span>
+            <span><i class="fas fa-chart-line"></i> Advanced analytics & reports</span>
+            <span><i class="fas fa-mobile-alt"></i> Mobile-friendly platform</span>
+            <span><i class="fas fa-cloud"></i> Cloud-based solution</span>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <div class="hero">
-        <div class="image-gallery reveal">
-            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop" alt="Analytics Dashboard" class="hero-image" onerror="this.src='https://placehold.co/500x300/2e7d32/white?text=Analytics'">
-            <div class="image-row">
-                <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=300&h=250&fit=crop" alt="Computer Setup" class="hero-image" onerror="this.src='https://placehold.co/300x250/2e7d32/white?text=Computer'">
-                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=300&h=250&fit=crop" alt="Laptop Workspace" class="hero-image" onerror="this.src='https://placehold.co/300x250/2e7d32/white?text=Laptop'">
-            </div>
+        <div class="image-section reveal">
+            <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&h=600&fit=crop" alt="Smartphone with attendance app" class="hero-image" onerror="this.src='https://placehold.co/500x600/2e7d32/white?text=Springytrack+App'">
         </div>
         <div class="content-section reveal">
             <div class="badge">
@@ -1316,22 +1300,6 @@
             <h1>Smart <span class="highlight">Attendance</span><br>Management System</h1>
             <p>Streamline your workforce management with real-time tracking, QR check-ins, and comprehensive analytics. Trusted by 500+ organizations worldwide.</p>
             <a href="#login" class="cta-link">Get Started <i class="fas fa-arrow-right"></i></a>
-        </div>
-    </div>
-
-    <!-- Moving Text Marquee -->
-    <div class="marquee">
-        <div class="marquee-content">
-            <span>✨ Springytrack - Smart Attendance System</span>
-            <span>🚀 Real-time Tracking & Analytics</span>
-            <span>🔒 Secure Biometric Authentication</span>
-            <span>📱 Mobile Friendly Access</span>
-            <span>🌟 Trusted by 500+ Organizations</span>
-            <span>✨ Springytrack - Smart Attendance System</span>
-            <span>🚀 Real-time Tracking & Analytics</span>
-            <span>🔒 Secure Biometric Authentication</span>
-            <span>📱 Mobile Friendly Access</span>
-            <span>🌟 Trusted by 500+ Organizations</span>
         </div>
     </div>
 
@@ -1427,7 +1395,7 @@
                 <span>OR</span>
             </div>
 
-            <button id="biometricBtn" class="biometric-btn" disabled>
+            <button id="biometricBtn" class="biometric-btn">
                 <i class="fas fa-fingerprint"></i> Sign in with Biometrics
             </button>
 
@@ -1514,7 +1482,7 @@
             <div class="fingerprint-icon">
                 <i class="fas fa-fingerprint"></i>
             </div>
-            <div id="modalStatus" style="margin: 10px 0; color: rgba(255,255,255,0.7);">Waiting for fingerprint...</div>
+            <div id="modalStatus" style="margin: 10px 0; color: #666;">Waiting for fingerprint...</div>
             <button id="cancelModalBtn" class="modal-btn modal-btn-secondary">Cancel</button>
         </div>
     </div>
@@ -1527,7 +1495,7 @@
             <div class="fingerprint-icon">
                 <i class="fas fa-fingerprint"></i>
             </div>
-            <div id="loginModalStatus" style="margin: 10px 0; color: rgba(255,255,255,0.7);">Waiting for fingerprint...</div>
+            <div id="loginModalStatus" style="margin: 10px 0; color: #666;">Waiting for fingerprint...</div>
             <button id="cancelLoginModalBtn" class="modal-btn modal-btn-secondary">Cancel</button>
         </div>
     </div>
@@ -1537,7 +1505,7 @@
         <div class="modal-content">
             <h2><i class="fas fa-key"></i> Reset Password</h2>
             <p>Enter your email address to receive a reset link.</p>
-            <input type="email" id="resetEmail" placeholder="Your email" style="width: 100%; padding: 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(46,125,50,0.3); border-radius: 12px; margin-bottom: 20px; color: white;">
+            <input type="email" id="resetEmail" placeholder="Your email" style="width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; margin-bottom: 20px;">
             <button id="sendResetBtn" class="modal-btn" style="width: 100%;">Send Reset Link</button>
             <div id="forgotError" class="error-message" style="margin-top: 15px;"></div>
         </div>
@@ -1546,20 +1514,10 @@
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // Create water fountain particles
-        function createWaterFountain() {
-            const container = document.getElementById('waterFountain');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'water-particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.width = particle.style.height = Math.random() * 30 + 10 + 'px';
-                particle.style.animationDelay = Math.random() * 4 + 's';
-                particle.style.animationDuration = Math.random() * 3 + 3 + 's';
-                container.appendChild(particle);
-            }
-        }
-        createWaterFountain();
+        // Supabase configuration
+        const SUPABASE_URL = 'https://hesxkxbtreqfxmhrdwml.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_jTsJmSF195H4U6Og7oOdSA_2VI1_xnd';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Password visibility toggle
         const passwordInput = document.getElementById('password');
@@ -1571,15 +1529,17 @@
             passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
         });
 
-        // Theme Toggle with light mode handling
+        // Theme Toggle - Update all elements when toggling
+        let isDark = false;
         const themeToggle = document.getElementById('themeToggle');
         themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            const icon = themeToggle.querySelector('.theme-icon');
-            if (document.body.classList.contains('light-mode')) {
-                icon.className = 'fas fa-moon theme-icon';
+            isDark = !isDark;
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                themeToggle.querySelector('.theme-icon').className = 'fas fa-moon theme-icon';
             } else {
-                icon.className = 'fas fa-sun theme-icon';
+                document.body.classList.remove('dark-mode');
+                themeToggle.querySelector('.theme-icon').className = 'fas fa-sun theme-icon';
             }
         });
 
@@ -1591,6 +1551,18 @@
             } else {
                 header.classList.remove('scrolled');
             }
+            
+            // Background shapes appear on scroll
+            const shapes = document.querySelectorAll('.shape');
+            shapes.forEach((shape, index) => {
+                const rect = shape.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                if (rect.top < windowHeight - 100) {
+                    setTimeout(() => {
+                        shape.classList.add('visible');
+                    }, index * 200);
+                }
+            });
         });
 
         // Mobile menu
@@ -1629,7 +1601,7 @@
         window.addEventListener('scroll', reveal);
         reveal();
 
-        // Auto-moving slider
+        // Auto Slider
         const sliderTrack = document.getElementById('sliderTrack');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
@@ -1679,23 +1651,27 @@
         }
 
         function startAutoSlide() {
-            autoSlideInterval = setInterval(nextSlide, 4000);
+            autoSlideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function stopAutoSlide() {
+            clearInterval(autoSlideInterval);
         }
 
         prevBtn.addEventListener('click', () => {
-            clearInterval(autoSlideInterval);
+            stopAutoSlide();
             prevSlide();
             startAutoSlide();
         });
 
         nextBtn.addEventListener('click', () => {
-            clearInterval(autoSlideInterval);
+            stopAutoSlide();
             nextSlide();
             startAutoSlide();
         });
 
         window.addEventListener('resize', () => {
-            clearInterval(autoSlideInterval);
+            stopAutoSlide();
             updateSlider();
             startAutoSlide();
         });
@@ -1714,10 +1690,12 @@
                 biometricBtn.disabled = false;
                 biometricStatus.textContent = '✅ Biometric ready. Click to login with fingerprint.';
                 biometricStatus.style.display = 'block';
+                biometricStatus.style.color = '#2e7d32';
             } else {
-                biometricBtn.disabled = true;
-                biometricStatus.textContent = '🔐 Login with email first to enable biometric login';
+                biometricBtn.disabled = false;
+                biometricStatus.textContent = '🔐 Click to register fingerprint after login';
                 biometricStatus.style.display = 'block';
+                biometricStatus.style.color = '#64748b';
             }
         }
         updateBiometricButton();
@@ -1880,8 +1858,8 @@
                 if (error) throw error;
                 
                 forgotError.textContent = '✅ Password reset email sent! Check your inbox.';
-                forgotError.style.color = '#4ade80';
-                forgotError.style.background = 'rgba(46,125,50,0.2)';
+                forgotError.style.color = '#166534';
+                forgotError.style.background = '#dcfce7';
                 forgotError.style.display = 'block';
                 
                 setTimeout(() => {
