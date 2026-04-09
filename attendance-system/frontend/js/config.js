@@ -24,45 +24,103 @@ try {
 // ============================================
 
 const ORGANIZATION_SETTINGS = {
-    // Organization coordinates - UPDATE WITH YOUR ACTUAL ORGANIZATION LOCATION
-    latitude: 4.865871,
-    longitude: 6.951314,
-    radius: 100,
-    
+    // 🔁 UPDATE THESE WITH VERIFIED COORDINATES
+    latitude: 4.865870,
+    longitude: 6.951394,
+
+    // Base radius (meters)
+    radius: 200,
+
+    // Minimum GPS buffer (meters)
+    minimumBuffer: 30,
+
     // Method to check if user is within organization premises
-    isWithinPremises: function(userLatitude, userLongitude) {
+    isWithinPremises: function (userLatitude, userLongitude, accuracy = 0) {
         const distance = this.calculateDistance(userLatitude, userLongitude);
-        console.log(`📍 Distance from organization: ${distance.toFixed(2)} meters`);
-        return distance <= this.radius;
+
+        // Use the greater of GPS accuracy or minimum buffer
+        const effectiveBuffer = Math.max(accuracy || 0, this.minimumBuffer);
+
+        const allowedRadius = this.radius + effectiveBuffer;
+
+        console.log('📍 LOCATION DEBUG INFO');
+        console.log('----------------------------------');
+        console.log(`User Location: ${userLatitude}, ${userLongitude}`);
+        console.log(`Office Location: ${this.latitude}, ${this.longitude}`);
+        console.log(`Distance: ${distance.toFixed(2)} meters`);
+        console.log(`GPS Accuracy: ${accuracy} meters`);
+        console.log(`Effective Buffer: ${effectiveBuffer} meters`);
+        console.log(`Allowed Radius: ${allowedRadius} meters`);
+        console.log(`Within Premises: ${distance <= allowedRadius}`);
+        console.log('----------------------------------');
+
+        return distance <= allowedRadius;
     },
-    
-    // Calculate distance between two coordinates using Haversine formula
-    calculateDistance: function(lat2, lon2) {
+
+    // Calculate distance using Haversine formula
+    calculateDistance: function (lat2, lon2) {
         const lat1 = this.latitude;
         const lon1 = this.longitude;
-        
-        const R = 6371e3;
+
+        const R = 6371e3; // meters
         const φ1 = lat1 * Math.PI / 180;
         const φ2 = lat2 * Math.PI / 180;
         const Δφ = (lat2 - lat1) * Math.PI / 180;
         const Δλ = (lon2 - lon1) * Math.PI / 180;
-        
-        const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-                  Math.cos(φ1) * Math.cos(φ2) *
-                  Math.sin(Δλ/2) * Math.sin(Δλ/2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        
+
+        const a =
+            Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
         return R * c;
     },
-    
-    // Method to update organization location
-    updateLocation: function(latitude, longitude, radius = 100) {
+
+    // Update organization location dynamically
+    updateLocation: function (latitude, longitude, radius = 200) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.radius = radius;
-        console.log('📍 Organization location updated:', { latitude, longitude, radius });
+
+        console.log('📍 Organization location updated:', {
+            latitude,
+            longitude,
+            radius
+        });
     }
 };
+
+// ============================================
+// GEOLOCATION HELPER (HIGH ACCURACY)
+// ============================================
+
+function getUserLocation() {
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+            return reject(new Error('Geolocation is not supported by this browser.'));
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                resolve({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    accuracy: position.coords.accuracy
+                });
+            },
+            (error) => {
+                reject(error);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            }
+        );
+    });
+}
 
 // ============================================
 // API ENDPOINTS - PRODUCTION URLs
@@ -71,7 +129,7 @@ const ORGANIZATION_SETTINGS = {
 // Backend API URL (Vercel deployment)
 const API_URL = 'https://attendify-backend-api.vercel.app/api';
 
-// Frontend URL (Netlify deployment) - Auto-detected
+// Frontend URL (Netlify deployment)
 const FRONTEND_URL = window.location.origin;
 
 // ============================================
@@ -85,14 +143,15 @@ const ROLES = {
     SUPERVISOR: 'supervisor'
 };
 
-// Check if user has required role
+// Check role hierarchy
 function hasRole(userRole, requiredRole) {
     const roleHierarchy = {
-        'admin': 4,
-        'supervisor': 3,
-        'staff': 2,
-        'student': 1
+        admin: 4,
+        supervisor: 3,
+        staff: 2,
+        student: 1
     };
+
     return roleHierarchy[userRole] >= roleHierarchy[requiredRole];
 }
 
@@ -100,7 +159,7 @@ function hasRole(userRole, requiredRole) {
 // HELPER FUNCTIONS
 // ============================================
 
-// Format date to local string
+// Format date
 function formatDate(date) {
     if (!date) return '-';
     return new Date(date).toLocaleDateString('en-US', {
@@ -110,7 +169,7 @@ function formatDate(date) {
     });
 }
 
-// Format time to local string
+// Format time
 function formatTime(time) {
     if (!time) return '-';
     return new Date(time).toLocaleTimeString('en-US', {
@@ -120,13 +179,13 @@ function formatTime(time) {
     });
 }
 
-// Format datetime to local string
+// Format datetime
 function formatDateTime(datetime) {
     if (!datetime) return '-';
     return `${formatDate(datetime)} ${formatTime(datetime)}`;
 }
 
-// Show notification
+// Notification system
 function showNotification(message, type = 'info') {
     const colors = {
         success: '#4caf50',
@@ -134,15 +193,14 @@ function showNotification(message, type = 'info') {
         warning: '#ff9800',
         info: '#2196f3'
     };
-    
-    const existingNotification = document.querySelector('.custom-notification');
-    if (existingNotification) {
-        existingNotification.remove();
-    }
-    
+
+    const existing = document.querySelector('.custom-notification');
+    if (existing) existing.remove();
+
     const notification = document.createElement('div');
     notification.className = 'custom-notification';
     notification.textContent = message;
+
     notification.style.cssText = `
         position: fixed;
         bottom: 20px;
@@ -158,16 +216,16 @@ function showNotification(message, type = 'info') {
         font-size: 14px;
         max-width: 300px;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
 }
 
-// Add animation styles if not already added
+// Inject animation styles
 if (!document.querySelector('#notification-styles')) {
     const style = document.createElement('style');
     style.id = 'notification-styles';
@@ -189,13 +247,14 @@ if (!document.querySelector('#notification-styles')) {
 // ============================================
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { 
-        supabase: window.supabaseClient, 
-        API_URL, 
+    module.exports = {
+        supabase: window.supabaseClient,
+        API_URL,
         FRONTEND_URL,
-        ROLES, 
-        hasRole, 
+        ROLES,
+        hasRole,
         ORGANIZATION_SETTINGS,
+        getUserLocation,
         formatDate,
         formatTime,
         formatDateTime,

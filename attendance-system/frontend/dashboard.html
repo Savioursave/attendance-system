@@ -147,6 +147,56 @@
             box-shadow: 0 4px 12px rgba(123,31,162,0.4);
         }
 
+        .btn-primary {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f57c00 0%, #ef6c00 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -441,8 +491,8 @@
 
         <div class="container">
             <div class="quick-actions">
-                <button onclick="window.attendance.checkIn('manual')" class="btn-checkin" id="checkInBtn">✅ Check In</button>
-                <button onclick="window.attendance.checkOut()" class="btn-checkout" id="checkOutBtn">⏰ Check Out</button>
+                <button onclick="window.attendance?.checkIn('manual')" class="btn-checkin" id="checkInBtn">✅ Check In</button>
+                <button onclick="window.attendance?.checkOut()" class="btn-checkout" id="checkOutBtn">⏰ Check Out</button>
                 <button onclick="openAssistModal()" class="btn-assist" id="assistBtn">🤝 Assist Check In/Out</button>
                 <button onclick="showPresentAbsentUsers()" class="btn-view" id="viewUsersBtn">👥 View Present/Absent</button>
             </div>
@@ -610,9 +660,9 @@
     </div>
 
     <div id="deptModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content modal-large">
             <span class="close">&times;</span>
-            <h2>Department Management</h2>
+            <h2>🏢 Department Management</h2>
             <div id="deptManagementContent"></div>
         </div>
     </div>
@@ -744,7 +794,7 @@
                 if (!window.attendance) window.attendance = new AttendanceManager();
                 await loadStats();
                 await loadRecentAttendanceGrouped();
-                await window.attendance.checkTodayStatus();
+                if (window.attendance) await window.attendance.checkTodayStatus();
                 setupRealtimeListeners();
             } catch (error) {
                 showError('Error loading dashboard: ' + error.message);
@@ -752,11 +802,19 @@
         }
 
         async function generateMasterQR() {
+            if (!window.admin) {
+                alert('Admin manager not initialized');
+                return;
+            }
             const result = await window.admin.generateMasterQR();
             if (result.success) alert('✅ Master QR code generated successfully!');
         }
         
         async function downloadMasterQR() {
+            if (!window.qrManager) {
+                alert('QR Manager not initialized');
+                return;
+            }
             const result = await window.qrManager.downloadMasterQR();
             if (result.success && result.qrCodeUrl) {
                 const link = document.createElement('a');
@@ -780,6 +838,10 @@
         }
         
         async function viewMasterQR() {
+            if (!window.qrManager) {
+                alert('QR Manager not initialized');
+                return;
+            }
             const result = await window.qrManager.downloadMasterQR();
             if (result.success && result.qrCodeUrl) {
                 currentMasterQRDataUrl = result.qrCodeUrl;
@@ -791,6 +853,10 @@
         }
         
         async function resetMasterQR() {
+            if (!window.admin) {
+                alert('Admin manager not initialized');
+                return;
+            }
             if (confirm('Reset master QR code? This will invalidate all existing QR codes.')) {
                 await window.admin.resetMasterQR();
                 alert('Master QR code reset. Generate a new one.');
@@ -802,6 +868,10 @@
         }
 
         async function openAssistModal() {
+            if (!window.admin) {
+                alert('Admin manager not initialized');
+                return;
+            }
             const result = await window.admin.getUsers();
             const userSelect = document.getElementById('assistUserSelect');
             if (result.success) {
@@ -883,18 +953,22 @@
             document.body.appendChild(loadingMsg);
             
             try {
-                await window.attendance.supabase.from('attendance_photos').insert([{
-                    user_id: assistUserId,
-                    helper_id: window.auth.currentUser.id,
-                    photo_data: capturedPhotoData,
-                    action_type: assistAction
-                }]);
+                if (window.attendance && window.attendance.supabase) {
+                    await window.attendance.supabase.from('attendance_photos').insert([{
+                        user_id: assistUserId,
+                        helper_id: window.auth.currentUser.id,
+                        photo_data: capturedPhotoData,
+                        action_type: assistAction
+                    }]);
+                }
                 
                 let result;
                 if (assistAction === 'checkin') {
-                    result = await window.attendance.checkIn('assisted', assistUserId);
+                    if (window.attendance) result = await window.attendance.checkIn('assisted', assistUserId);
+                    else result = { success: false, error: 'Attendance manager not initialized' };
                 } else {
-                    result = await window.attendance.checkOut(assistUserId);
+                    if (window.attendance) result = await window.attendance.checkOut(assistUserId);
+                    else result = { success: false, error: 'Attendance manager not initialized' };
                 }
                 
                 if (result.success) {
@@ -921,13 +995,14 @@
             }
         }
         
-        document.getElementById('captureBtn').onclick = capturePhoto;
-        document.getElementById('cameraModal').querySelector('.close').onclick = function() {
+        document.getElementById('captureBtn')?.addEventListener('click', capturePhoto);
+        document.getElementById('cameraModal')?.querySelector('.close')?.addEventListener('click', function() {
             stopCamera();
             document.getElementById('cameraModal').style.display = 'none';
-        };
+        });
 
         async function loadStats() {
+            if (!window.attendance) return;
             const stats = await window.attendance.getTodayStats();
             if (stats) {
                 document.getElementById('totalUsers').textContent = stats.total || 0;
@@ -939,6 +1014,10 @@
         }
 
         async function loadRecentAttendanceGrouped() {
+            if (!window.attendance || !window.attendance.supabase) {
+                document.getElementById('groupedAttendance').innerHTML = '<div class="info-message">Attendance system not ready.</div>';
+                return;
+            }
             const { data, error } = await window.attendance.supabase
                 .from('attendance')
                 .select(`*, users!attendance_user_id_fkey (full_name, employee_id, departments (name))`)
@@ -983,9 +1062,19 @@
                     else if (record.status === 'late') { statusClass = 'status-late'; statusText = 'Late'; }
                     else { statusClass = 'status-absent'; statusText = 'Absent'; }
                     
-                    html += `<tr><td><strong>${escapeHtml(record.users?.full_name || 'Unknown')}</strong></td><td>${escapeHtml(deptName)}</td><td>${checkIn}</td><td>${checkOut}</td><td><span class="status-badge ${statusClass}">${statusText}</span></td><td>${record.check_in_method}</td></tr>`;
+                    html += `<tr>
+                        <td><strong>${escapeHtml(record.users?.full_name || 'Unknown')}</strong></td>
+                        <td>${escapeHtml(deptName)}</td>
+                        <td>${checkIn}</td>
+                        <td>${checkOut}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>${record.check_in_method || '-'}</td>
+                    </tr>`;
                 }
-                html += `</tbody></table></div></div>`;
+                html += `</tbody>
+                            </table>
+                        </div>
+                    </div>`;
             }
             container.innerHTML = html;
         }
@@ -1019,6 +1108,7 @@
         }
 
         async function loadAllUsersStatus() {
+            if (!window.attendance || !window.attendance.supabase) return;
             const content = document.getElementById('presentAbsentContent');
             content.innerHTML = '<div class="spinner"></div><p>Loading...</p>';
             try {
@@ -1036,8 +1126,18 @@
                 });
                 const absent = (users?.length || 0) - present;
                 
-                let html = `<div class="stats-grid" style="margin-bottom:20px;">${['Total Users', 'Present', 'Late', 'Absent'].map((l,i) => `<div class="stat-card"><h3>${l}</h3><div>${[users?.length, present, late, absent][i]}</div></div>`).join('')}</div>
-                    <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Employee</th><th>Email</th><th>Department</th><th>Role</th><th>Status</th><th>Check In</th><th>Check Out</th></tr></thead><tbody>`;
+                let html = `<div class="stats-grid" style="margin-bottom:20px;">
+                    <div class="stat-card"><h3>Total Users</h3><div>${users?.length || 0}</div></div>
+                    <div class="stat-card"><h3>Present</h3><div>${present}</div></div>
+                    <div class="stat-card"><h3>Late</h3><div>${late}</div></div>
+                    <div class="stat-card"><h3>Absent</h3><div>${absent}</div></div>
+                </div>
+                <div class="attendance-table-container">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr><th>Employee</th><th>Email</th><th>Department</th><th>Role</th><th>Status</th><th>Check In</th><th>Check Out</th></tr>
+                        </thead>
+                        <tbody>`;
                 
                 users?.forEach(u => {
                     const a = attMap[u.id];
@@ -1050,9 +1150,19 @@
                         if (a.check_out_time) checkOut = new Date(a.check_out_time).toLocaleTimeString();
                         sClass = status === 'present' ? 'status-present' : 'status-late';
                     }
-                    html += `<tr><td><strong>${escapeHtml(u.full_name)}</strong></td><td>${escapeHtml(u.employee_id)}</td><td>${escapeHtml(dept)}</td><td>${u.role}</td><td><span class="status-badge ${sClass}">${sText}</span></td><td>${checkIn}</td><td>${checkOut}</td></tr>`;
+                    html += `<tr>
+                        <td><strong>${escapeHtml(u.full_name)}</strong></td>
+                        <td>${escapeHtml(u.employee_id)}</td>
+                        <td>${escapeHtml(dept)}</td>
+                        <td>${u.role}</td>
+                        <td><span class="status-badge ${sClass}">${sText}</span></td>
+                        <td>${checkIn}</td>
+                        <td>${checkOut}</td>
+                    </tr>`;
                 });
-                html += `</tbody></table></div>`;
+                html += `</tbody>
+                    </table>
+                </div>`;
                 content.innerHTML = html;
             } catch (error) {
                 content.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
@@ -1060,25 +1170,49 @@
         }
 
         async function loadPresentUsers() {
+            if (!window.attendance || !window.attendance.supabase) return;
             const content = document.getElementById('presentAbsentContent');
             content.innerHTML = '<div class="spinner"></div><p>Loading...</p>';
             try {
                 const today = new Date().toISOString().split('T')[0];
-                const { data } = await window.attendance.supabase.from('attendance').select(`*, users(full_name, employee_id, role, departments(name))`).eq('date', today).not('check_in_time', 'is', null);
+                const { data } = await window.attendance.supabase
+                    .from('attendance')
+                    .select(`*, users(full_name, employee_id, role, departments(name))`)
+                    .eq('date', today)
+                    .not('check_in_time', 'is', null);
                 if (!data?.length) { content.innerHTML = '<div class="info-message">No users present today.</div>'; return; }
                 const cutoff = '09:00:00';
                 const lateCount = data.filter(r => new Date(r.check_in_time).toTimeString().split(' ')[0] > cutoff).length;
-                let html = `<div class="stats-grid" style="margin-bottom:20px;">${['Present Today', 'On Time', 'Late'].map((l,i) => `<div class="stat-card"><h3>${l}</h3><div>${i===0?data.length:i===1?data.length-lateCount:lateCount}</div></div>`).join('')}</div>
-                    <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Employee</th><th>Email</th><th>Department</th><th>Role</th><th>Status</th><th>Check In</th><th>Check Out</th></tr></thead><tbody>`;
+                let html = `<div class="stats-grid" style="margin-bottom:20px;">
+                    <div class="stat-card"><h3>Present Today</h3><div>${data.length}</div></div>
+                    <div class="stat-card"><h3>On Time</h3><div>${data.length - lateCount}</div></div>
+                    <div class="stat-card"><h3>Late</h3><div>${lateCount}</div></div>
+                </div>
+                <div class="attendance-table-container">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr><th>Employee</th><th>Email</th><th>Department</th><th>Role</th><th>Status</th><th>Check In</th><th>Check Out</th></tr>
+                        </thead>
+                        <tbody>`;
                 data.forEach(r => {
                     const u = r.users;
                     if (!u) return;
                     const dept = u.departments?.name || 'Not Assigned';
                     const sClass = r.status === 'present' ? 'status-present' : 'status-late';
                     const sText = r.status === 'present' ? 'Present' : 'Late';
-                    html += `<tr><td><strong>${escapeHtml(u.full_name)}</strong></td><td>${escapeHtml(u.employee_id)}</td><td>${escapeHtml(dept)}</td><td>${u.role}</td><td><span class="status-badge ${sClass}">${sText}</span></td><td>${new Date(r.check_in_time).toLocaleTimeString()}</td><td>${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td></tr>`;
+                    html += `<tr>
+                        <td><strong>${escapeHtml(u.full_name)}</strong></td>
+                        <td>${escapeHtml(u.employee_id)}</td>
+                        <td>${escapeHtml(dept)}</td>
+                        <td>${u.role}</td>
+                        <td><span class="status-badge ${sClass}">${sText}</span></td>
+                        <td>${new Date(r.check_in_time).toLocaleTimeString()}</td>
+                        <td>${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td>
+                    </tr>`;
                 });
-                html += `</tbody></table></div>`;
+                html += `</tbody>
+                    </table>
+                </div>`;
                 content.innerHTML = html;
             } catch (error) {
                 content.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
@@ -1086,6 +1220,7 @@
         }
 
         async function loadAbsentUsers() {
+            if (!window.attendance || !window.attendance.supabase) return;
             const content = document.getElementById('presentAbsentContent');
             content.innerHTML = '<div class="spinner"></div><p>Loading...</p>';
             try {
@@ -1096,19 +1231,37 @@
                 const absentUsers = users?.filter(u => !checkedIds.has(u.id)) || [];
                 if (absentUsers.length === 0) { content.innerHTML = '<div class="success-message">✅ All users are present today!</div>'; return; }
                 let html = `<div class="stats-grid"><div class="stat-card"><h3>Absent Today</h3><div>${absentUsers.length}</div></div></div>
-                    <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Employee</th><th>Email</th><th>Department</th><th>Role</th></tr></thead><tbody>`;
+                    <div class="attendance-table-container">
+                        <table class="attendance-table">
+                            <thead>
+                                <tr><th>Employee</th><th>Email</th><th>Department</th><th>Role</th></tr>
+                            </thead>
+                            <tbody>`;
                 absentUsers.forEach(u => {
                     const dept = u.departments?.name || 'Not Assigned';
-                    html += `<tr><td><strong>${escapeHtml(u.full_name)}</strong></td><td>${escapeHtml(u.employee_id)}</td><td>${escapeHtml(dept)}</td><td>${u.role}</td></tr>`;
+                    html += `<tr>
+                        <td><strong>${escapeHtml(u.full_name)}</strong></td>
+                        <td>${escapeHtml(u.employee_id)}</td>
+                        <td>${escapeHtml(dept)}</td>
+                        <td>${u.role}</td>
+                    </tr>`;
                 });
-                html += `</tbody></table></div>`;
+                html += `</tbody>
+                        </table>
+                    </div>`;
                 content.innerHTML = html;
             } catch (error) {
                 content.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
             }
         }
 
+        // ============= USER MANAGEMENT =============
+        
         async function showUserManagement() {
+            if (!window.admin) {
+                alert('Admin manager not initialized');
+                return;
+            }
             const modal = document.getElementById('userModal');
             const content = document.getElementById('userManagementContent');
             content.innerHTML = '<div class="spinner"></div><p>Loading users...</p>';
@@ -1116,13 +1269,44 @@
             const departments = await window.admin.getDepartments();
             const result = await window.admin.getUsers();
             if (result.success) {
-                let html = `<div class="filter-bar"><input type="text" id="userSearch" placeholder="Search..." onkeyup="filterUsers()"><select id="roleFilter" onchange="filterUsers()"><option value="">All Roles</option><option value="admin">Admin</option><option value="supervisor">Supervisor</option><option value="staff">Staff</option><option value="student">Student</option></select><select id="deptFilter" onchange="filterUsers()"><option value="">All Departments</option>${departments.success ? departments.data.map(d => `<option value="${d.id}">${d.name}</option>`).join('') : ''}</select><button onclick="openAddUserForm()" class="btn-success">+ Add New User</button></div>
-                    <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Status</th><th>Actions</th></tr></thead><tbody id="userTableBody">`;
+                let html = `<div class="filter-bar">
+                    <input type="text" id="userSearch" placeholder="Search..." onkeyup="filterUsers()">
+                    <select id="roleFilter" onchange="filterUsers()">
+                        <option value="">All Roles</option>
+                        <option value="admin">Admin</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="staff">Staff</option>
+                        <option value="student">Student</option>
+                    </select>
+                    <select id="deptFilter" onchange="filterUsers()">
+                        <option value="">All Departments</option>
+                        ${departments.success ? departments.data.map(d => `<option value="${d.id}">${escapeHtml(d.name)}</option>`).join('') : ''}
+                    </select>
+                    <button onclick="openAddUserForm()" class="btn-success">+ Add New User</button>
+                </div>
+                <div class="attendance-table-container">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Status</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="userTableBody">`;
                 result.data.forEach(user => {
                     const dept = user.departments?.name || 'Not Assigned';
-                    html += `<tr data-role="${user.role}" data-dept="${user.department_id || ''}" data-name="${user.full_name.toLowerCase()}" data-email="${user.employee_id.toLowerCase()}"><td><strong>${escapeHtml(user.full_name)}</strong></td><td>${escapeHtml(user.employee_id)}</td><td><span class="status-badge">${user.role}</span></td><td>${escapeHtml(dept)}</td><td><span class="status-badge status-${user.is_active ? 'present' : 'absent'}">${user.is_active ? 'Active' : 'Inactive'}</span></td><td><button onclick="openEditUserForm('${user.id}')" class="btn-info">Edit</button> <button onclick="toggleUserStatus('${user.id}', ${user.is_active})" class="btn-warning">${user.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
+                    html += `<tr data-role="${user.role}" data-dept="${user.department_id || ''}" data-name="${(user.full_name || '').toLowerCase()}" data-email="${(user.employee_id || '').toLowerCase()}">
+                        <td><strong>${escapeHtml(user.full_name)}</strong></td>
+                        <td>${escapeHtml(user.employee_id)}</td>
+                        <td><span class="status-badge">${user.role}</span></td>
+                        <td>${escapeHtml(dept)}</td>
+                        <td><span class="status-badge status-${user.is_active ? 'present' : 'absent'}">${user.is_active ? 'Active' : 'Inactive'}</span></td>
+                        <td>
+                            <button onclick="openEditUserForm('${user.id}')" class="btn-info">Edit</button>
+                            <button onclick="toggleUserStatus('${user.id}', ${user.is_active})" class="btn-warning">${user.is_active ? 'Deactivate' : 'Activate'}</button>
+                        </td>
+                    </tr>`;
                 });
-                html += `</tbody></table></div>`;
+                html += `</tbody>
+                    </table>
+                </div>`;
                 content.innerHTML = html;
             } else {
                 content.innerHTML = `<div class="error-message">Error loading users: ${result.error}</div>`;
@@ -1154,6 +1338,7 @@
         }
 
         async function openEditUserForm(userId) {
+            if (!window.admin) return;
             document.getElementById('userFormTitle').textContent = 'Edit User';
             document.getElementById('userPassword').required = false;
             document.getElementById('saveUserBtn').textContent = 'Update User';
@@ -1163,8 +1348,8 @@
                 const user = result.data.find(u => u.id === userId);
                 if (user) {
                     document.getElementById('userId').value = user.id;
-                    document.getElementById('userFullName').value = user.full_name;
-                    document.getElementById('userEmail').value = user.employee_id;
+                    document.getElementById('userFullName').value = user.full_name || '';
+                    document.getElementById('userEmail').value = user.employee_id || '';
                     document.getElementById('userRole').value = user.role;
                     document.getElementById('userDepartment').value = user.department_id || '';
                     document.getElementById('userPhone').value = user.phone || '';
@@ -1176,6 +1361,7 @@
         }
 
         async function loadDepartmentDropdown() {
+            if (!window.admin) return;
             const deptSelect = document.getElementById('userDepartment');
             const current = deptSelect.value;
             deptSelect.innerHTML = '<option value="">None</option>';
@@ -1198,6 +1384,10 @@
 
         document.getElementById('userForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!window.admin) {
+                alert('Admin manager not initialized');
+                return;
+            }
             const userId = document.getElementById('userId').value;
             const isEdit = !!userId;
             const userData = {
@@ -1232,7 +1422,8 @@
         });
 
         async function toggleUserStatus(userId, currentStatus) {
-            if (confirm(`Deactivate this user?`)) {
+            if (!window.admin) return;
+            if (confirm(`Are you sure you want to ${currentStatus ? 'deactivate' : 'activate'} this user?`)) {
                 const result = await window.admin.updateUser(userId, { is_active: !currentStatus });
                 if (result.success) {
                     alert('Status updated');
@@ -1242,26 +1433,66 @@
             }
         }
 
+        // ============= DEPARTMENT MANAGEMENT (FIXED) =============
+        
         async function showDepartmentManagement() {
+            if (!window.admin) {
+                alert('Admin manager not initialized');
+                return;
+            }
             const modal = document.getElementById('deptModal');
             const content = document.getElementById('deptManagementContent');
             content.innerHTML = '<div class="spinner"></div><p>Loading departments...</p>';
             modal.style.display = 'block';
-            const result = await window.admin.getDepartments();
-            if (result.success) {
-                let html = `<button onclick="openAddDepartmentForm()" class="btn-success" style="margin-bottom:15px;">+ Add Department</button>
-                    <div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Name</th><th>Description</th><th>Head</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
-                result.data.forEach(dept => {
-                    html += `<tr><td>${escapeHtml(dept.name)}</td><td>${escapeHtml(dept.description || 'N/A')}</td><td>${dept.head_of_department?.full_name || 'Not assigned'}</td><td><span class="status-badge status-${dept.is_active ? 'present' : 'absent'}">${dept.is_active ? 'Active' : 'Inactive'}</span></td><td><button onclick="openEditDepartmentForm('${dept.id}')" class="btn-info">Edit</button> <button onclick="toggleDepartmentStatus('${dept.id}', ${dept.is_active})" class="btn-warning">${dept.is_active ? 'Deactivate' : 'Activate'}</button></td></tr>`;
-                });
-                html += `</tbody></table></div>`;
-                content.innerHTML = html;
-            } else {
-                content.innerHTML = `<div class="error-message">Error loading departments: ${result.error}</div>`;
+            
+            try {
+                const result = await window.admin.getDepartments();
+                console.log('Departments result:', result);
+                
+                if (result.success && result.data) {
+                    let html = `
+                        <div style="margin-bottom: 20px;">
+                            <button onclick="openAddDepartmentForm()" class="btn-success">+ Add Department</button>
+                        </div>
+                        <div class="attendance-table-container">
+                            <table class="attendance-table">
+                                <thead>
+                                    <tr><th>Name</th><th>Description</th><th>Head</th><th>Status</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody>`;
+                    
+                    if (result.data.length === 0) {
+                        html += `<tr><td colspan="5" style="text-align: center;">No departments found. Click "Add Department" to create one.</td></tr>`;
+                    } else {
+                        result.data.forEach(dept => {
+                            html += `<tr>
+                                <td><strong>${escapeHtml(dept.name)}</strong></td>
+                                <td>${escapeHtml(dept.description || 'N/A')}</td>
+                                <td>${dept.head_of_department?.full_name || 'Not assigned'}</td>
+                                <td><span class="status-badge status-${dept.is_active ? 'present' : 'absent'}">${dept.is_active ? 'Active' : 'Inactive'}</span></td>
+                                <td>
+                                    <button onclick="openEditDepartmentForm('${dept.id}')" class="btn-info" style="margin-right: 5px;">Edit</button>
+                                    <button onclick="toggleDepartmentStatus('${dept.id}', ${dept.is_active})" class="btn-warning">${dept.is_active ? 'Deactivate' : 'Activate'}</button>
+                                    <button onclick="deleteDepartment('${dept.id}')" class="btn-danger" style="margin-left: 5px;">Delete</button>
+                                </td>
+                            </table>`;
+                        });
+                    }
+                    html += `</tbody>
+                            </table>
+                        </div>`;
+                    content.innerHTML = html;
+                } else {
+                    content.innerHTML = `<div class="error-message">Error loading departments: ${result.error || 'Unknown error'}</div>`;
+                }
+            } catch (error) {
+                console.error('Error in showDepartmentManagement:', error);
+                content.innerHTML = `<div class="error-message">Error loading departments: ${error.message}</div>`;
             }
         }
 
         async function openAddDepartmentForm() {
+            if (!window.admin) return;
             document.getElementById('deptFormTitle').textContent = 'Add Department';
             document.getElementById('deptForm').reset();
             document.getElementById('deptId').value = '';
@@ -1272,11 +1503,13 @@
         }
 
         async function openEditDepartmentForm(deptId) {
+            if (!window.admin) return;
             document.getElementById('deptFormTitle').textContent = 'Edit Department';
             document.getElementById('saveDeptBtn').textContent = 'Update Department';
             await loadDeptHeadDropdown();
+            
             const result = await window.admin.getDepartments();
-            if (result.success) {
+            if (result.success && result.data) {
                 const dept = result.data.find(d => d.id === deptId);
                 if (dept) {
                     document.getElementById('deptId').value = dept.id;
@@ -1291,11 +1524,12 @@
         }
 
         async function loadDeptHeadDropdown() {
+            if (!window.admin) return;
             const headSelect = document.getElementById('deptHead');
             const current = headSelect.value;
             headSelect.innerHTML = '<option value="">None</option>';
             const users = await window.admin.getUsers({ role: 'supervisor' });
-            if (users.success) {
+            if (users.success && users.data) {
                 users.data.forEach(user => {
                     const option = document.createElement('option');
                     option.value = user.id;
@@ -1313,6 +1547,10 @@
 
         document.getElementById('deptForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!window.admin) {
+                alert('Admin manager not initialized');
+                return;
+            }
             const deptId = document.getElementById('deptId').value;
             const isEdit = !!deptId;
             const deptData = {
@@ -1321,33 +1559,62 @@
                 head_of_department: document.getElementById('deptHead').value || null,
                 is_active: document.getElementById('deptActive').checked
             };
+            
+            if (!deptData.name) {
+                document.getElementById('deptFormError').textContent = 'Department name is required';
+                document.getElementById('deptFormError').style.display = 'block';
+                return;
+            }
+            
             const saveBtn = document.getElementById('saveDeptBtn');
             const original = saveBtn.textContent;
             saveBtn.textContent = 'Saving...';
             saveBtn.disabled = true;
+            document.getElementById('deptFormError').style.display = 'none';
+            
             let result = isEdit ? await window.admin.updateDepartment(deptId, deptData) : await window.admin.createDepartment(deptData);
+            
             saveBtn.textContent = original;
             saveBtn.disabled = false;
+            
             if (result.success) {
                 alert(`Department ${isEdit ? 'updated' : 'created'} successfully!`);
                 closeDeptForm();
                 showDepartmentManagement();
             } else {
-                document.getElementById('deptFormError').textContent = result.error;
+                document.getElementById('deptFormError').textContent = result.error || 'Failed to save department';
                 document.getElementById('deptFormError').style.display = 'block';
             }
         });
 
         async function toggleDepartmentStatus(deptId, currentStatus) {
-            if (confirm(`Deactivate this department?`)) {
+            if (!window.admin) return;
+            if (confirm(`Are you sure you want to ${currentStatus ? 'deactivate' : 'activate'} this department?`)) {
                 const result = await window.admin.updateDepartment(deptId, { is_active: !currentStatus });
                 if (result.success) {
                     alert('Status updated');
                     showDepartmentManagement();
+                } else {
+                    alert('Error: ' + result.error);
                 }
             }
         }
 
+        async function deleteDepartment(deptId) {
+            if (!window.admin) return;
+            if (confirm('Are you sure you want to delete this department? This action cannot be undone.')) {
+                const result = await window.admin.deleteDepartment(deptId);
+                if (result.success) {
+                    alert('Department deleted successfully');
+                    showDepartmentManagement();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            }
+        }
+
+        // ============= REPORTS =============
+        
         function showReports() {
             const modal = document.getElementById('reportsModal');
             const today = new Date().toISOString().split('T')[0];
@@ -1365,26 +1632,50 @@
         }
 
         async function generateReport() {
+            if (!window.attendance || !window.attendance.supabase) return;
             const results = document.getElementById('reportResults');
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             const reportType = document.getElementById('reportType').value;
             results.innerHTML = '<div class="spinner"></div><p>Generating...</p>';
             try {
-                const { data } = await window.attendance.supabase.from('attendance').select(`*, users(full_name, employee_id, departments(name))`).gte('date', startDate).lte('date', endDate).order('date', { ascending: false });
+                const { data } = await window.attendance.supabase
+                    .from('attendance')
+                    .select(`*, users(full_name, employee_id, departments(name))`)
+                    .gte('date', startDate)
+                    .lte('date', endDate)
+                    .order('date', { ascending: false });
+                
                 if (data?.length) {
                     const total = data.length, present = data.filter(r => r.status === 'present').length, late = data.filter(r => r.status === 'late').length;
-                    let html = `<div class="stats-grid" style="margin-bottom:20px;">${['Total Records', 'Present', 'Late'].map((l,i) => `<div class="stat-card"><h3>${l}</h3><div>${[total, present, late][i]}</div></div>`).join('')}</div>`;
+                    let html = `<div class="stats-grid" style="margin-bottom:20px;">
+                        <div class="stat-card"><h3>Total Records</h3><div>${total}</div></div>
+                        <div class="stat-card"><h3>Present</h3><div>${present}</div></div>
+                        <div class="stat-card"><h3>Late</h3><div>${late}</div></div>
+                    </div>`;
                     if (reportType === 'detailed') {
-                        html += `<div class="attendance-table-container"><table class="attendance-table"><thead><tr><th>Date</th><th>Employee</th><th>Check In</th><th>Check Out</th><th>Status</th><th>Method</th></tr></thead><tbody>`;
-                        data.slice(0, 20).forEach(r => {
-                            const dept = r.users?.departments?.name || 'Not Assigned';
+                        html += `<div class="attendance-table-container">
+                            <table class="attendance-table">
+                                <thead>
+                                    <tr><th>Date</th><th>Employee</th><th>Check In</th><th>Check Out</th><th>Status</th><th>Method</th></tr>
+                                </thead>
+                                <tbody>`;
+                        data.slice(0, 50).forEach(r => {
                             const statusText = r.status === 'present' ? 'Present' : (r.status === 'late' ? 'Late' : 'Absent');
                             const statusClass = r.status === 'present' ? 'status-present' : (r.status === 'late' ? 'status-late' : 'status-absent');
-                            html += `<tr><td>${r.date}</td><td>${escapeHtml(r.users?.full_name || 'Unknown')}</td><td>${r.check_in_time ? new Date(r.check_in_time).toLocaleTimeString() : '-'}</td><td>${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td><td><span class="status-badge ${statusClass}">${statusText}</span></td><td>${r.check_in_method}</td></tr>`;
+                            html += `<tr>
+                                <td>${r.date}</td>
+                                <td>${escapeHtml(r.users?.full_name || 'Unknown')}</td>
+                                <td>${r.check_in_time ? new Date(r.check_in_time).toLocaleTimeString() : '-'}</td>
+                                <td>${r.check_out_time ? new Date(r.check_out_time).toLocaleTimeString() : '-'}</td>
+                                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                                <td>${r.check_in_method || '-'}</td>
+                            </tr>`;
                         });
-                        html += `</tbody></table></div>`;
-                        if (data.length > 20) html += '<p>Showing first 20 records. Export for full data.</p>';
+                        html += `</tbody>
+                            </table>
+                        </div>`;
+                        if (data.length > 50) html += '<p>Showing first 50 records. Export for full data.</p>';
                     }
                     results.innerHTML = html;
                 } else {
@@ -1395,16 +1686,19 @@
             }
         }
 
-        function exportReport() { alert('Export to CSV feature ready.'); }
+        function exportReport() {
+            alert('Export to CSV feature ready. Use the Admin Manager export function for full data export.');
+        }
 
         function setupRealtimeListeners() {
             window.addEventListener('attendance-updated', () => {
                 loadStats();
                 loadRecentAttendanceGrouped();
-                window.attendance.checkTodayStatus();
+                if (window.attendance) window.attendance.checkTodayStatus();
             });
         }
 
+        // Close modal handlers
         document.querySelectorAll('.close').forEach(btn => {
             btn.onclick = function() {
                 const modal = this.closest('.modal');

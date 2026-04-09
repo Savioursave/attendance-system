@@ -1,6 +1,8 @@
+// Admin Manager - Complete Fixed Version
 class AdminManager {
     constructor() {
         this.supabase = window.supabaseClient;
+        console.log('✅ AdminManager constructor called');
         this.checkAdminAccess();
         console.log('✅ AdminManager initialized');
     }
@@ -26,6 +28,10 @@ class AdminManager {
         try {
             console.log('📱 Generating master QR code...');
             
+            if (!window.qrManager) {
+                throw new Error('QR Manager not initialized');
+            }
+            
             const result = await window.qrManager.generateMasterQR();
             
             if (result.success) {
@@ -46,10 +52,13 @@ class AdminManager {
         try {
             console.log('📥 Downloading master QR code...');
             
+            if (!window.qrManager) {
+                throw new Error('QR Manager not initialized');
+            }
+            
             const result = await window.qrManager.downloadMasterQR();
             
             if (result.success && result.qrCodeUrl) {
-                // Create download link
                 const link = document.createElement('a');
                 link.download = 'organization-qr-code.png';
                 link.href = result.qrCodeUrl;
@@ -69,6 +78,9 @@ class AdminManager {
     
     async getMasterQRStatus() {
         try {
+            if (!window.qrManager) {
+                throw new Error('QR Manager not initialized');
+            }
             const masterQR = window.qrManager.getMasterQR();
             return { 
                 success: true, 
@@ -83,6 +95,9 @@ class AdminManager {
     async resetMasterQR() {
         try {
             if (confirm('Are you sure you want to reset the master QR code? This will invalidate all existing QR codes displayed at the entrance.')) {
+                if (!window.qrManager) {
+                    throw new Error('QR Manager not initialized');
+                }
                 const result = await window.qrManager.resetMasterQR();
                 if (result.success) {
                     alert('✅ Master QR code reset successfully. Generate a new one to continue.');
@@ -346,10 +361,11 @@ class AdminManager {
         }
     }
 
-    // ============= DEPARTMENT MANAGEMENT =============
+    // ============= DEPARTMENT MANAGEMENT (FIXED) =============
 
     async getDepartments() {
         try {
+            console.log('📋 Fetching departments...');
             const { data, error } = await this.supabase
                 .from('departments')
                 .select(`
@@ -362,16 +378,23 @@ class AdminManager {
                 `)
                 .order('name');
 
-            if (error) throw error;
+            if (error) {
+                console.error('❌ Error fetching departments:', error);
+                throw error;
+            }
+            
+            console.log(`✅ Fetched ${data?.length || 0} departments`);
             return { success: true, data: data || [] };
         } catch (error) {
-            console.error('Error fetching departments:', error);
+            console.error('❌ Error in getDepartments:', error);
             return { success: false, error: error.message, data: [] };
         }
     }
 
     async createDepartment(deptData) {
         try {
+            console.log('➕ Creating department:', deptData);
+            
             if (!deptData.name) throw new Error('Department name is required');
 
             const { data, error } = await this.supabase
@@ -380,14 +403,22 @@ class AdminManager {
                     name: deptData.name,
                     description: deptData.description || null,
                     head_of_department: deptData.head_of_department || null,
-                    is_active: deptData.is_active !== undefined ? deptData.is_active : true
+                    is_active: deptData.is_active !== undefined ? deptData.is_active : true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
                 }])
                 .select();
 
-            if (error) throw error;
+            if (error) {
+                console.error('❌ Error creating department:', error);
+                throw error;
+            }
+            
+            console.log('✅ Department created:', data);
             alert(`Department "${deptData.name}" created successfully!`);
             return { success: true, data: data?.[0] };
         } catch (error) {
+            console.error('❌ Error in createDepartment:', error);
             alert('Error creating department: ' + error.message);
             return { success: false, error: error.message };
         }
@@ -395,6 +426,10 @@ class AdminManager {
 
     async updateDepartment(deptId, updates) {
         try {
+            console.log('✏️ Updating department:', deptId, updates);
+            
+            if (!deptId) throw new Error('Department ID is required');
+
             const { data, error } = await this.supabase
                 .from('departments')
                 .update({
@@ -407,10 +442,16 @@ class AdminManager {
                 .eq('id', deptId)
                 .select();
 
-            if (error) throw error;
+            if (error) {
+                console.error('❌ Error updating department:', error);
+                throw error;
+            }
+            
+            console.log('✅ Department updated:', data);
             alert(`Department "${updates.name}" updated successfully!`);
             return { success: true, data: data?.[0] };
         } catch (error) {
+            console.error('❌ Error in updateDepartment:', error);
             alert('Error updating department: ' + error.message);
             return { success: false, error: error.message };
         }
@@ -418,6 +459,9 @@ class AdminManager {
 
     async deleteDepartment(deptId) {
         try {
+            console.log('🗑️ Deleting department:', deptId);
+            
+            // Check if department has active users
             const { count, error: countError } = await this.supabase
                 .from('users')
                 .select('*', { count: 'exact', head: true })
@@ -425,13 +469,23 @@ class AdminManager {
                 .eq('is_active', true);
 
             if (countError) throw countError;
-            if (count > 0) throw new Error(`Cannot delete department with ${count} active users.`);
+            
+            if (count > 0) {
+                throw new Error(`Cannot delete department with ${count} active users. Please reassign or deactivate users first.`);
+            }
 
-            const { error } = await this.supabase.from('departments').delete().eq('id', deptId);
+            const { error } = await this.supabase
+                .from('departments')
+                .delete()
+                .eq('id', deptId);
+                
             if (error) throw error;
+            
+            console.log('✅ Department deleted');
             alert('Department deleted successfully');
             return { success: true };
         } catch (error) {
+            console.error('❌ Error in deleteDepartment:', error);
             alert('Error deleting department: ' + error.message);
             return { success: false, error: error.message };
         }
@@ -474,6 +528,7 @@ class AdminManager {
                 }
             };
         } catch (error) {
+            console.error('❌ Error in generateReport:', error);
             return { success: false, error: error.message };
         }
     }
@@ -535,6 +590,7 @@ class AdminManager {
             if (error) throw error;
             return { success: true, qrData };
         } catch (error) {
+            console.error('❌ Error in generateUserQRCode:', error);
             return { success: false, error: error.message };
         }
     }
@@ -545,6 +601,7 @@ class AdminManager {
             if (error) throw error;
             return { success: true, data: data || [] };
         } catch (error) {
+            console.error('❌ Error in getAllUserQRCodes:', error);
             return { success: false, error: error.message };
         }
     }
@@ -575,6 +632,7 @@ class AdminManager {
                 }
             };
         } catch (error) {
+            console.error('❌ Error in getSystemStats:', error);
             return { success: false, error: error.message };
         }
     }
@@ -591,6 +649,7 @@ class AdminManager {
             if (error) throw error;
             return { success: true, data: data || [] };
         } catch (error) {
+            console.error('❌ Error in getActivityLogs:', error);
             return { success: false, error: error.message };
         }
     }
